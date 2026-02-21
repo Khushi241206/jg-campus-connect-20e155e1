@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Eye, EyeOff, GraduationCap } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import heroCampus from "@/assets/hero-campus.jpg";
+import jgCampus from "@/assets/jg-campus.jpeg";
 import jgLogo from "@/assets/jg-logo.jpeg";
 
 const Login = () => {
@@ -29,7 +29,7 @@ const Login = () => {
     <div className="min-h-screen flex relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0">
-        <img src={heroCampus} alt="" className="w-full h-full object-cover" />
+        <img src={jgCampus} alt="" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-foreground/60" />
       </div>
 

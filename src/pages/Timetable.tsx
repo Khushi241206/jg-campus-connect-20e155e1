@@ -10,6 +10,7 @@ const Timetable = () => {
   return (
     <div className="space-y-6 animate-fade-in">
       <h1 className="text-2xl font-bold text-foreground">Time Table</h1>
+      <p className="text-sm text-muted-foreground -mt-4">Year 2 - Div B &nbsp;|&nbsp; Room: 403</p>
 
       {/* Day Tabs */}
       <div className="flex gap-2 overflow-x-auto pb-2">
@@ -43,7 +44,7 @@ const Timetable = () => {
             </thead>
             <tbody className="divide-y divide-border">
               {classes.map((cls, i) => (
-                <tr key={i} className={`transition-colors hover:bg-muted/30 ${cls.subject === "Lunch Break" ? "bg-muted/20" : ""}`}>
+                <tr key={i} className={`transition-colors hover:bg-muted/30 ${cls.subject === "Break" ? "bg-muted/20" : ""}`}>
                   <td className="p-3 text-muted-foreground whitespace-nowrap">{cls.time}</td>
                   <td className="p-3 font-medium text-foreground">{cls.subject}</td>
                   <td className="p-3 text-muted-foreground hidden sm:table-cell">{cls.faculty || "—"}</td>
