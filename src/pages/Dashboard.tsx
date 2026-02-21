@@ -16,7 +16,7 @@ const Dashboard = () => {
   const pendingAssignments = assignments.filter(a => a.status === "pending").length;
   const urgentNotices = notices.filter(n => n.urgent).length;
 
-  const todayClasses = timetableData.Friday?.filter(c => c.subject !== "Lunch Break") || [];
+  const todayClasses = timetableData.Friday?.filter(c => c.subject !== "Break") || [];
 
   const stats = [
     { label: "Avg Attendance", value: `${avgAttendance}%`, icon: UserCheck, color: "text-success" },
