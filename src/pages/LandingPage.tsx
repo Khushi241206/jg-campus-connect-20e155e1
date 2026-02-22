@@ -12,6 +12,7 @@ const LandingPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -59,7 +60,7 @@ const LandingPage = () => {
             <button onClick={() => scrollTo("about")} className="text-white/80 hover:text-white text-sm font-medium transition-colors">About</button>
             <button onClick={() => scrollTo("contact")} className="text-white/80 hover:text-white text-sm font-medium transition-colors">Contact</button>
           </div>
-          <button onClick={() => scrollTo("hero")}
+          <button onClick={() => { setShowLogin(true); setTimeout(() => document.getElementById("login-card")?.scrollIntoView({ behavior: "smooth", block: "center" }), 100); }}
             className="px-5 py-2 bg-white text-gray-900 rounded-full text-sm font-semibold hover:bg-white/90 transition-all">
             Student Login
           </button>
@@ -84,7 +85,7 @@ const LandingPage = () => {
               Access your timetable, track attendance, view results, manage fees, and stay updated with university notices — all in one place.
             </p>
             <div className="mt-8 flex gap-4">
-              <button onClick={() => scrollTo("hero")}
+              <button onClick={() => { setShowLogin(true); setTimeout(() => document.getElementById("login-card")?.scrollIntoView({ behavior: "smooth", block: "center" }), 100); }}
                 className="px-6 py-3 rounded-lg text-white font-semibold text-sm transition-all hover:opacity-90 flex items-center gap-2"
                 style={{ background: "linear-gradient(135deg, #8B0000, #A1122F)" }}>
                 Get Started <span>→</span>
@@ -97,52 +98,55 @@ const LandingPage = () => {
           </motion.div>
 
           {/* Login Card */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="w-full max-w-md mx-auto lg:ml-auto bg-white rounded-2xl p-8 shadow-2xl"
-          >
-            <div className="flex flex-col items-center mb-6">
-              <img src={jgLogo} alt="JG University" className="h-16 w-auto rounded-lg mb-2" />
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Username</label>
-                <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Enter your username"
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-red-900/30 transition-all"
-                  required
-                />
+          {showLogin && (
+            <motion.div
+              id="login-card"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="w-full max-w-md mx-auto lg:ml-auto bg-white rounded-2xl p-8 shadow-2xl"
+            >
+              <div className="flex flex-col items-center mb-6">
+                <img src={jgLogo} alt="JG University" className="h-16 w-auto rounded-lg mb-2" />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Password</label>
-                <div className="relative">
+
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Username</label>
                   <input
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter your password"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-red-900/30 transition-all pr-10"
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Enter your username"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-red-900/30 transition-all"
                     required
                   />
-                  <button type="button" onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
                 </div>
-              </div>
-              <button type="submit"
-                className="w-full py-3 rounded-xl text-white font-semibold text-sm transition-all hover:opacity-90"
-                style={{ background: "linear-gradient(135deg, #8B0000, #A1122F)" }}>
-                Login
-              </button>
-            </form>
-          </motion.div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Password</label>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Enter your password"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-red-900/30 transition-all pr-10"
+                      required
+                    />
+                    <button type="button" onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                </div>
+                <button type="submit"
+                  className="w-full py-3 rounded-xl text-white font-semibold text-sm transition-all hover:opacity-90"
+                  style={{ background: "linear-gradient(135deg, #8B0000, #A1122F)" }}>
+                  Login
+                </button>
+              </form>
+            </motion.div>
+          )}
         </div>
       </section>
 
