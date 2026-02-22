@@ -4,7 +4,7 @@ import {
   LayoutDashboard, Clock, UserCheck, FileText, BarChart3,
   Bell, CreditCard, User, X, GraduationCap,
 } from "lucide-react";
-import jgLogo from "@/assets/jg-logo.jpeg";
+import jgLogo from "@/assets/jg-logo-white.png";
 
 const navItems = [
   { title: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
