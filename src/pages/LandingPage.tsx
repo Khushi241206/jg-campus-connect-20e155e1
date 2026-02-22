@@ -48,10 +48,10 @@ const LandingPage = () => {
   return (
     <div className="min-h-screen bg-white text-gray-900 scroll-smooth">
       {/* NAVBAR */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "shadow-lg" : ""}`}
-        style={{ background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)" }}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "shadow-lg backdrop-blur-sm" : ""}`}
+        style={{ background: scrolled ? "rgba(26, 26, 46, 0.95)" : "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)" }}>
         <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <img src={jgLogoWhite} alt="JG University" className="h-10 w-auto" />
           </div>
           <div className="hidden md:flex items-center gap-8">
@@ -83,6 +83,17 @@ const LandingPage = () => {
             <p className="mt-6 text-white/80 text-lg max-w-lg leading-relaxed">
               Access your timetable, track attendance, view results, manage fees, and stay updated with university notices — all in one place.
             </p>
+            <div className="mt-8 flex gap-4">
+              <button onClick={() => scrollTo("hero")}
+                className="px-6 py-3 rounded-lg text-white font-semibold text-sm transition-all hover:opacity-90 flex items-center gap-2"
+                style={{ background: "linear-gradient(135deg, #8B0000, #A1122F)" }}>
+                Get Started <span>→</span>
+              </button>
+              <button onClick={() => scrollTo("features")}
+                className="px-6 py-3 rounded-lg border-2 border-white/40 text-white font-semibold text-sm hover:bg-white/10 transition-all">
+                Explore Features
+              </button>
+            </div>
           </motion.div>
 
           {/* Login Card */}
