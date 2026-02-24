@@ -1,56 +1,54 @@
 export const attendanceData = [
-  { subject: "Probability & Statistics III", total: 27, present: 21, absent: 6, percentage: 85.7 },
-  { subject: "Design Thinking III", total: 27, present: 21, absent: 6, percentage: 85.7 },
-  { subject: "Web Technology III", total: 27, present: 21, absent: 6, percentage: 87.0 },
-  { subject: "Computer Networks / CN", total: 25, present: 19, absent: 6, percentage: 76.0 },
   { subject: "Software Engineering", total: 24, present: 22, absent: 2, percentage: 91.7 },
+  { subject: "Computer Networks", total: 25, present: 19, absent: 6, percentage: 76.0 },
   { subject: "Machine Learning", total: 26, present: 20, absent: 6, percentage: 76.9 },
+  { subject: "UI/UX Design", total: 27, present: 23, absent: 4, percentage: 85.2 },
+  { subject: "Vector Calculus", total: 25, present: 21, absent: 4, percentage: 84.0 },
 ];
 
 export const timetableData = {
   Monday: [
-    { time: "1:30 - 2:10 PM", subject: "SE", faculty: "Theory", room: "403", type: "Theory" },
-    { time: "2:10 - 2:50 PM", subject: "CN", faculty: "Theory", room: "403", type: "Theory" },
+    { time: "1:30 - 2:10 PM", subject: "Software Engineering (SE)", faculty: "Theory", room: "403", type: "Theory" },
+    { time: "2:10 - 2:50 PM", subject: "Computer Networks (CN)", faculty: "Theory", room: "403", type: "Theory" },
     { time: "2:50 - 3:30 PM", subject: "Break", faculty: "", room: "", type: "" },
-    { time: "3:30 - 4:10 PM", subject: "UI/UX", faculty: "Theory", room: "403", type: "Theory" },
-    { time: "4:10 - 4:50 PM", subject: "ML", faculty: "Lab", room: "403", type: "Lab" },
+    { time: "3:30 - 4:10 PM", subject: "UI/UX Design", faculty: "Theory", room: "403", type: "Theory" },
+    { time: "4:10 - 4:50 PM", subject: "Machine Learning (ML)", faculty: "Lab", room: "403", type: "Lab" },
   ],
   Tuesday: [
-    { time: "1:30 - 2:10 PM", subject: "ML", faculty: "Theory", room: "403", type: "Theory" },
+    { time: "1:30 - 2:10 PM", subject: "Machine Learning (ML)", faculty: "Theory", room: "403", type: "Theory" },
     { time: "2:10 - 2:50 PM", subject: "Vector Calculus", faculty: "Theory", room: "403", type: "Theory" },
     { time: "2:50 - 3:30 PM", subject: "Break", faculty: "", room: "", type: "" },
-    { time: "3:30 - 4:10 PM", subject: "CN", faculty: "Theory", room: "403", type: "Theory" },
-    { time: "4:10 - 4:50 PM", subject: "UI/UX", faculty: "Lab", room: "403", type: "Lab" },
+    { time: "3:30 - 4:10 PM", subject: "Computer Networks (CN)", faculty: "Theory", room: "403", type: "Theory" },
+    { time: "4:10 - 4:50 PM", subject: "UI/UX Design", faculty: "Lab", room: "403", type: "Lab" },
   ],
   Wednesday: [
-    { time: "1:30 - 2:10 PM", subject: "UI/UX", faculty: "Theory", room: "403", type: "Theory" },
-    { time: "2:10 - 2:50 PM", subject: "ML", faculty: "Theory", room: "403", type: "Theory" },
+    { time: "1:30 - 2:10 PM", subject: "UI/UX Design", faculty: "Theory", room: "403", type: "Theory" },
+    { time: "2:10 - 2:50 PM", subject: "Machine Learning (ML)", faculty: "Theory", room: "403", type: "Theory" },
     { time: "2:50 - 3:30 PM", subject: "Break", faculty: "", room: "", type: "" },
     { time: "3:30 - 4:10 PM", subject: "Vector Calculus", faculty: "Theory", room: "403", type: "Theory" },
-    { time: "4:10 - 4:50 PM", subject: "CN", faculty: "Theory", room: "403", type: "Theory" },
+    { time: "4:10 - 4:50 PM", subject: "Computer Networks (CN)", faculty: "Theory", room: "403", type: "Theory" },
   ],
   Thursday: [
-    { time: "1:30 - 2:10 PM", subject: "CN", faculty: "Theory", room: "403", type: "Theory" },
-    { time: "2:10 - 2:50 PM", subject: "UI/UX", faculty: "Theory", room: "403", type: "Theory" },
+    { time: "1:30 - 2:10 PM", subject: "Computer Networks (CN)", faculty: "Theory", room: "403", type: "Theory" },
+    { time: "2:10 - 2:50 PM", subject: "UI/UX Design", faculty: "Theory", room: "403", type: "Theory" },
     { time: "2:50 - 3:30 PM", subject: "Break", faculty: "", room: "", type: "" },
-    { time: "3:30 - 4:10 PM", subject: "ML", faculty: "Theory", room: "403", type: "Theory" },
-    { time: "4:10 - 4:50 PM", subject: "SE", faculty: "Theory", room: "403", type: "Theory" },
+    { time: "3:30 - 4:10 PM", subject: "Machine Learning (ML)", faculty: "Theory", room: "403", type: "Theory" },
+    { time: "4:10 - 4:50 PM", subject: "Software Engineering (SE)", faculty: "Theory", room: "403", type: "Theory" },
   ],
   Friday: [
-    { time: "1:30 - 2:10 PM", subject: "SE", faculty: "Theory", room: "403", type: "Theory" },
+    { time: "1:30 - 2:10 PM", subject: "Software Engineering (SE)", faculty: "Theory", room: "403", type: "Theory" },
     { time: "2:10 - 2:50 PM", subject: "Entrepreneurship", faculty: "Theory", room: "403", type: "Theory" },
     { time: "2:50 - 3:30 PM", subject: "Break", faculty: "", room: "", type: "" },
     { time: "3:30 - 4:10 PM", subject: "Sustainable Energy", faculty: "Theory", room: "403", type: "Theory" },
-    { time: "4:10 - 4:50 PM", subject: "ML", faculty: "Theory", room: "403", type: "Theory" },
+    { time: "4:10 - 4:50 PM", subject: "Machine Learning (ML)", faculty: "Theory", room: "403", type: "Theory" },
   ],
 };
 
 export const assignments = [
   { id: 1, title: "ML Model Implementation", subject: "Machine Learning", desc: "Implement a linear regression model using Python", deadline: "2026-02-15", status: "pending" as const },
   { id: 2, title: "Network Protocol Analysis", subject: "Computer Networks", desc: "Analyze TCP/IP protocol stack", deadline: "2026-02-12", status: "submitted" as const },
-  { id: 3, title: "UI/UX Case Study", subject: "Design Thinking", desc: "Complete case study on mobile banking app", deadline: "2026-02-10", status: "graded" as const, grade: "A" },
-  { id: 4, title: "Web App Development", subject: "Web Technology", desc: "Create a responsive portfolio website", deadline: "2026-02-20", status: "pending" as const },
-  { id: 5, title: "Statistical Analysis Report", subject: "Probability & Statistics", desc: "Perform hypothesis testing on given dataset", deadline: "2026-02-08", status: "graded" as const, grade: "B+" },
+  { id: 3, title: "UI/UX Case Study", subject: "UI/UX Design", desc: "Complete case study on mobile banking app", deadline: "2026-02-10", status: "graded" as const, grade: "A" },
+  { id: 4, title: "Vector Calculus Assignment", subject: "Vector Calculus", desc: "Solve problems on divergence and curl", deadline: "2026-02-20", status: "pending" as const },
   { id: 6, title: "Software Requirements Doc", subject: "Software Engineering", desc: "Write SRS document for e-commerce platform", deadline: "2026-02-18", status: "pending" as const },
 ];
 
@@ -112,12 +110,11 @@ export const attendanceTrend = [
 ];
 
 export const examSchedule = [
-  { id: 1, subject: "Probability & Statistics III", date: "2026-03-10", time: "10:00 AM - 1:00 PM", room: "Hall A", type: "Mid-Sem" as const },
-  { id: 2, subject: "Web Technology III", date: "2026-03-12", time: "10:00 AM - 1:00 PM", room: "Hall B", type: "Mid-Sem" as const },
-  { id: 3, subject: "Computer Networks", date: "2026-03-14", time: "2:00 PM - 5:00 PM", room: "Hall A", type: "Mid-Sem" as const },
-  { id: 4, subject: "Software Engineering", date: "2026-03-16", time: "10:00 AM - 1:00 PM", room: "Hall C", type: "Mid-Sem" as const },
-  { id: 5, subject: "Machine Learning", date: "2026-03-18", time: "2:00 PM - 5:00 PM", room: "Hall B", type: "Mid-Sem" as const },
-  { id: 6, subject: "Design Thinking III", date: "2026-03-20", time: "10:00 AM - 1:00 PM", room: "Hall A", type: "Mid-Sem" as const },
+  { id: 1, subject: "Software Engineering", date: "2026-03-10", time: "10:00 AM - 1:00 PM", room: "Hall A", type: "Mid-Sem" as const },
+  { id: 2, subject: "Computer Networks", date: "2026-03-14", time: "2:00 PM - 5:00 PM", room: "Hall A", type: "Mid-Sem" as const },
+  { id: 3, subject: "Machine Learning", date: "2026-03-16", time: "10:00 AM - 1:00 PM", room: "Hall C", type: "Mid-Sem" as const },
+  { id: 4, subject: "UI/UX Design", date: "2026-03-18", time: "2:00 PM - 5:00 PM", room: "Hall B", type: "Mid-Sem" as const },
+  { id: 5, subject: "Vector Calculus", date: "2026-03-20", time: "10:00 AM - 1:00 PM", room: "Hall A", type: "Mid-Sem" as const },
 ];
 
 export interface MCQQuestion {
@@ -178,7 +175,7 @@ export const onlineTests: OnlineTest[] = [
     questions: [],
   },
   {
-    id: 4, subject: "Web Technology III", title: "WT Unit Test 1", totalMarks: 40, duration: 35, date: "2026-03-05",
+    id: 4, subject: "UI/UX Design", title: "UI/UX Quiz 1", totalMarks: 30, duration: 25, date: "2026-03-05",
     status: "upcoming",
     questions: [],
   },
