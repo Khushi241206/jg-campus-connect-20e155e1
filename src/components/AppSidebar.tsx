@@ -4,7 +4,7 @@ import {
   LayoutDashboard, Clock, UserCheck, FileText, BarChart3,
   Bell, CreditCard, User, X, GraduationCap, ClipboardList, CalendarDays,
 } from "lucide-react";
-import jgLogo from "@/assets/jg-logo-white.png";
+
 
 const navItems = [
   { title: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
@@ -43,15 +43,10 @@ const AppSidebar = ({ open, onClose }: AppSidebarProps) => {
         lg:translate-x-0 lg:static lg:z-auto
         ${open ? "translate-x-0" : "-translate-x-full"}`}
       >
-        {/* Logo */}
-        <div className="p-4 flex items-center gap-3 border-b border-sidebar-border">
-          <img src={jgLogo} alt="JG University" className="h-10 w-auto rounded" />
-          <div className="flex-1 min-w-0">
-            <h2 className="text-sm font-bold leading-tight truncate">JG University</h2>
-            <p className="text-xs text-sidebar-foreground/60">Excellence by Choice</p>
-          </div>
-          <button onClick={onClose} className="lg:hidden p-1 rounded hover:bg-sidebar-accent">
-            <X className="h-4 w-4" />
+        {/* Close button (mobile) */}
+        <div className="p-4 flex items-center justify-end lg:hidden">
+          <button onClick={onClose} className="p-1 rounded hover:bg-sidebar-accent">
+            <X className="h-5 w-5" />
           </button>
         </div>
 
