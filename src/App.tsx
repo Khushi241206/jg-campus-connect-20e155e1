@@ -12,7 +12,9 @@ import Dashboard from "@/pages/Dashboard";
 import Timetable from "@/pages/Timetable";
 import Attendance from "@/pages/Attendance";
 import Assignments from "@/pages/Assignments";
+import Exams from "@/pages/Exams";
 import Results from "@/pages/Results";
+import Events from "@/pages/Events";
 import Notices from "@/pages/Notices";
 import Fees from "@/pages/Fees";
 import Profile from "@/pages/Profile";
@@ -39,7 +41,9 @@ const AppRoutes = () => (
       <Route path="/timetable" element={<Timetable />} />
       <Route path="/attendance" element={<Attendance />} />
       <Route path="/assignments" element={<Assignments />} />
+      <Route path="/exams" element={<Exams />} />
       <Route path="/results" element={<Results />} />
+      <Route path="/events" element={<Events />} />
       <Route path="/notices" element={<Notices />} />
       <Route path="/fees" element={<Fees />} />
       <Route path="/profile" element={<Profile />} />
