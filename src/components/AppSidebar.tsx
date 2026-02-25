@@ -2,9 +2,9 @@ import { NavLink as RouterNavLink, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   LayoutDashboard, Clock, UserCheck, FileText, BarChart3,
-  Bell, CreditCard, User, X, GraduationCap, ClipboardList, CalendarDays,
+  Bell, CreditCard, User, X, GraduationCap, ClipboardList, CalendarDays, MessageSquare,
 } from "lucide-react";
-
+import jgLogoWhite from "@/assets/jg-logo-white.png";
 
 const navItems = [
   { title: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
@@ -16,6 +16,7 @@ const navItems = [
   { title: "Events", path: "/events", icon: CalendarDays },
   { title: "Notices", path: "/notices", icon: Bell },
   { title: "Fees", path: "/fees", icon: CreditCard },
+  { title: "Feedback", path: "/feedback", icon: MessageSquare },
   { title: "Profile", path: "/profile", icon: User },
 ];
 
@@ -43,9 +44,13 @@ const AppSidebar = ({ open, onClose }: AppSidebarProps) => {
         lg:translate-x-0 lg:static lg:z-auto
         ${open ? "translate-x-0" : "-translate-x-full"}`}
       >
-        {/* Close button (mobile) */}
-        <div className="p-4 flex items-center justify-end lg:hidden">
-          <button onClick={onClose} className="p-1 rounded hover:bg-sidebar-accent">
+        {/* Header with logo */}
+        <div className="p-4 flex items-center justify-between border-b border-sidebar-border">
+          <div className="flex items-center gap-2">
+            <img src={jgLogoWhite} alt="JG University" className="h-9 w-auto" />
+            <span className="text-sm font-semibold text-sidebar-foreground">JG University</span>
+          </div>
+          <button onClick={onClose} className="p-1 rounded hover:bg-sidebar-accent lg:hidden">
             <X className="h-5 w-5" />
           </button>
         </div>

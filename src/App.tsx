@@ -17,6 +17,7 @@ import Results from "@/pages/Results";
 import Events from "@/pages/Events";
 import Notices from "@/pages/Notices";
 import Fees from "@/pages/Fees";
+import Feedback from "@/pages/Feedback";
 import Profile from "@/pages/Profile";
 import NotFound from "@/pages/NotFound";
 
@@ -46,6 +47,7 @@ const AppRoutes = () => (
       <Route path="/events" element={<Events />} />
       <Route path="/notices" element={<Notices />} />
       <Route path="/fees" element={<Fees />} />
+      <Route path="/feedback" element={<Feedback />} />
       <Route path="/profile" element={<Profile />} />
     </Route>
     <Route path="*" element={<NotFound />} />
