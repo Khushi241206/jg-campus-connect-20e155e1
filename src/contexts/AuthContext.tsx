@@ -26,7 +26,7 @@ const mockUser: User = {
   id: "1",
   name: "Rahul Sharma",
   enrollment: "JGU2022CSE1142",
-  program: "B.Tech - CSE | IT | AI-ML | AI-DS",
+  program: "B.Tech - AI-ML",
   semester: "4th Semester",
   year: "Year 2 - B",
   division: "Div B",
