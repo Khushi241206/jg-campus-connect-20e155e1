@@ -22,7 +22,7 @@ const Dashboard = () => {
     { label: "Avg Attendance", value: `${avgAttendance}%`, icon: UserCheck, color: "text-success" },
     { label: "Pending Tasks", value: pendingAssignments, icon: FileText, color: "text-warning" },
     { label: "Urgent Notices", value: urgentNotices, icon: Bell, color: "text-destructive" },
-    { label: "Fee Due", value: `₹${(fees.due).toLocaleString()}`, icon: CreditCard, color: "text-primary" },
+    { label: "Fee Due", value: `₹${(fees.outstanding).toLocaleString()}`, icon: CreditCard, color: "text-primary" },
   ];
 
   return (

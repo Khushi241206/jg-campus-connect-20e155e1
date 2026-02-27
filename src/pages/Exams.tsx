@@ -1,10 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { ClipboardList, Clock, CheckCircle2, AlertCircle, ChevronRight, ArrowLeft, Timer } from "lucide-react";
-import { examSchedule, onlineTests, OnlineTest, MCQQuestion } from "@/data/mockData";
+import { examSchedule, onlineTests as initialTests, OnlineTest, MCQQuestion } from "@/data/mockData";
 import { useToast } from "@/hooks/use-toast";
 
 type Tab = "schedule" | "tests" | "test-results";
+
+interface CompletedTest {
+  id: number;
+  subject: string;
+  title: string;
+  totalMarks: number;
+  score: number;
+  date: string;
+  percentage: number;
+}
 
 const Exams = () => {
   const [tab, setTab] = useState<Tab>("schedule");
@@ -13,6 +23,8 @@ const Exams = () => {
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(0);
+  const [completedTests, setCompletedTests] = useState<CompletedTest[]>([]);
+  const [availableTests, setAvailableTests] = useState(initialTests);
   const { toast } = useToast();
 
   const tabs: { key: Tab; label: string }[] = [
@@ -21,15 +33,7 @@ const Exams = () => {
     { key: "test-results", label: "Test Results" },
   ];
 
-  const startTest = (test: OnlineTest) => {
-    setActiveTest(test);
-    setAnswers({});
-    setSubmitted(false);
-    setScore(0);
-    setTimeLeft(test.duration * 60);
-  };
-
-  const submitTest = () => {
+  const submitTest = useCallback(() => {
     if (!activeTest) return;
     let correct = 0;
     activeTest.questions.forEach((q) => {
@@ -38,7 +42,37 @@ const Exams = () => {
     const totalScore = Math.round((correct / activeTest.questions.length) * activeTest.totalMarks);
     setScore(totalScore);
     setSubmitted(true);
+    setCompletedTests(prev => [...prev, {
+      id: activeTest.id, subject: activeTest.subject, title: activeTest.title,
+      totalMarks: activeTest.totalMarks, score: totalScore,
+      date: new Date().toISOString().split("T")[0],
+      percentage: Math.round((totalScore / activeTest.totalMarks) * 100),
+    }]);
+    setAvailableTests(prev => prev.map(t => t.id === activeTest.id ? { ...t, status: "completed" as const, score: totalScore } : t));
     toast({ title: "Test Submitted!", description: `You scored ${totalScore}/${activeTest.totalMarks}` });
+  }, [activeTest, answers, toast]);
+
+  // Live timer
+  useEffect(() => {
+    if (!activeTest || submitted || timeLeft <= 0) return;
+    const interval = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          submitTest();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [activeTest, submitted, timeLeft, submitTest]);
+
+  const startTest = (test: OnlineTest) => {
+    setActiveTest(test);
+    setAnswers({});
+    setSubmitted(false);
+    setScore(0);
+    setTimeLeft(test.duration * 60); // 10 min = 600 seconds
   };
 
   const exitTest = () => {
@@ -46,6 +80,10 @@ const Exams = () => {
     setSubmitted(false);
     setAnswers({});
   };
+
+  const timerMinutes = Math.floor(timeLeft / 60);
+  const timerSeconds = timeLeft % 60;
+  const timerUrgent = timeLeft < 120;
 
   // Active test view
   if (activeTest && !submitted) {
@@ -59,15 +97,15 @@ const Exams = () => {
               <p className="text-sm text-muted-foreground">{activeTest.subject} • {activeTest.totalMarks} Marks</p>
             </div>
           </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-destructive/10 text-destructive text-sm font-medium">
+          <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-bold ${timerUrgent ? "bg-destructive/10 text-destructive animate-pulse" : "bg-warning/10 text-warning"}`}>
             <Timer className="h-4 w-4" />
-            {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, "0")}
+            {timerMinutes}:{String(timerSeconds).padStart(2, "0")}
           </div>
         </div>
 
         <div className="space-y-4">
           {activeTest.questions.map((q, idx) => (
-            <motion.div key={q.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.05 }}
+            <motion.div key={q.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.03 }}
               className="bg-card rounded-lg border border-border p-5">
               <p className="font-medium text-foreground mb-3">
                 <span className="text-primary mr-2">Q{idx + 1}.</span>{q.question}
@@ -121,7 +159,6 @@ const Exams = () => {
           </p>
         </motion.div>
 
-        {/* Answer review */}
         <div className="space-y-3">
           <h3 className="font-semibold text-foreground">Answer Review</h3>
           {activeTest.questions.map((q, idx) => {
@@ -140,7 +177,6 @@ const Exams = () => {
     );
   }
 
-  // Main view with tabs
   return (
     <div className="space-y-6 animate-fade-in">
       <h1 className="text-2xl font-bold text-foreground">Exams & Online Tests</h1>
@@ -176,7 +212,7 @@ const Exams = () => {
 
       {tab === "tests" && (
         <div className="space-y-3">
-          {onlineTests.map((test, i) => (
+          {availableTests.map((test, i) => (
             <motion.div key={test.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
               className="bg-card rounded-lg border border-border p-4">
               <div className="flex items-center justify-between">
@@ -208,7 +244,7 @@ const Exams = () => {
 
       {tab === "test-results" && (
         <div className="space-y-3">
-          {onlineTests.filter(t => t.status === "completed").map((test, i) => (
+          {completedTests.length > 0 ? completedTests.map((test, i) => (
             <motion.div key={test.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
               className="bg-card rounded-lg border border-border p-4 flex items-center justify-between">
               <div>
@@ -217,16 +253,14 @@ const Exams = () => {
               </div>
               <div className="text-right">
                 <p className="text-lg font-bold text-foreground">{test.score}/{test.totalMarks}</p>
-                <p className={`text-xs font-medium ${(test.score! / test.totalMarks) >= 0.6 ? "text-success" : "text-destructive"}`}>
-                  {Math.round((test.score! / test.totalMarks) * 100)}%
-                </p>
+                <p className={`text-xs font-medium ${test.percentage >= 60 ? "text-success" : "text-destructive"}`}>{test.percentage}%</p>
               </div>
             </motion.div>
-          ))}
-          {onlineTests.filter(t => t.status === "completed").length === 0 && (
+          )) : (
             <div className="text-center py-12 text-muted-foreground">
               <AlertCircle className="h-10 w-10 mx-auto mb-3 opacity-50" />
               <p>No completed tests yet</p>
+              <p className="text-sm mt-1">Take a test to see your results here</p>
             </div>
           )}
         </div>

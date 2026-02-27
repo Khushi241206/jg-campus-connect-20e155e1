@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
-import { Menu, LogOut, Bell } from "lucide-react";
+import { Menu, LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import AppSidebar from "@/components/AppSidebar";
 import MobileBottomNav from "@/components/MobileBottomNav";
+import NotificationsDropdown from "@/components/NotificationsDropdown";
 
 const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -25,10 +26,7 @@ const DashboardLayout = () => {
 
           <div className="flex-1" />
 
-          <button className="p-2 rounded-lg hover:bg-muted transition-colors relative">
-            <Bell className="h-5 w-5 text-muted-foreground" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-destructive rounded-full" />
-          </button>
+          <NotificationsDropdown />
 
           <div className="hidden sm:flex items-center gap-2 text-sm">
             <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-xs font-bold">

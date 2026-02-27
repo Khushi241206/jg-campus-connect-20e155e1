@@ -1,39 +1,81 @@
 import { motion } from "framer-motion";
 import { results } from "@/data/mockData";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, Download } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
+
+const gradePoints: Record<string, number> = { "A+": 10, "A": 9, "B+": 8, "B": 7, "C+": 6, "C": 5 };
 
 const Results = () => {
   const [expandedSem, setExpandedSem] = useState<number | null>(null);
+  const { user } = useAuth();
+  const { toast } = useToast();
+
+  const downloadSemesterPDF = (semNum: number) => {
+    const sem = results.semesters.find(s => s.sem === semNum);
+    if (!sem) return;
+
+    const content = `
+========================================================
+           JG UNIVERSITY - SEMESTER RESULT REPORT
+========================================================
+
+Student Name:     ${user?.name || "Rahul Sharma"}
+Enrollment No:    ${user?.enrollment || "JGU2022CSE1142"}
+Program:          B.Tech - AI-ML
+Semester:         ${sem.sem}
+SGPA:             ${sem.sgpa}
+CGPA:             ${results.cgpa}
+
+--------------------------------------------------------
+SUBJECT-WISE RESULTS
+--------------------------------------------------------
+${"Subject".padEnd(30)}${"Grade".padEnd(10)}Credits
+--------------------------------------------------------
+${sem.subjects.map(s => `${s.name.padEnd(30)}${s.grade.padEnd(10)}${s.credits}`).join("\n")}
+--------------------------------------------------------
+
+Total Credits:    ${sem.subjects.reduce((s, sub) => s + sub.credits, 0)}
+SGPA:             ${sem.sgpa}
+Grade Points:     ${sem.subjects.map(s => `${s.grade}(${gradePoints[s.grade] || 0})`).join(", ")}
+
+========================================================
+Generated on: ${new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}
+Report ID: JGU-RES-SEM${sem.sem}-${Date.now().toString(36).toUpperCase()}
+
+This is a computer-generated result report.
+========================================================
+    `.trim();
+
+    const blob = new Blob([content], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `JGU_Semester_${sem.sem}_Result_${user?.enrollment || "student"}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast({ title: "Report Downloaded! ✅", description: `Semester ${sem.sem} result report saved.` });
+  };
 
   return (
     <div className="space-y-6 animate-fade-in">
       <h1 className="text-2xl font-bold text-foreground">Results</h1>
 
-      {/* CGPA Card */}
       <div className="bg-card rounded-lg border border-border p-6 text-center">
         <p className="text-sm text-muted-foreground">Cumulative GPA</p>
         <p className="text-5xl font-bold text-primary mt-1">{results.cgpa}</p>
       </div>
 
-      {/* Semesters */}
       <div className="space-y-3">
         {results.semesters.map((sem, i) => (
-          <motion.div
-            key={sem.sem}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.08 }}
-            className="bg-card rounded-lg border border-border overflow-hidden card-hover"
-          >
-            <button
-              onClick={() => setExpandedSem(expandedSem === sem.sem ? null : sem.sem)}
-              className="w-full flex items-center justify-between p-4"
-            >
+          <motion.div key={sem.sem} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}
+            className="bg-card rounded-lg border border-border overflow-hidden card-hover">
+            <button onClick={() => setExpandedSem(expandedSem === sem.sem ? null : sem.sem)} className="w-full flex items-center justify-between p-4">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm">
-                  S{sem.sem}
-                </div>
+                <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm">S{sem.sem}</div>
                 <div className="text-left">
                   <p className="font-semibold text-foreground">Semester {sem.sem}</p>
                   <p className="text-xs text-muted-foreground">{sem.subjects.length} subjects</p>
@@ -65,6 +107,12 @@ const Results = () => {
                     ))}
                   </tbody>
                 </table>
+                <div className="p-3 border-t border-border">
+                  <button onClick={() => downloadSemesterPDF(sem.sem)}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-all">
+                    <Download className="h-4 w-4" /> Download Semester {sem.sem} Report
+                  </button>
+                </div>
               </div>
             )}
           </motion.div>

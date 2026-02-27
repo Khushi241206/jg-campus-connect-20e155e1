@@ -13,9 +13,9 @@ const Fees = () => {
         JG UNIVERSITY - FEE RECEIPT
 ========================================
 
-Student Name: Aryan Sharma
-Enrollment No: JGU2024CSE042
-Program: B.Tech CSE (Semester 4)
+Student Name: Rahul Sharma
+Enrollment No: JGU2022CSE1142
+Program: B.Tech - AI-ML (Semester 4)
 Academic Year: 2025-2026
 
 ----------------------------------------
@@ -24,17 +24,21 @@ FEE BREAKDOWN (Per Semester: ₹${fees.perSemester.toLocaleString()})
 ${fees.breakdown.map(item => `${item.name.padEnd(25)} ₹${item.amount.toLocaleString()}`).join('\n')}
 ----------------------------------------
 Total Per Semester:        ₹${fees.perSemester.toLocaleString()}
-Total Yearly Fee:          ₹${fees.yearlyTotal.toLocaleString()}
 
 ----------------------------------------
+SCHOLARSHIP & PAYMENT SUMMARY
+----------------------------------------
+Total Fees:                ₹${fees.total.toLocaleString()}
+Total Paid:                ₹${fees.paid.toLocaleString()}
+Applicable Scholarship:    ₹${fees.applicableScholarship.toLocaleString()}
+Sanctioned Scholarship:    ₹${fees.sanctionedScholarship.toLocaleString()}
+Pending Scholarship:       ₹${fees.pendingScholarship.toLocaleString()}
+Outstanding:               ₹${fees.outstanding.toLocaleString()}
+----------------------------------------
+
 PAYMENT HISTORY
 ----------------------------------------
 ${fees.installments.map(inst => `${inst.date}  ₹${inst.amount.toLocaleString()}  ${inst.status.toUpperCase()}`).join('\n')}
-
-----------------------------------------
-Total Paid:                ₹${fees.paid.toLocaleString()}
-Total Due:                 ₹${fees.due.toLocaleString()}
-----------------------------------------
 
 Generated on: ${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
 Receipt No: JGU-REC-${Date.now().toString(36).toUpperCase()}
@@ -55,40 +59,34 @@ This is a computer-generated receipt.
     toast({ title: "Receipt Downloaded! ✅", description: "Fee receipt has been saved to your downloads." });
   };
 
+  const summaryItems = [
+    { label: "Total Fees", value: fees.total, color: "text-foreground" },
+    { label: "Total Paid", value: fees.paid, color: "text-success" },
+    { label: "Applicable Scholarship", value: fees.applicableScholarship, color: "text-primary" },
+    { label: "Sanctioned Scholarship", value: fees.sanctionedScholarship, color: "text-primary" },
+    { label: "Pending Scholarship", value: fees.pendingScholarship, color: "text-warning" },
+    { label: "Outstanding", value: fees.outstanding, color: "text-destructive" },
+  ];
+
   return (
     <div className="space-y-6 animate-fade-in">
       <h1 className="text-2xl font-bold text-foreground">Fees</h1>
 
       {/* Summary */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-card rounded-lg border border-border p-4 text-center">
-          <p className="text-xs text-muted-foreground">Per Semester</p>
-          <p className="text-xl font-bold text-foreground">₹{fees.perSemester.toLocaleString()}</p>
-        </div>
-        <div className="bg-card rounded-lg border border-border p-4 text-center">
-          <p className="text-xs text-muted-foreground">Yearly Total</p>
-          <p className="text-xl font-bold text-foreground">₹{fees.yearlyTotal.toLocaleString()}</p>
-        </div>
-        <div className="bg-card rounded-lg border border-border p-4 text-center">
-          <p className="text-xs text-muted-foreground">Paid</p>
-          <p className="text-xl font-bold text-success">₹{fees.paid.toLocaleString()}</p>
-        </div>
-        <div className="bg-card rounded-lg border border-border p-4 text-center">
-          <p className="text-xs text-muted-foreground">Due</p>
-          <p className="text-xl font-bold text-destructive">₹{fees.due.toLocaleString()}</p>
-        </div>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {summaryItems.map((item) => (
+          <div key={item.label} className="bg-card rounded-lg border border-border p-4 text-center">
+            <p className="text-xs text-muted-foreground">{item.label}</p>
+            <p className={`text-xl font-bold ${item.color}`}>₹{item.value.toLocaleString()}</p>
+          </div>
+        ))}
       </div>
 
       {/* Progress */}
       <div className="bg-card rounded-lg border border-border p-4">
         <p className="text-sm font-medium text-foreground mb-2">Payment Progress</p>
         <div className="w-full h-3 bg-muted rounded-full overflow-hidden">
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: `${paidPct}%` }}
-            transition={{ duration: 1 }}
-            className="h-full bg-success rounded-full"
-          />
+          <motion.div initial={{ width: 0 }} animate={{ width: `${paidPct}%` }} transition={{ duration: 1 }} className="h-full bg-success rounded-full" />
         </div>
         <p className="text-xs text-muted-foreground mt-1">{paidPct.toFixed(0)}% paid</p>
       </div>
@@ -101,20 +99,14 @@ This is a computer-generated receipt.
             {fees.installments.map((inst, i) => (
               <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
                 <div className="flex items-center gap-2">
-                  {inst.status === "paid" ? (
-                    <CheckCircle className="h-4 w-4 text-success" />
-                  ) : (
-                    <Clock className="h-4 w-4 text-warning" />
-                  )}
+                  {inst.status === "paid" ? <CheckCircle className="h-4 w-4 text-success" /> : <Clock className="h-4 w-4 text-warning" />}
                   <div>
                     <p className="text-sm font-medium text-foreground">₹{inst.amount.toLocaleString()}</p>
                     <p className="text-xs text-muted-foreground">{inst.date}</p>
                   </div>
                 </div>
                 {inst.status === "due" ? (
-                  <button className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-medium btn-lift">
-                    Pay Now
-                  </button>
+                  <button className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-medium btn-lift">Pay Now</button>
                 ) : (
                   <span className="text-xs text-success font-medium">Paid</span>
                 )}
