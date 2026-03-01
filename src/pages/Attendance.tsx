@@ -69,14 +69,30 @@ const Attendance = () => {
 
         <div className="bg-card rounded-lg border border-border p-4">
           <h3 className="font-semibold text-foreground mb-3">Overall Distribution</h3>
-          <div className="h-56 flex items-center justify-center">
+          <div className="h-72 flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie data={pieData} cx="50%" cy="50%" innerRadius={50} outerRadius={80} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}>
+              <PieChart margin={{ top: 20, right: 30, bottom: 20, left: 30 }}>
+                <Pie data={pieData} cx="50%" cy="50%" innerRadius={50} outerRadius={80} dataKey="value"
+                  label={({ name, value, percent, cx, cy, midAngle, outerRadius: oR }) => {
+                    const RADIAN = Math.PI / 180;
+                    const radius = oR + 25;
+                    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+                    return (
+                      <text x={x} y={y} textAnchor={x > cx ? "start" : "end"} dominantBaseline="central" className="text-xs" fill="hsl(var(--foreground))">
+                        {`${name} ${(percent * 100).toFixed(0)}%`}
+                      </text>
+                    );
+                  }}
+                  labelLine={false}
+                >
                   {pieData.map((entry, i) => (
                     <Cell key={i} fill={entry.fill} />
                   ))}
                 </Pie>
+                <text x="50%" y="50%" textAnchor="middle" dominantBaseline="central" className="text-sm font-semibold" fill="hsl(var(--foreground))">
+                  Present : {overall}
+                </text>
                 <Tooltip contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: "8px", fontSize: "12px" }} />
               </PieChart>
             </ResponsiveContainer>
