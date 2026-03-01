@@ -88,11 +88,14 @@ export const notices = [
 
 export const fees = {
   total: 40250,
-  paid: 28175,
-  applicableScholarship: 8050,
-  sanctionedScholarship: 6000,
-  pendingScholarship: 2050,
-  outstanding: 4025,
+  paid: 25250,
+  applicableScholarship: 0,
+  sanctionedScholarship: 0,
+  pendingScholarship: 0,
+  outstanding: 0,
+  year: "2025-2026",
+  class: "Second Year-B",
+  semester: "SEM-4",
   breakdown: [
     { name: "Tuition Fee", amount: 28000 },
     { name: "Lab Fee", amount: 5000 },
@@ -101,11 +104,37 @@ export const fees = {
     { name: "Development Fee", amount: 1500 },
     { name: "Sports & Activity Fee", amount: 1000 },
   ],
-  installments: [
-    { amount: 28175, date: "2025-07-15", status: "paid" as const },
-    { amount: 12075, date: "2026-01-15", status: "due" as const },
+  history: [
+    {
+      type: "ONLINE" as const,
+      date: "05 Aug 2025",
+      amount: 40250,
+      class: "Second Year-B",
+      receiptNo: "JGENG202500240",
+      instrumentNo: "113885697562",
+      narration: "Online Payment - 313833-2403841012",
+      status: "CLEARED" as const,
+    },
+    {
+      type: "CHEQUE" as const,
+      date: "22 Dec 2025",
+      amount: 25250,
+      class: "Second Year-B",
+      receiptNo: "JGENG202501061",
+      instrumentNo: "000042",
+      narration: "JG UNIVERSITY SCHOLARSHIP APPROVAL (JGU/ACAD/25-26/SCH/004) AM...",
+      status: "CLEARED" as const,
+    },
   ],
   perSemester: 40250,
+  bankDetails: {
+    bankName: "State Bank of India",
+    branch: "JG University Campus Branch",
+    accountName: "JG University Fee Collection Account",
+    accountNo: "39876542100",
+    ifsc: "SBIN0071234",
+    micr: "400002567",
+  },
 };
 
 export const attendanceTrend = [
