@@ -18,7 +18,7 @@ const Profile = () => {
 
   const info = [
     { label: "Enrollment No.", value: user.enrollment },
-    { label: "Program", value: user.program },
+    { label: "Program", value: "B.Tech - AI-ML" },
     { label: "Semester", value: user.semester },
     { label: "Year", value: user.year },
     { label: "Email", value: user.email },

@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, MessageSquare, Clock, CheckCircle2, ChevronRight, ArrowLeft } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
 interface FeedbackItem {
@@ -23,6 +22,13 @@ const recipients = [
   { value: "admin", label: "Admin Office" },
 ];
 
+const mockResponses: Record<string, string> = {
+  professor: "Thank you for your feedback. I will address this in the next class session.",
+  hod: "Your concern has been noted and forwarded to the relevant department for action.",
+  dean: "We appreciate your feedback. The academic council will review this matter.",
+  admin: "Your request has been processed. Please visit the admin office for further assistance.",
+};
+
 const Feedback = () => {
   const [feedbacks, setFeedbacks] = useState<FeedbackItem[]>([]);
   const [showForm, setShowForm] = useState(false);
@@ -31,50 +37,42 @@ const Feedback = () => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
-  const fetchFeedbacks = async () => {
-    const { data } = await supabase
-      .from("feedback")
-      .select("*")
-      .order("created_at", { ascending: false });
-    if (data) setFeedbacks(data as FeedbackItem[]);
-  };
-
-  useEffect(() => {
-    fetchFeedbacks();
-
-    // Realtime subscription for responses
-    const channel = supabase
-      .channel("feedback-updates")
-      .on("postgres_changes", { event: "*", schema: "public", table: "feedback" }, () => {
-        fetchFeedbacks();
-      })
-      .subscribe();
-
-    return () => { supabase.removeChannel(channel); };
-  }, []);
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const { error } = await supabase.from("feedback").insert({
-      student_name: "Aryan Sharma",
-      student_email: "aryan.sharma@jgu.edu.in",
+
+    const newFeedback: FeedbackItem = {
+      id: Date.now().toString(),
+      student_name: "Rahul Sharma",
       recipient: form.recipient,
       subject: form.subject,
       message: form.message,
-    });
+      response: null,
+      status: "pending",
+      created_at: new Date().toISOString(),
+      responded_at: null,
+    };
+
+    setFeedbacks(prev => [newFeedback, ...prev]);
+    toast({ title: "Feedback Sent! ✅", description: `Your feedback has been sent to the ${recipients.find(r => r.value === form.recipient)?.label}.` });
+    setForm({ recipient: "professor", subject: "", message: "" });
+    setShowForm(false);
     setLoading(false);
-    if (error) {
-      toast({ title: "Error", description: "Failed to send feedback.", variant: "destructive" });
-    } else {
-      toast({ title: "Feedback Sent! ✅", description: `Your feedback has been sent to the ${recipients.find(r => r.value === form.recipient)?.label}.` });
-      setForm({ recipient: "professor", subject: "", message: "" });
-      setShowForm(false);
-      fetchFeedbacks();
-    }
+
+    // Simulate a response after 3 seconds
+    setTimeout(() => {
+      setFeedbacks(prev => prev.map(fb =>
+        fb.id === newFeedback.id
+          ? { ...fb, status: "responded", response: mockResponses[fb.recipient] || "Thank you for your feedback.", responded_at: new Date().toISOString() }
+          : fb
+      ));
+      toast({ title: "Response Received! 💬", description: `${recipients.find(r => r.value === newFeedback.recipient)?.label} has responded to "${newFeedback.subject}".` });
+    }, 3000);
   };
 
   if (viewing) {
+    // Find latest version from state
+    const latest = feedbacks.find(f => f.id === viewing.id) || viewing;
     return (
       <div className="space-y-6 animate-fade-in">
         <button onClick={() => setViewing(null)} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
@@ -82,29 +80,25 @@ const Feedback = () => {
         </button>
         <div className="bg-card rounded-lg border border-border p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-foreground">{viewing.subject}</h2>
-            <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${viewing.status === "responded" ? "bg-success/10 text-success" : "bg-warning/10 text-warning"}`}>
-              {viewing.status === "responded" ? "Responded" : "Pending"}
+            <h2 className="text-lg font-bold text-foreground">{latest.subject}</h2>
+            <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${latest.status === "responded" ? "bg-success/10 text-success" : "bg-warning/10 text-warning"}`}>
+              {latest.status === "responded" ? "Responded" : "Pending"}
             </span>
           </div>
           <p className="text-xs text-muted-foreground mb-4">
-            Sent to: {recipients.find(r => r.value === viewing.recipient)?.label} • {new Date(viewing.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+            Sent to: {recipients.find(r => r.value === latest.recipient)?.label} • {new Date(latest.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}
           </p>
-
-          {/* Student message */}
           <div className="mb-4">
             <p className="text-xs font-medium text-muted-foreground mb-1">Your Message:</p>
             <div className="p-4 rounded-lg bg-primary/5 border border-primary/10">
-              <p className="text-sm text-foreground whitespace-pre-wrap">{viewing.message}</p>
+              <p className="text-sm text-foreground whitespace-pre-wrap">{latest.message}</p>
             </div>
           </div>
-
-          {/* Response */}
-          {viewing.response ? (
+          {latest.response ? (
             <div>
-              <p className="text-xs font-medium text-muted-foreground mb-1">Response ({viewing.responded_at ? new Date(viewing.responded_at).toLocaleDateString("en-IN", { day: "numeric", month: "short" }) : ""}):</p>
+              <p className="text-xs font-medium text-muted-foreground mb-1">Response ({latest.responded_at ? new Date(latest.responded_at).toLocaleDateString("en-IN", { day: "numeric", month: "short" }) : ""}):</p>
               <div className="p-4 rounded-lg bg-success/5 border border-success/10">
-                <p className="text-sm text-foreground whitespace-pre-wrap">{viewing.response}</p>
+                <p className="text-sm text-foreground whitespace-pre-wrap">{latest.response}</p>
               </div>
             </div>
           ) : (
@@ -128,11 +122,9 @@ const Feedback = () => {
         </button>
       </div>
 
-      {/* New Feedback Form */}
       <AnimatePresence>
         {showForm && (
-          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden">
+          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
             <form onSubmit={handleSubmit} className="bg-card rounded-lg border border-border p-5 space-y-4">
               <h3 className="font-semibold text-foreground">Send Feedback</h3>
               <div>
@@ -169,7 +161,6 @@ const Feedback = () => {
         )}
       </AnimatePresence>
 
-      {/* Feedback List */}
       <div className="space-y-3">
         {feedbacks.length === 0 ? (
           <div className="text-center py-12 text-muted-foreground">
