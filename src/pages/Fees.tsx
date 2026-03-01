@@ -163,22 +163,6 @@ This is a computer-generated receipt.
                   </button>
                 </div>
 
-                {/* Breakdown */}
-                <div className="bg-card rounded-xl border border-border p-4">
-                  <h3 className="font-semibold text-foreground mb-3">Fee Breakdown (Per Semester)</h3>
-                  <div className="space-y-2">
-                    {fees.breakdown.map(item => (
-                      <div key={item.name} className="flex justify-between p-2.5 rounded-lg bg-muted/50">
-                        <span className="text-sm text-foreground">{item.name}</span>
-                        <span className="text-sm font-medium text-foreground">₹{item.amount.toLocaleString()}</span>
-                      </div>
-                    ))}
-                    <div className="flex justify-between p-2.5 rounded-lg bg-primary/10 border border-primary/20">
-                      <span className="text-sm font-bold text-foreground">Total</span>
-                      <span className="text-sm font-bold text-primary">₹{fees.perSemester.toLocaleString()}</span>
-                    </div>
-                  </div>
-                </div>
               </motion.div>
             )}
 

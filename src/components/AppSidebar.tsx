@@ -48,7 +48,6 @@ const AppSidebar = ({ open, onClose }: AppSidebarProps) => {
         <div className="p-4 flex items-center justify-between border-b border-sidebar-border">
           <div className="flex items-center gap-2">
             <img src={jgLogoWhite} alt="JG University" className="h-9 w-auto" />
-            <span className="text-sm font-semibold text-sidebar-foreground">JG University</span>
           </div>
           <button onClick={onClose} className="p-1 rounded hover:bg-sidebar-accent lg:hidden">
             <X className="h-5 w-5" />
