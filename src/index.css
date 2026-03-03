@@ -175,17 +175,41 @@
     border: 1px solid hsl(var(--glass-border));
   }
   .card-hover {
-    @apply transition-all duration-300;
+    @apply transition-all duration-300 ease-out;
   }
   .card-hover:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px -12px hsl(var(--primary) / 0.15);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px -10px hsl(var(--primary) / 0.12);
   }
   .btn-lift {
-    @apply transition-all duration-200;
+    @apply transition-all duration-200 ease-out;
   }
   .btn-lift:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px -4px hsl(var(--primary) / 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px -4px hsl(var(--primary) / 0.25);
+  }
+  .btn-lift:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px -2px hsl(var(--primary) / 0.2);
+  }
+
+  /* Smooth page transitions */
+  .page-transition {
+    animation: fade-in 0.3s ease-out;
+  }
+
+  /* Bell shake trigger class */
+  .bell-ring {
+    animation: bell-shake 0.6s ease-in-out;
+  }
+
+  /* Bounce on success */
+  .bounce-success {
+    animation: bounce-success 0.3s ease-out;
+  }
+
+  /* Sidebar transition */
+  .sidebar-transition {
+    @apply transition-all duration-300 ease-in-out;
   }
 }
