@@ -18,7 +18,6 @@ const courses = [
 const academicCalendar = [
   { event: "Semester 4 Begins", date: "6 Jan 2026", type: "academic" as const },
   { event: "Mid-Term Examinations", date: "16 - 21 Feb 2026", type: "exam" as const },
-  { event: "Holi Break", date: "14 - 15 Mar 2026", type: "holiday" as const },
   { event: "Internal Examinations", date: "6 - 15 Apr 2026", type: "exam" as const },
   { event: "External Examinations", date: "23 - 30 Apr 2026", type: "exam" as const },
   { event: "Semester 4 Ends", date: "30 Apr 2026", type: "academic" as const },
@@ -153,14 +152,14 @@ const Academics = () => {
                 <motion.div key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.06 }}
                   className="flex items-center gap-4 p-3 rounded-lg bg-muted/50">
                   <div className={`w-2 h-10 rounded-full shrink-0
-                    ${item.type === "exam" ? "bg-destructive" : item.type === "holiday" ? "bg-warning" : "bg-primary"}`} />
+                    ${item.type === "exam" ? "bg-destructive" : "bg-primary"}`} />
                   <div className="flex-1">
                     <p className="font-medium text-foreground text-sm">{item.event}</p>
                     <p className="text-xs text-muted-foreground">{item.date}</p>
                   </div>
                   <span className={`text-xs px-2 py-0.5 rounded-full font-medium
-                    ${item.type === "exam" ? "bg-destructive/10 text-destructive" : item.type === "holiday" ? "bg-warning/10 text-warning" : "bg-primary/10 text-primary"}`}>
-                    {item.type === "exam" ? "Exam" : item.type === "holiday" ? "Holiday" : "Academic"}
+                    ${item.type === "exam" ? "bg-destructive/10 text-destructive" : "bg-primary/10 text-primary"}`}>
+                    {item.type === "exam" ? "Exam" : "Academic"}
                   </span>
                 </motion.div>
               ))}
@@ -171,7 +170,6 @@ const Academics = () => {
           <div className="flex gap-4 text-xs text-muted-foreground">
             <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-primary" /> Academic</div>
             <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-destructive" /> Exam</div>
-            <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-warning" /> Holiday</div>
           </div>
         </motion.div>
       )}
