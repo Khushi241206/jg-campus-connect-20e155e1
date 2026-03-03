@@ -19,6 +19,7 @@ import Notices from "@/pages/Notices";
 import Fees from "@/pages/Fees";
 import Feedback from "@/pages/Feedback";
 import Profile from "@/pages/Profile";
+import Academics from "@/pages/Academics";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -43,6 +44,7 @@ const AppRoutes = () => (
       <Route path="/attendance" element={<Attendance />} />
       <Route path="/assignments" element={<Assignments />} />
       <Route path="/exams" element={<Exams />} />
+      <Route path="/academics" element={<Academics />} />
       <Route path="/results" element={<Results />} />
       <Route path="/events" element={<Events />} />
       <Route path="/notices" element={<Notices />} />
