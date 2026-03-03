@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { ClipboardList, Clock, CheckCircle2, AlertCircle, ChevronRight, ArrowLeft, Timer } from "lucide-react";
-import { examSchedule, onlineTests as initialTests, OnlineTest, MCQQuestion } from "@/data/mockData";
+import { onlineTests as initialTests, OnlineTest, MCQQuestion } from "@/data/mockData";
 import { useToast } from "@/hooks/use-toast";
 
-type Tab = "schedule" | "tests" | "test-results";
+type Tab = "tests" | "test-results";
 
 interface CompletedTest {
   id: number;
@@ -17,7 +17,7 @@ interface CompletedTest {
 }
 
 const Exams = () => {
-  const [tab, setTab] = useState<Tab>("schedule");
+  const [tab, setTab] = useState<Tab>("tests");
   const [activeTest, setActiveTest] = useState<OnlineTest | null>(null);
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [submitted, setSubmitted] = useState(false);
@@ -28,7 +28,6 @@ const Exams = () => {
   const { toast } = useToast();
 
   const tabs: { key: Tab; label: string }[] = [
-    { key: "schedule", label: "Exam Schedule" },
     { key: "tests", label: "Online Tests" },
     { key: "test-results", label: "Test Results" },
   ];
@@ -191,24 +190,6 @@ const Exams = () => {
         ))}
       </div>
 
-      {tab === "schedule" && (
-        <div className="space-y-3">
-          {examSchedule.map((exam, i) => (
-            <motion.div key={exam.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-              className="bg-card rounded-lg border border-border p-4 flex items-center gap-4">
-              <div className="w-14 h-14 rounded-lg bg-primary/10 flex flex-col items-center justify-center shrink-0">
-                <span className="text-xs text-primary font-medium">{new Date(exam.date).toLocaleDateString("en", { month: "short" })}</span>
-                <span className="text-lg font-bold text-primary">{new Date(exam.date).getDate()}</span>
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-medium text-foreground truncate">{exam.subject}</p>
-                <p className="text-xs text-muted-foreground mt-0.5">{exam.time} • {exam.room}</p>
-              </div>
-              <span className="text-xs px-2.5 py-1 rounded-full bg-warning/10 text-warning font-medium shrink-0">{exam.type}</span>
-            </motion.div>
-          ))}
-        </div>
-      )}
 
       {tab === "tests" && (
         <div className="space-y-3">
