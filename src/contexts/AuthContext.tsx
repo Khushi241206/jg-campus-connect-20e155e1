@@ -24,16 +24,17 @@ interface AuthContextType {
 
 const mockUser: User = {
   id: "1",
-  name: "Rahul Sharma",
+  name: "Ananya Sharma",
   enrollment: "JGU2022CSE1142",
   program: "B.Tech - CSE|AI-ML|AI-DS|IT",
   semester: "4th Semester",
   year: "Year 2 - B",
   division: "Div B",
-  email: "rahul.sharma@jgu.edu.in",
+  email: "ananya.sharma@jgu.edu.in",
   phone: "+91 98765 43211",
   dob: "15 March 2004",
   guardian: "Mr. Rajesh Sharma",
+  avatar: "/src/assets/avatar-ananya.png",
 };
 
 const AuthContext = createContext<AuthContextType>({
