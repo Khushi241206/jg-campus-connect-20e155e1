@@ -5,10 +5,18 @@ import { AlertTriangle, CheckCircle, CalendarDays, FileText, ChevronLeft, Chevro
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, PieChart, Pie } from "recharts";
 import { useToast } from "@/hooks/use-toast";
 
-// Generate daily attendance using exact timetable schedule
+// Generate realistic daily attendance using exact timetable schedule
 const generateDailyAttendance = () => {
   const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] as const;
   const data: Record<string, { subject: string; faculty: string; time: string; type: string; status: "P" | "A" | "N" }[]> = {};
+  const today = new Date();
+  const todayStr = today.toISOString().split("T")[0];
+
+  // Seed-based pseudo-random for consistency
+  const seededRandom = (seed: number) => {
+    const x = Math.sin(seed * 9301 + 49297) * 233280;
+    return x - Math.floor(x);
+  };
 
   for (let m = 0; m < 3; m++) {
     const daysInMonth = new Date(2026, m + 1, 0).getDate();
@@ -17,32 +25,52 @@ const generateDailyAttendance = () => {
       const dayName = dayNames[date.getDay()];
       const dateStr = date.toISOString().split("T")[0];
 
+      // Don't generate attendance for future dates
+      if (dateStr > todayStr) continue;
+
       if (dayName === "Sunday" || dayName === "Saturday") continue;
       const schedule = timetableData[dayName as keyof typeof timetableData];
       if (!schedule) continue;
 
-      const seed = d * 7 + m * 31;
-      data[dateStr] = schedule.map((cls, i) => ({
+      const daySeed = d + m * 31 + 2026;
+      const dayRand = seededRandom(daySeed);
+
+      // ~8% chance of being fully absent (sudden holiday/sick day)
+      const isFullAbsent = dayRand < 0.08;
+
+      data[dateStr] = schedule.map((cls, i) => {
+        if (cls.subject === "Break") {
+          return { subject: cls.subject, faculty: cls.faculty, time: cls.time, type: cls.type, status: "N" as const };
+        }
+
+        if (isFullAbsent) {
+          return { subject: cls.subject, faculty: cls.faculty, time: cls.time, type: cls.type, status: "A" as const };
+        }
+
+        // ~12% chance of being absent for individual lectures
+        const lectureRand = seededRandom(daySeed * 10 + i * 7 + 3);
+        const status: "P" | "A" = lectureRand < 0.12 ? "A" : "P";
+
+        return { subject: cls.subject, faculty: cls.faculty, time: cls.time, type: cls.type, status };
+      });
+    }
+  }
+
+  // For today specifically, if it's a weekday and we have schedule, mark as "N" (not yet marked) for future lectures
+  if (data[todayStr]) {
+    // Keep as-is since we already generated it
+  } else {
+    const dayName = dayNames[today.getDay()];
+    if (dayName !== "Sunday" && dayName !== "Saturday") {
+      const schedule = timetableData[dayName as keyof typeof timetableData] || timetableData.Monday;
+      data[todayStr] = schedule.map((cls) => ({
         subject: cls.subject,
         faculty: cls.faculty,
         time: cls.time,
         type: cls.type,
-        status: cls.subject === "Break" ? ("N" as const) : ((seed + i) % 7 === 0 ? "A" : "P") as "P" | "A",
+        status: cls.subject === "Break" ? ("N" as const) : ("P" as const),
       }));
     }
-  }
-
-  const today = new Date().toISOString().split("T")[0];
-  if (!data[today]) {
-    const dayName = dayNames[new Date().getDay()];
-    const schedule = timetableData[dayName as keyof typeof timetableData] || timetableData.Monday;
-    data[today] = schedule.map((cls) => ({
-      subject: cls.subject,
-      faculty: cls.faculty,
-      time: cls.time,
-      type: cls.type,
-      status: cls.subject === "Break" ? ("N" as const) : ("N" as const),
-    }));
   }
 
   return data;
@@ -90,6 +118,9 @@ const Attendance = () => {
   const dailyLectures = dailyAttendanceData[dateStr] || [];
   const formatDate = (d: Date) => d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
   const dayName = selectedDate.toLocaleDateString("en-US", { weekday: "long" });
+
+  // Check if selected date is in the future
+  const isFutureDate = dateStr > new Date().toISOString().split("T")[0];
 
   const changeDate = (delta: number) => {
     const d = new Date(selectedDate);
@@ -194,6 +225,7 @@ const Attendance = () => {
                   const isSelected = d.toISOString().split("T")[0] === dateStr;
                   const isToday = d.toISOString().split("T")[0] === new Date().toISOString().split("T")[0];
                   const isWeekend = d.getDay() === 0 || d.getDay() === 6;
+                  const isFuture = d.toISOString().split("T")[0] > new Date().toISOString().split("T")[0];
                   return (
                     <button
                       key={i}
@@ -201,6 +233,7 @@ const Attendance = () => {
                       className={`flex flex-col items-center py-2 rounded-xl text-sm font-medium transition-all active:scale-95
                         ${isSelected ? "bg-primary text-primary-foreground shadow-md" :
                           isToday ? "bg-primary/10 text-primary" :
+                          isFuture ? "text-muted-foreground/30" :
                           isWeekend ? "text-muted-foreground/50" : "text-foreground hover:bg-muted"}`}
                     >
                       <span className="text-sm font-semibold">{d.getDate()}</span>
@@ -216,8 +249,17 @@ const Attendance = () => {
               </div>
             </div>
 
+            {/* Future date notice */}
+            {isFutureDate && (
+              <div className="bg-warning/10 border border-warning/20 rounded-xl p-4 text-center">
+                <CalendarDays className="h-8 w-8 mx-auto mb-2 text-warning opacity-70" />
+                <p className="font-medium text-foreground text-sm">Future Date</p>
+                <p className="text-xs text-muted-foreground mt-1">Attendance data is not available for future dates</p>
+              </div>
+            )}
+
             {/* Daily stats */}
-            {lectureCount > 0 && (
+            {!isFutureDate && lectureCount > 0 && (
               <div className="grid grid-cols-3 gap-2">
                 <div className="bg-card border border-border rounded-xl p-3 text-center">
                   <p className="text-lg font-bold text-foreground">{lectureCount}</p>
@@ -235,7 +277,7 @@ const Attendance = () => {
             )}
 
             {/* Lecture cards */}
-            {dailyLectures.length > 0 ? (
+            {!isFutureDate && dailyLectures.length > 0 ? (
               <div className="space-y-2.5">
                 {dailyLectures.map((lec, i) => (
                   <motion.div key={i} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
@@ -272,13 +314,13 @@ const Attendance = () => {
                   </motion.div>
                 ))}
               </div>
-            ) : (
+            ) : !isFutureDate ? (
               <div className="text-center py-16 text-muted-foreground">
                 <CalendarDays className="h-10 w-10 mx-auto mb-3 opacity-50" />
                 <p className="font-medium">No lectures on this date</p>
                 <p className="text-xs mt-1">Weekends and holidays have no scheduled classes</p>
               </div>
-            )}
+            ) : null}
           </motion.div>
         )}
 
