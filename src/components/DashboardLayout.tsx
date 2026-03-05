@@ -5,6 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import AppSidebar from "@/components/AppSidebar";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import NotificationsDropdown from "@/components/NotificationsDropdown";
+import AIChatbot from "@/components/AIChatbot";
 import avatarAnanya from "@/assets/avatar-ananya.png";
 
 const DashboardLayout = () => {
@@ -51,6 +52,7 @@ const DashboardLayout = () => {
 
         <MobileBottomNav />
       </div>
+      <AIChatbot />
     </div>
   );
 };

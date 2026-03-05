@@ -19,7 +19,7 @@ export const timetableData = {
   ],
   Tuesday: [
     { time: "1:30 - 2:10 PM", subject: "Machine Learning (ML)", faculty: "Mr. Sameer Deo", room: "403", type: "Theory" },
-    { time: "2:10 - 2:50 PM", subject: "Vector Calculus", faculty: "Dr. R.K. Sharma", room: "403", type: "Theory" },
+    { time: "2:10 - 2:50 PM", subject: "Vector Calculus", faculty: "Miss. Neelu Verma", room: "403", type: "Theory" },
     { time: "2:50 - 3:30 PM", subject: "Break", faculty: "", room: "", type: "" },
     { time: "3:30 - 4:10 PM", subject: "Computer Networks (CN)", faculty: "Mr. Sharad Patidar", room: "403", type: "Theory" },
     { time: "4:10 - 4:50 PM", subject: "UI/UX Design", faculty: "Ms. Anukreeti Chaudhary", room: "403", type: "Lab" },
@@ -28,7 +28,7 @@ export const timetableData = {
     { time: "1:30 - 2:10 PM", subject: "UI/UX Design", faculty: "Ms. Anukreeti Chaudhary", room: "403", type: "Theory" },
     { time: "2:10 - 2:50 PM", subject: "Machine Learning (ML)", faculty: "Mr. Sameer Deo", room: "403", type: "Theory" },
     { time: "2:50 - 3:30 PM", subject: "Break", faculty: "", room: "", type: "" },
-    { time: "3:30 - 4:10 PM", subject: "Vector Calculus", faculty: "Dr. R.K. Sharma", room: "403", type: "Theory" },
+    { time: "3:30 - 4:10 PM", subject: "Vector Calculus", faculty: "Miss. Neelu Verma", room: "403", type: "Theory" },
     { time: "4:10 - 4:50 PM", subject: "Computer Networks (CN)", faculty: "Mr. Sharad Patidar", room: "403", type: "Theory" },
   ],
   Thursday: [
@@ -40,9 +40,9 @@ export const timetableData = {
   ],
   Friday: [
     { time: "1:30 - 2:10 PM", subject: "Software Engineering (SE)", faculty: "Miss. Neelu Verma", room: "403", type: "Theory" },
-    { time: "2:10 - 2:50 PM", subject: "Entrepreneurship", faculty: "Prof. M. Singh", room: "403", type: "Theory" },
+    { time: "2:10 - 2:50 PM", subject: "Entrepreneurship", faculty: "Mr. Sharad Patidar", room: "403", type: "Theory" },
     { time: "2:50 - 3:30 PM", subject: "Break", faculty: "", room: "", type: "" },
-    { time: "3:30 - 4:10 PM", subject: "Sustainable Energy", faculty: "Dr. A. Gupta", room: "403", type: "Theory" },
+    { time: "3:30 - 4:10 PM", subject: "Sustainable Energy", faculty: "Ms. Anukreeti Chaudhary", room: "403", type: "Theory" },
     { time: "4:10 - 4:50 PM", subject: "Machine Learning (ML)", faculty: "Mr. Sameer Deo", room: "403", type: "Theory" },
   ],
 };

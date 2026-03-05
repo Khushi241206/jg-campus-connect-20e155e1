@@ -7,6 +7,7 @@ import { attendanceData, assignments, notices, fees, attendanceTrend, timetableD
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { useNavigate } from "react-router-dom";
 import avatarAnanya from "@/assets/avatar-ananya.png";
+import { AttendancePrediction, AcademicHealthScore, SmartReminders, PerformanceAnalytics } from "@/components/SmartWidgets";
 
 const card = "bg-card rounded-xl border border-border p-3 md:p-4 card-hover";
 
@@ -62,6 +63,12 @@ const Dashboard = () => {
         ))}
       </div>
 
+      {/* AI Smart Widgets */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+        <AttendancePrediction />
+        <AcademicHealthScore />
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
         {/* Today's Classes */}
         <div className={card}>
@@ -87,6 +94,11 @@ const Dashboard = () => {
           </div>
         </div>
 
+        {/* Smart Reminders */}
+        <SmartReminders />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
         {/* Recent Notices */}
         <div className={card}>
           <div className="flex items-center justify-between mb-3 md:mb-4">
@@ -112,6 +124,9 @@ const Dashboard = () => {
             ))}
           </div>
         </div>
+
+        {/* Performance Analytics */}
+        <PerformanceAnalytics />
       </div>
 
       {/* Attendance Trend */}

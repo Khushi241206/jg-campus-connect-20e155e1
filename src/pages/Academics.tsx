@@ -10,9 +10,9 @@ const courses = [
   { code: "CS402", name: "Computer Networks", faculty: "Mr. Sharad Patidar", credits: 4, type: "Core" },
   { code: "CS403", name: "Software Engineering", faculty: "Miss. Neelu Verma", credits: 3, type: "Core" },
   { code: "CS404", name: "UI/UX Design", faculty: "Ms. Anukreeti Chaudhary", credits: 3, type: "Core" },
-  { code: "MA401", name: "Vector Calculus", faculty: "Dr. R.K. Sharma", credits: 4, type: "Core" },
-  { code: "OE401", name: "Sustainable Energy", faculty: "Dr. A. Gupta", credits: 2, type: "Open Elective" },
-  { code: "OE402", name: "Entrepreneurship", faculty: "Prof. M. Singh", credits: 2, type: "Open Elective" },
+  { code: "MA401", name: "Vector Calculus", faculty: "Miss. Neelu Verma", credits: 4, type: "Core" },
+  { code: "OE401", name: "Sustainable Energy", faculty: "Ms. Anukreeti Chaudhary", credits: 2, type: "Open Elective" },
+  { code: "OE402", name: "Entrepreneurship", faculty: "Mr. Sharad Patidar", credits: 2, type: "Open Elective" },
 ];
 
 const academicCalendar = [
@@ -33,13 +33,13 @@ const Academics = () => {
   ];
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <h1 className="text-2xl font-bold text-foreground">Academics</h1>
+    <div className="space-y-4 md:space-y-6 animate-fade-in">
+      <h1 className="text-xl md:text-2xl font-bold text-foreground">Academics</h1>
 
-      <div className="flex gap-2 overflow-x-auto pb-1">
+      <div className="flex gap-1.5 md:gap-2 overflow-x-auto pb-1 -mx-1 px-1">
         {tabs.map(t => (
           <button key={t.key} onClick={() => setTab(t.key)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all
+            className={`flex-1 md:flex-none px-3 md:px-4 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-all
               ${tab === t.key ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}>
             {t.label}
           </button>
@@ -49,7 +49,7 @@ const Academics = () => {
       {/* Class Info */}
       {tab === "class-info" && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
-          <div className="bg-card rounded-lg border border-border p-5">
+          <div className="bg-card rounded-xl border border-border p-4 md:p-5">
             <div className="flex items-center gap-3 mb-4">
               <div className="p-2.5 rounded-lg bg-primary/10">
                 <GraduationCap className="h-5 w-5 text-primary" />
@@ -59,7 +59,7 @@ const Academics = () => {
                 <p className="text-xs text-muted-foreground">Semester 4 • 2025-2026</p>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3 md:gap-4">
               <div className="bg-muted/50 rounded-lg p-3">
                 <div className="flex items-center gap-2 text-muted-foreground mb-1">
                   <Users className="h-3.5 w-3.5" />
@@ -91,8 +91,8 @@ const Academics = () => {
             </div>
           </div>
 
-          {/* Exam Schedule (moved from Exams) */}
-          <div className="bg-card rounded-lg border border-border p-5">
+          {/* Exam Schedule */}
+          <div className="bg-card rounded-xl border border-border p-4 md:p-5">
             <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
               <CalendarDays className="h-4 w-4 text-primary" /> Upcoming Exam Schedule
             </h3>
@@ -118,21 +118,21 @@ const Academics = () => {
 
       {/* Courses */}
       {tab === "courses" && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-2.5">
           {courses.map((course, i) => (
             <motion.div key={course.code} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-              className="bg-card rounded-lg border border-border p-4">
-              <div className="flex items-center justify-between mb-1">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-primary/10">
+              className="bg-card rounded-xl border border-border p-3 md:p-4 card-hover">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="p-2 rounded-lg bg-primary/10 shrink-0">
                     <BookOpen className="h-4 w-4 text-primary" />
                   </div>
-                  <div>
-                    <p className="font-semibold text-foreground text-sm">{course.name}</p>
-                    <p className="text-xs text-muted-foreground">{course.code} • {course.faculty}</p>
+                  <div className="min-w-0">
+                    <p className="font-semibold text-foreground text-sm truncate">{course.name}</p>
+                    <p className="text-xs text-muted-foreground truncate">{course.code} • {course.faculty}</p>
                   </div>
                 </div>
-                <div className="text-right">
+                <div className="text-right shrink-0 ml-2">
                   <span className="text-xs px-2 py-0.5 rounded-full bg-accent text-accent-foreground font-medium">{course.type}</span>
                   <p className="text-xs text-muted-foreground mt-1">{course.credits} Credits</p>
                 </div>
@@ -145,7 +145,7 @@ const Academics = () => {
       {/* Academic Calendar */}
       {tab === "calendar" && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
-          <div className="bg-card rounded-lg border border-border p-5">
+          <div className="bg-card rounded-xl border border-border p-4 md:p-5">
             <h3 className="font-semibold text-foreground mb-4">Semester 4 Academic Calendar (2025-2026)</h3>
             <div className="space-y-3">
               {academicCalendar.map((item, i) => (
@@ -157,7 +157,7 @@ const Academics = () => {
                     <p className="font-medium text-foreground text-sm">{item.event}</p>
                     <p className="text-xs text-muted-foreground">{item.date}</p>
                   </div>
-                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium shrink-0
                     ${item.type === "exam" ? "bg-destructive/10 text-destructive" : "bg-primary/10 text-primary"}`}>
                     {item.type === "exam" ? "Exam" : "Academic"}
                   </span>
@@ -166,7 +166,6 @@ const Academics = () => {
             </div>
           </div>
 
-          {/* Legend */}
           <div className="flex gap-4 text-xs text-muted-foreground">
             <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-primary" /> Academic</div>
             <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-destructive" /> Exam</div>
