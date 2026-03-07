@@ -14,7 +14,7 @@ export const AttendancePrediction = () => {
       <div className="flex items-center gap-2 mb-2">
         <div className="p-1.5 rounded-lg bg-primary/10"><Brain className="h-4 w-4 text-primary" /></div>
         <h3 className="font-semibold text-foreground text-sm">Attendance Prediction</h3>
-        <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-accent/10 text-accent-foreground font-medium flex items-center gap-0.5">
+        <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium flex items-center gap-0.5">
           <Sparkles className="h-2.5 w-2.5" /> AI
         </span>
       </div>
@@ -49,7 +49,7 @@ export const AcademicHealthScore = () => {
       <div className="flex items-center gap-2 mb-3">
         <div className="p-1.5 rounded-lg bg-primary/10"><Activity className="h-4 w-4 text-primary" /></div>
         <h3 className="font-semibold text-foreground text-sm">Academic Health</h3>
-        <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-accent/10 text-accent-foreground font-medium flex items-center gap-0.5">
+        <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium flex items-center gap-0.5">
           <Sparkles className="h-2.5 w-2.5" /> AI
         </span>
       </div>
@@ -97,7 +97,7 @@ export const SmartReminders = () => {
       <div className="flex items-center gap-2 mb-3">
         <div className="p-1.5 rounded-lg bg-primary/10"><Bell className="h-4 w-4 text-primary" /></div>
         <h3 className="font-semibold text-foreground text-sm">Smart Reminders</h3>
-        <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-accent/10 text-accent-foreground font-medium flex items-center gap-0.5">
+        <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium flex items-center gap-0.5">
           <Sparkles className="h-2.5 w-2.5" /> AI
         </span>
       </div>
@@ -129,7 +129,7 @@ export const PerformanceAnalytics = () => {
       <div className="flex items-center gap-2 mb-3">
         <div className="p-1.5 rounded-lg bg-primary/10"><TrendingUp className="h-4 w-4 text-primary" /></div>
         <h3 className="font-semibold text-foreground text-sm">Performance Insights</h3>
-        <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-accent/10 text-accent-foreground font-medium flex items-center gap-0.5">
+        <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium flex items-center gap-0.5">
           <Sparkles className="h-2.5 w-2.5" /> AI
         </span>
       </div>

@@ -2,7 +2,7 @@ import { NavLink as RouterNavLink, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   LayoutDashboard, Clock, UserCheck, FileText, BarChart3,
-  Bell, CreditCard, User, X, GraduationCap, ClipboardList, CalendarDays, MessageSquare, BookOpen,
+  Bell, CreditCard, User, X, GraduationCap, ClipboardList, CalendarDays, MessageSquare, BookOpen, Info,
 } from "lucide-react";
 import jgLogoWhite from "@/assets/jg-logo-white.png";
 
@@ -18,6 +18,7 @@ const navItems = [
   { title: "Notices", path: "/notices", icon: Bell },
   { title: "Fees", path: "/fees", icon: CreditCard },
   { title: "Feedback", path: "/feedback", icon: MessageSquare },
+  { title: "About", path: "/about", icon: Info },
   { title: "Profile", path: "/profile", icon: User },
 ];
 
