@@ -1,12 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send, Bot, Sparkles, Loader2 } from "lucide-react";
+import { MessageCircle, X, Send, Bot, Sparkles, Loader2, ImageIcon } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 interface Message {
   id: number;
   text: string;
   isBot: boolean;
+  imageUrl?: string;
 }
 
 const quickReplies = [
@@ -21,10 +22,11 @@ const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 const AIChatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { id: 0, text: "Hi Ananya! 👋 I'm your AI academic assistant. Ask me anything — from how to write an SRS document to exam tips!", isBot: true },
+    { id: 0, text: "Hi Ananya! 👋 I'm your AI academic assistant. Ask me anything or tap 🖼️ to generate images!", isBot: true },
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [imageMode, setImageMode] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -33,16 +35,61 @@ const AIChatbot = () => {
     }
   }, [messages]);
 
+  const generateImage = async (prompt: string) => {
+    if (!prompt.trim() || isLoading) return;
+    const userMsg: Message = { id: Date.now(), text: `🖼️ ${prompt}`, isBot: false };
+    setMessages(prev => [...prev, userMsg]);
+    setInput("");
+    setIsLoading(true);
+    setImageMode(false);
+
+    const assistantId = Date.now() + 1;
+
+    try {
+      const resp = await fetch(CHAT_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({ type: "image", prompt }),
+      });
+
+      if (!resp.ok) {
+        const errData = await resp.json().catch(() => ({}));
+        throw new Error(errData.error || "Failed to generate image");
+      }
+
+      const data = await resp.json();
+      const imageUrl = data.imageUrl;
+      const caption = data.caption || "Here's the generated image:";
+
+      setMessages(prev => [...prev, { id: assistantId, text: caption, isBot: true, imageUrl }]);
+    } catch (err: any) {
+      setMessages(prev => [...prev, {
+        id: assistantId,
+        text: `⚠️ ${err.message || "Image generation failed. Please try again."}`,
+        isBot: true,
+      }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const sendMessage = async (text: string) => {
     if (!text.trim() || isLoading) return;
+
+    if (imageMode) {
+      return generateImage(text);
+    }
+
     const userMsg: Message = { id: Date.now(), text, isBot: false };
     setMessages(prev => [...prev, userMsg]);
     setInput("");
     setIsLoading(true);
 
-    // Build conversation history for AI
     const history = [...messages, userMsg]
-      .filter(m => m.id !== 0) // skip initial greeting
+      .filter(m => m.id !== 0)
       .map(m => ({ role: m.isBot ? "assistant" as const : "user" as const, content: m.text }));
 
     let assistantText = "";
@@ -67,7 +114,6 @@ const AIChatbot = () => {
       const decoder = new TextDecoder();
       let buffer = "";
 
-      // Add empty assistant message
       setMessages(prev => [...prev, { id: assistantId, text: "", isBot: true }]);
 
       while (true) {
@@ -158,14 +204,26 @@ const AIChatbot = () => {
                   animate={{ opacity: 1, y: 0 }}
                   className={`flex ${msg.isBot ? "justify-start" : "justify-end"}`}
                 >
-                  <div className={`max-w-[85%] px-3 py-2 rounded-2xl text-sm
+                  <div className={`max-w-[85%] px-3 py-2 rounded-2xl text-sm leading-relaxed
                     ${msg.isBot ? "bg-muted text-foreground rounded-bl-md" : "bg-primary text-primary-foreground rounded-br-md"}`}>
                     {msg.isBot ? (
-                      <div className="prose prose-sm dark:prose-invert max-w-none [&>p]:m-0 [&>ul]:my-1 [&>ol]:my-1 [&>h1]:text-sm [&>h2]:text-sm [&>h3]:text-xs">
+                      <div className="prose prose-sm dark:prose-invert max-w-none
+                        [&>p]:mb-2 [&>p:last-child]:mb-0
+                        [&>ul]:my-1.5 [&>ul]:pl-4 [&>ul>li]:mb-1
+                        [&>ol]:my-1.5 [&>ol]:pl-4 [&>ol>li]:mb-1
+                        [&>h1]:text-sm [&>h1]:font-bold [&>h1]:mb-2 [&>h1]:mt-3
+                        [&>h2]:text-sm [&>h2]:font-semibold [&>h2]:mb-1.5 [&>h2]:mt-2
+                        [&>h3]:text-xs [&>h3]:font-semibold [&>h3]:mb-1 [&>h3]:mt-2
+                        [&>p>strong]:font-semibold
+                        [&>p>code]:bg-primary/10 [&>p>code]:px-1 [&>p>code]:rounded [&>p>code]:text-xs
+                        [&>pre]:bg-primary/5 [&>pre]:p-2 [&>pre]:rounded-lg [&>pre]:text-xs [&>pre]:my-2 [&>pre]:overflow-x-auto">
                         <ReactMarkdown>{msg.text}</ReactMarkdown>
                       </div>
                     ) : (
                       <span className="whitespace-pre-line">{msg.text}</span>
+                    )}
+                    {msg.imageUrl && (
+                      <img src={msg.imageUrl} alt="Generated" className="mt-2 rounded-lg w-full max-w-[260px]" />
                     )}
                   </div>
                 </motion.div>
@@ -179,7 +237,7 @@ const AIChatbot = () => {
               )}
             </div>
 
-            {messages.length <= 2 && (
+            {messages.length <= 2 && !imageMode && (
               <div className="px-3 pb-2 flex gap-1.5 flex-wrap">
                 {quickReplies.map((qr) => (
                   <button key={qr} onClick={() => sendMessage(qr)}
@@ -190,20 +248,36 @@ const AIChatbot = () => {
               </div>
             )}
 
-            <div className="p-2 border-t border-border flex gap-2">
-              <input
-                value={input}
-                onChange={e => setInput(e.target.value)}
-                onKeyDown={e => e.key === "Enter" && sendMessage(input)}
-                placeholder="Ask anything..."
-                className="flex-1 px-3 py-2 bg-muted rounded-xl text-sm text-foreground placeholder:text-muted-foreground outline-none"
-                disabled={isLoading}
-              />
-              <button onClick={() => sendMessage(input)}
-                disabled={isLoading}
-                className="p-2 bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50">
-                <Send className="h-4 w-4" />
-              </button>
+            <div className="p-2 border-t border-border">
+              {imageMode && (
+                <div className="mb-1.5 flex items-center gap-1.5 px-1">
+                  <ImageIcon className="h-3 w-3 text-primary" />
+                  <span className="text-[10px] text-primary font-medium">Image mode — describe what to generate</span>
+                  <button onClick={() => setImageMode(false)} className="ml-auto text-[10px] text-muted-foreground hover:text-foreground">Cancel</button>
+                </div>
+              )}
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setImageMode(!imageMode)}
+                  className={`p-2 rounded-xl transition-colors ${imageMode ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}
+                  title="Generate image"
+                >
+                  <ImageIcon className="h-4 w-4" />
+                </button>
+                <input
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  onKeyDown={e => e.key === "Enter" && sendMessage(input)}
+                  placeholder={imageMode ? "Describe an image..." : "Ask anything..."}
+                  className="flex-1 px-3 py-2 bg-muted rounded-xl text-sm text-foreground placeholder:text-muted-foreground outline-none"
+                  disabled={isLoading}
+                />
+                <button onClick={() => sendMessage(input)}
+                  disabled={isLoading}
+                  className="p-2 bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50">
+                  <Send className="h-4 w-4" />
+                </button>
+              </div>
             </div>
           </motion.div>
         )}
