@@ -230,10 +230,10 @@ const Attendance = () => {
                   <div key={i} className="text-center text-[10px] text-muted-foreground font-medium pb-1">{d}</div>
                 ))}
                 {getWeekDates().map((d, i) => {
-                  const isSelected = d.toISOString().split("T")[0] === dateStr;
-                  const isToday = d.toISOString().split("T")[0] === new Date().toISOString().split("T")[0];
+                  const isSelected = toLocalDateStr(d) === dateStr;
+                  const isToday = toLocalDateStr(d) === toLocalDateStr(new Date());
                   const isWeekend = d.getDay() === 0 || d.getDay() === 6;
-                  const isFuture = d.toISOString().split("T")[0] > new Date().toISOString().split("T")[0];
+                  const isFuture = toLocalDateStr(d) > toLocalDateStr(new Date());
                   return (
                     <button
                       key={i}
