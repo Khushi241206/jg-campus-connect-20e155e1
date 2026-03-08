@@ -90,16 +90,62 @@ const LandingPage = () => {
       </nav>
 
       {/* HERO SECTION */}
-      <section id="hero" className="relative min-h-screen flex items-center">
+      <section id="hero" className="relative min-h-screen flex items-center overflow-hidden">
+        {/* Campus background */}
         <div className="absolute inset-0">
           <img src={jgCampus} alt="JG University Campus" className="w-full h-full object-cover" />
           <div
             className="absolute inset-0"
             style={{
-              background: "linear-gradient(135deg, rgba(26,26,46,0.75) 0%, rgba(15,52,96,0.6) 50%, rgba(0,0,0,0.5) 100%)",
+              background: "linear-gradient(135deg, rgba(26,26,46,0.82) 0%, rgba(15,52,96,0.65) 50%, rgba(0,0,0,0.55) 100%)",
             }}
           />
         </div>
+
+        {/* Animated gradient overlay */}
+        <motion.div
+          className="absolute inset-0 pointer-events-none"
+          animate={{
+            background: [
+              "radial-gradient(ellipse 80% 60% at 20% 40%, rgba(139,0,0,0.15) 0%, transparent 70%)",
+              "radial-gradient(ellipse 80% 60% at 80% 60%, rgba(200,155,60,0.12) 0%, transparent 70%)",
+              "radial-gradient(ellipse 80% 60% at 50% 30%, rgba(15,52,96,0.18) 0%, transparent 70%)",
+              "radial-gradient(ellipse 80% 60% at 20% 40%, rgba(139,0,0,0.15) 0%, transparent 70%)",
+            ],
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        />
+
+        {/* Floating glass orbs */}
+        <motion.div
+          className="absolute top-[15%] right-[10%] w-64 h-64 rounded-full pointer-events-none hidden lg:block"
+          style={{
+            background: "radial-gradient(circle, rgba(200,155,60,0.08) 0%, transparent 70%)",
+            border: "1px solid rgba(200,155,60,0.08)",
+            backdropFilter: "blur(2px)",
+          }}
+          animate={{ y: [0, -20, 0], x: [0, 10, 0] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute bottom-[20%] left-[5%] w-40 h-40 rounded-full pointer-events-none hidden lg:block"
+          style={{
+            background: "radial-gradient(circle, rgba(139,0,0,0.06) 0%, transparent 70%)",
+            border: "1px solid rgba(255,255,255,0.05)",
+            backdropFilter: "blur(2px)",
+          }}
+          animate={{ y: [0, 15, 0], x: [0, -8, 0] }}
+          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        />
+        <motion.div
+          className="absolute top-[55%] right-[30%] w-24 h-24 rounded-full pointer-events-none hidden lg:block"
+          style={{
+            background: "radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%)",
+            border: "1px solid rgba(255,255,255,0.06)",
+          }}
+          animate={{ y: [0, -12, 0], scale: [1, 1.1, 1] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 pt-24 pb-16 w-full grid lg:grid-cols-2 gap-16 items-center">
           {/* Left text */}
@@ -108,55 +154,148 @@ const LandingPage = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3, duration: 0.5 }}
-              className="inline-block mb-6 px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase"
-              style={{ background: "rgba(200, 155, 60, 0.2)", color: "#C89B3C", border: "1px solid rgba(200, 155, 60, 0.3)" }}
+              className="inline-block mb-6 px-5 py-2 rounded-full text-xs font-semibold tracking-widest uppercase"
+              style={{
+                background: "rgba(200, 155, 60, 0.12)",
+                color: "#C89B3C",
+                border: "1px solid rgba(200, 155, 60, 0.25)",
+                backdropFilter: "blur(8px)",
+              }}
             >
               Welcome to JG University
             </motion.div>
 
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.1] tracking-tight">
-              <span className="text-white">Your Academic</span>
-              <br />
-              <span className="text-white">Journey,</span>
-              <br />
-              <span
-                className="bg-clip-text text-transparent"
-                style={{ backgroundImage: "linear-gradient(135deg, #C89B3C 0%, #E8C872 50%, #C89B3C 100%)" }}
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.08] tracking-tight">
+              <motion.span
+                className="text-white block"
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2, duration: 0.6 }}
+              >
+                Your Academic
+              </motion.span>
+              <motion.span
+                className="text-white block"
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.35, duration: 0.6 }}
+              >
+                Journey,
+              </motion.span>
+              <motion.span
+                className="bg-clip-text text-transparent block"
+                style={{ backgroundImage: "linear-gradient(135deg, #C89B3C 0%, #F0D78C 40%, #C89B3C 80%)" }}
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.5, duration: 0.6 }}
               >
                 Simplified
-              </span>
+              </motion.span>
             </h1>
 
-            <p className="mt-8 text-white/75 text-lg md:text-xl max-w-lg leading-relaxed font-light">
+            <motion.p
+              className="mt-8 text-white/70 text-lg md:text-xl max-w-lg leading-relaxed font-light"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.7, duration: 0.6 }}
+            >
               Access your timetable, track attendance, view results, manage fees, and stay updated with university notices — all in one place.
-            </p>
+            </motion.p>
 
-            <div className="mt-10 flex flex-wrap gap-4">
-              <button
+            <motion.div
+              className="mt-10 flex flex-wrap gap-5"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.9, duration: 0.5 }}
+            >
+              {/* Primary CTA */}
+              <motion.button
                 onClick={() => {
                   setShowLogin(true);
                   setTimeout(() => document.getElementById("login-card")?.scrollIntoView({ behavior: "smooth", block: "center" }), 100);
                 }}
-                className="px-8 py-3.5 rounded-[14px] text-white font-semibold text-sm transition-all duration-300 hover:scale-105 hover:shadow-2xl flex items-center gap-2.5"
+                className="group relative px-9 py-4 rounded-[14px] text-white font-bold text-[15px] flex items-center gap-3 overflow-hidden"
                 style={{
-                  background: "linear-gradient(135deg, #8B0000 0%, #B91C3C 100%)",
-                  boxShadow: "0 8px 32px rgba(139, 0, 0, 0.35)",
+                  background: "linear-gradient(135deg, #8B0000 0%, #C0392B 100%)",
+                  boxShadow: "0 8px 32px rgba(139, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.15)",
                 }}
+                whileHover={{ scale: 1.05, boxShadow: "0 12px 40px rgba(139, 0, 0, 0.5)" }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
               >
-                Get Started <span className="text-lg">→</span>
-              </button>
-              <button
+                <span className="relative z-10">Start Matching</span>
+                <motion.span
+                  className="relative z-10 text-lg"
+                  animate={{ x: [0, 4, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  →
+                </motion.span>
+                <div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                  style={{
+                    background: "linear-gradient(135deg, #A50000 0%, #D94452 100%)",
+                  }}
+                />
+              </motion.button>
+
+              {/* Secondary CTA */}
+              <motion.button
                 onClick={() => scrollTo("features")}
-                className="px-8 py-3.5 rounded-[14px] text-white font-semibold text-sm transition-all duration-300 hover:bg-white/15"
+                className="group relative px-9 py-4 rounded-[14px] text-white font-semibold text-[15px] overflow-hidden"
                 style={{
-                  border: "1.5px solid rgba(255,255,255,0.3)",
-                  backdropFilter: "blur(10px)",
-                  background: "rgba(255,255,255,0.05)",
+                  border: "1.5px solid rgba(255,255,255,0.25)",
+                  backdropFilter: "blur(12px)",
+                  background: "rgba(255,255,255,0.06)",
                 }}
+                whileHover={{
+                  scale: 1.05,
+                  backgroundColor: "rgba(255,255,255,0.12)",
+                  borderColor: "rgba(255,255,255,0.4)",
+                }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
               >
-                Explore Features
-              </button>
-            </div>
+                <span className="relative z-10">Learn How It Works</span>
+              </motion.button>
+            </motion.div>
+
+            {/* Floating glass stat cards */}
+            <motion.div
+              className="mt-14 flex flex-wrap gap-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.2, duration: 0.6 }}
+            >
+              {[
+                { value: "5000+", label: "Students" },
+                { value: "200+", label: "Faculty" },
+                { value: "98%", label: "Placement" },
+              ].map((stat, i) => (
+                <motion.div
+                  key={stat.label}
+                  className="flex flex-col items-center px-6 py-4"
+                  style={{
+                    background: "rgba(255, 255, 255, 0.07)",
+                    backdropFilter: "blur(16px)",
+                    borderRadius: "14px",
+                    border: "1px solid rgba(255, 255, 255, 0.1)",
+                    minWidth: "110px",
+                  }}
+                  whileHover={{
+                    background: "rgba(255, 255, 255, 0.12)",
+                    borderColor: "rgba(200, 155, 60, 0.3)",
+                    y: -3,
+                  }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                >
+                  <span className="text-xl font-extrabold" style={{ color: "#C89B3C" }}>
+                    {stat.value}
+                  </span>
+                  <span className="text-xs text-white/50 font-medium mt-0.5">{stat.label}</span>
+                </motion.div>
+              ))}
+            </motion.div>
           </motion.div>
 
           {/* Login Card */}
