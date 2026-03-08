@@ -165,6 +165,8 @@ const AIChatbot = () => {
     }
   };
 
+  if (examMode) return null;
+
   return (
     <>
       <motion.button
