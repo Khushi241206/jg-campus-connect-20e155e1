@@ -101,80 +101,58 @@ const Events = () => {
         })}
       </div>
 
-      {/* Registration Modal */}
-      <AnimatePresence>
-        {registering && activeEvent && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-foreground/50 z-50 flex items-center justify-center p-4"
-            onClick={() => setRegistering(null)}>
-            <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-card rounded-xl border border-border p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
-              onClick={(e) => e.stopPropagation()}>
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold text-foreground">Register for Event</h2>
-                <button onClick={() => setRegistering(null)} className="p-1 rounded-lg hover:bg-muted">
-                  <X className="h-5 w-5 text-muted-foreground" />
-                </button>
-              </div>
-              <p className="text-sm text-muted-foreground mb-4">{activeEvent.title} • {activeEvent.venue}</p>
-
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-1">Full Name *</label>
-                  <input required value={form.name} onChange={e => setForm({...form, name: e.target.value})}
-                    className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-1">Email *</label>
-                  <input required type="email" value={form.email} onChange={e => setForm({...form, email: e.target.value})}
-                    className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-1">Phone *</label>
-                  <input required type="tel" value={form.phone} onChange={e => setForm({...form, phone: e.target.value})}
-                    className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30" />
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-1">Department *</label>
-                    <select required value={form.department} onChange={e => setForm({...form, department: e.target.value})}
-                      className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
-                      <option value="">Select</option>
-                      <option value="CSE">CSE</option>
-                      <option value="ECE">ECE</option>
-                      <option value="ME">ME</option>
-                      <option value="CE">CE</option>
-                      <option value="MBA">MBA</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-1">Year *</label>
-                    <select required value={form.year} onChange={e => setForm({...form, year: e.target.value})}
-                      className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
-                      <option value="">Select</option>
-                      <option value="1">1st Year</option>
-                      <option value="2">2nd Year</option>
-                      <option value="3">3rd Year</option>
-                      <option value="4">4th Year</option>
-                    </select>
-                  </div>
-                </div>
-                {(activeEvent.category === "Sports" || activeEvent.category === "Hackathon") && (
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-1">Team Name (optional)</label>
-                    <input value={form.teamName || ""} onChange={e => setForm({...form, teamName: e.target.value})}
-                      className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30" />
-                  </div>
-                )}
-                <button type="submit"
-                  className="w-full py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-all">
-                  Submit Registration
-                </button>
-              </form>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <Modal open={!!registering && !!activeEvent} onClose={() => { setRegistering(null); setForm({ name: "", email: "", phone: "", department: "", year: "" }); }}
+        title="Register for Event" description={activeEvent ? `${activeEvent.title} • ${activeEvent.venue}` : ""}>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <Label className="mb-1.5 block">Full Name *</Label>
+            <Input required value={form.name} onChange={e => setForm({...form, name: e.target.value})} />
+          </div>
+          <div>
+            <Label className="mb-1.5 block">Email *</Label>
+            <Input required type="email" value={form.email} onChange={e => setForm({...form, email: e.target.value})} />
+          </div>
+          <div>
+            <Label className="mb-1.5 block">Phone *</Label>
+            <Input required type="tel" value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label className="mb-1.5 block">Department *</Label>
+              <select required value={form.department} onChange={e => setForm({...form, department: e.target.value})}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                <option value="">Select</option>
+                <option value="CSE">CSE</option>
+                <option value="ECE">ECE</option>
+                <option value="ME">ME</option>
+                <option value="CE">CE</option>
+                <option value="MBA">MBA</option>
+              </select>
+            </div>
+            <div>
+              <Label className="mb-1.5 block">Year *</Label>
+              <select required value={form.year} onChange={e => setForm({...form, year: e.target.value})}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                <option value="">Select</option>
+                <option value="1">1st Year</option>
+                <option value="2">2nd Year</option>
+                <option value="3">3rd Year</option>
+                <option value="4">4th Year</option>
+              </select>
+            </div>
+          </div>
+          {activeEvent && (activeEvent.category === "Sports" || activeEvent.category === "Hackathon") && (
+            <div>
+              <Label className="mb-1.5 block">Team Name (optional)</Label>
+              <Input value={form.teamName || ""} onChange={e => setForm({...form, teamName: e.target.value})} />
+            </div>
+          )}
+          <button type="submit"
+            className="w-full py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-all">
+            Submit Registration
+          </button>
+        </form>
+      </Modal>
     </div>
   );
 };
