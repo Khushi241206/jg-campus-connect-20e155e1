@@ -107,7 +107,7 @@ const LandingPage = () => {
               className="w-full max-w-md mx-auto lg:ml-auto bg-white rounded-2xl p-8 shadow-2xl"
             >
               <div className="flex flex-col items-center mb-6">
-                <img src={jgLogo} alt="JG University" className="h-20 w-auto mb-2" />
+                <img src={jgLogo} alt="JG University" className="h-24 w-64 object-contain mb-2" />
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-5">
