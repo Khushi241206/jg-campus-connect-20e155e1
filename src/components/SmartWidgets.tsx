@@ -134,16 +134,26 @@ export const PerformanceAnalytics = () => {
         </span>
       </div>
       <div className="space-y-2">
-        {subjects.filter(s => s.risk !== "low").map((s, i) => (
+        {subjects.map((s, i) => (
           <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-muted/30">
-            <div className="min-w-0">
-              <p className="text-sm font-medium text-foreground truncate">{s.name}</p>
-              <p className="text-[10px] text-muted-foreground">{s.attendance}% attendance</p>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center justify-between mb-1">
+                <p className="text-sm font-medium text-foreground truncate">{s.name}</p>
+                <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium shrink-0 ml-2
+                  ${s.risk === "high" ? "bg-destructive/10 text-destructive" : s.risk === "medium" ? "bg-warning/10 text-warning" : "bg-success/10 text-success"}`}>
+                  {s.risk === "high" ? "At Risk" : s.risk === "medium" ? "Watch" : "On Track"}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all ${s.risk === "high" ? "bg-destructive" : s.risk === "medium" ? "bg-warning" : "bg-success"}`}
+                    style={{ width: `${s.attendance}%` }}
+                  />
+                </div>
+                <span className="text-[10px] text-muted-foreground shrink-0">{s.attendance}%</span>
+              </div>
             </div>
-            <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium shrink-0
-              ${s.risk === "high" ? "bg-destructive/10 text-destructive" : "bg-warning/10 text-warning"}`}>
-              {s.risk === "high" ? "At Risk" : "Watch"}
-            </span>
           </div>
         ))}
         {subjects.every(s => s.risk === "low") && (
