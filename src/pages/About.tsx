@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { GraduationCap, Sparkles, Shield, Smartphone, Palette, Brain, Heart } from "lucide-react";
-import jgLogo from "@/assets/jg-logo.jpeg";
+import jgLogoWhite from "@/assets/jg-logo-white.png";
 
 const features = [
   { icon: Brain, title: "AI-Powered Insights", desc: "Smart attendance predictions, academic health scores, and personalized reminders powered by artificial intelligence." },
