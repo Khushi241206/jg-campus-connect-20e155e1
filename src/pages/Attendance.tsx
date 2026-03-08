@@ -5,12 +5,20 @@ import { AlertTriangle, CheckCircle, CalendarDays, FileText, ChevronLeft, Chevro
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, PieChart, Pie } from "recharts";
 import { useToast } from "@/hooks/use-toast";
 
+// Timezone-safe local date string helper
+const toLocalDateStr = (d: Date) => {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+};
+
 // Generate realistic daily attendance using exact timetable schedule
 const generateDailyAttendance = () => {
   const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] as const;
   const data: Record<string, { subject: string; faculty: string; time: string; type: string; status: "P" | "A" | "N" }[]> = {};
   const today = new Date();
-  const todayStr = today.toISOString().split("T")[0];
+  const todayStr = toLocalDateStr(today);
 
   // Seed-based pseudo-random for consistency
   const seededRandom = (seed: number) => {
@@ -23,7 +31,7 @@ const generateDailyAttendance = () => {
     for (let d = 1; d <= daysInMonth; d++) {
       const date = new Date(2026, m, d);
       const dayName = dayNames[date.getDay()];
-      const dateStr = date.toISOString().split("T")[0];
+      const dateStr = toLocalDateStr(date);
 
       // Don't generate attendance for future dates
       if (dateStr > todayStr) continue;
@@ -114,13 +122,13 @@ const Attendance = () => {
     { name: "Absent", value: total - overall, fill: "hsl(var(--destructive))" },
   ];
 
-  const dateStr = selectedDate.toISOString().split("T")[0];
+  const dateStr = toLocalDateStr(selectedDate);
   const dailyLectures = dailyAttendanceData[dateStr] || [];
   const formatDate = (d: Date) => d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
   const dayName = selectedDate.toLocaleDateString("en-US", { weekday: "long" });
 
   // Check if selected date is in the future
-  const isFutureDate = dateStr > new Date().toISOString().split("T")[0];
+  const isFutureDate = dateStr > toLocalDateStr(new Date());
 
   const changeDate = (delta: number) => {
     const d = new Date(selectedDate);
@@ -222,10 +230,10 @@ const Attendance = () => {
                   <div key={i} className="text-center text-[10px] text-muted-foreground font-medium pb-1">{d}</div>
                 ))}
                 {getWeekDates().map((d, i) => {
-                  const isSelected = d.toISOString().split("T")[0] === dateStr;
-                  const isToday = d.toISOString().split("T")[0] === new Date().toISOString().split("T")[0];
+                  const isSelected = toLocalDateStr(d) === dateStr;
+                  const isToday = toLocalDateStr(d) === toLocalDateStr(new Date());
                   const isWeekend = d.getDay() === 0 || d.getDay() === 6;
-                  const isFuture = d.toISOString().split("T")[0] > new Date().toISOString().split("T")[0];
+                  const isFuture = toLocalDateStr(d) > toLocalDateStr(new Date());
                   return (
                     <button
                       key={i}
@@ -244,8 +252,11 @@ const Attendance = () => {
 
               <div className="flex items-center justify-center gap-1 mt-3">
                 <input type="date" value={dateStr}
-                  onChange={e => setSelectedDate(new Date(e.target.value + "T00:00:00"))}
-                  className="bg-muted/50 text-foreground text-xs px-3 py-1.5 rounded-lg border border-border outline-none" />
+                  onChange={e => {
+                    const [y, m, d] = e.target.value.split('-').map(Number);
+                    setSelectedDate(new Date(y, m - 1, d));
+                  }}
+                  className="bg-muted/50 text-foreground text-xs px-3 py-1.5 rounded-lg border border-border outline-none min-w-[140px] w-auto" />
               </div>
             </div>
 
