@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Upload, X, FileText, Image } from "lucide-react";
+import { Modal } from "@/components/ui/modal";
 import { assignments } from "@/data/mockData";
 import { useToast } from "@/hooks/use-toast";
 
