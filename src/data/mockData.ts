@@ -147,11 +147,11 @@ export const attendanceTrend = [
 ];
 
 export const examSchedule = [
-  { id: 1, subject: "Software Engineering", date: "2026-03-10", time: "10:00 AM - 1:00 PM", room: "Hall A", type: "Mid-Sem" as const },
-  { id: 2, subject: "Computer Networks", date: "2026-03-14", time: "2:00 PM - 5:00 PM", room: "Hall A", type: "Mid-Sem" as const },
-  { id: 3, subject: "Machine Learning", date: "2026-03-16", time: "10:00 AM - 1:00 PM", room: "Hall C", type: "Mid-Sem" as const },
-  { id: 4, subject: "UI/UX Design", date: "2026-03-18", time: "2:00 PM - 5:00 PM", room: "Hall B", type: "Mid-Sem" as const },
-  { id: 5, subject: "Vector Calculus", date: "2026-03-20", time: "10:00 AM - 1:00 PM", room: "Hall A", type: "Mid-Sem" as const },
+  { id: 1, subject: "Software Engineering", date: "2026-04-06", time: "10:00 AM - 1:00 PM", room: "Hall A", type: "Internal" as const },
+  { id: 2, subject: "Computer Networks", date: "2026-04-08", time: "2:00 PM - 5:00 PM", room: "Hall A", type: "Internal" as const },
+  { id: 3, subject: "Machine Learning", date: "2026-04-10", time: "10:00 AM - 1:00 PM", room: "Hall C", type: "Internal" as const },
+  { id: 4, subject: "UI/UX Design", date: "2026-04-12", time: "2:00 PM - 5:00 PM", room: "Hall B", type: "Internal" as const },
+  { id: 5, subject: "Vector Calculus", date: "2026-04-14", time: "10:00 AM - 1:00 PM", room: "Hall A", type: "Internal" as const },
 ];
 
 export interface MCQQuestion {
