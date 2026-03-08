@@ -1,4 +1,4 @@
-import { useState } from "framer-motion".startsWith ? "react" : "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, MessageSquare, Clock, CheckCircle2, ChevronRight, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
