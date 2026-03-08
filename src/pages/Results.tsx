@@ -61,29 +61,29 @@ This is a computer-generated result report.
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <h1 className="text-2xl font-bold text-foreground">Results</h1>
+    <div className="space-y-5 md:space-y-6 animate-fade-in">
+      <h1 className="text-xl md:text-2xl font-bold text-foreground tracking-tight">Results</h1>
 
-      <div className="bg-card rounded-lg border border-border p-6 text-center">
-        <p className="text-sm text-muted-foreground">Cumulative GPA</p>
-        <p className="text-5xl font-bold text-primary mt-1">{results.cgpa}</p>
+      <div className="bg-card rounded-xl border border-border p-6 md:p-8 text-center card-shadow">
+        <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium">Cumulative GPA</p>
+        <p className="text-5xl font-bold text-primary mt-2 leading-none">{results.cgpa}</p>
       </div>
 
       <div className="space-y-3">
         {results.semesters.map((sem, i) => (
           <motion.div key={sem.sem} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}
-            className="bg-card rounded-lg border border-border overflow-hidden card-hover">
-            <button onClick={() => setExpandedSem(expandedSem === sem.sem ? null : sem.sem)} className="w-full flex items-center justify-between p-4">
+            className="bg-card rounded-xl border border-border overflow-hidden card-hover card-shadow">
+            <button onClick={() => setExpandedSem(expandedSem === sem.sem ? null : sem.sem)} className="w-full flex items-center justify-between p-4 md:p-5">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm">S{sem.sem}</div>
+                <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm shadow-sm">S{sem.sem}</div>
                 <div className="text-left">
                   <p className="font-semibold text-foreground">Semester {sem.sem}</p>
-                  <p className="text-xs text-muted-foreground">{sem.subjects.length} subjects</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">{sem.subjects.length} subjects</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <span className="text-sm font-bold text-primary">SGPA: {sem.sgpa}</span>
-                {expandedSem === sem.sem ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                <span className="text-sm font-bold text-primary tabular-nums">SGPA: {sem.sgpa}</span>
+                {expandedSem === sem.sem ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
               </div>
             </button>
 
@@ -91,25 +91,25 @@ This is a computer-generated result report.
               <div className="border-t border-border">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="bg-muted/50">
-                      <th className="text-left p-3 font-medium text-foreground">Subject</th>
-                      <th className="text-center p-3 font-medium text-foreground">Grade</th>
-                      <th className="text-center p-3 font-medium text-foreground">Credits</th>
+                    <tr className="bg-muted/40">
+                      <th className="text-left p-3.5 font-medium text-foreground text-xs uppercase tracking-wide">Subject</th>
+                      <th className="text-center p-3.5 font-medium text-foreground text-xs uppercase tracking-wide">Grade</th>
+                      <th className="text-center p-3.5 font-medium text-foreground text-xs uppercase tracking-wide">Credits</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
                     {sem.subjects.map((sub) => (
-                      <tr key={sub.name}>
-                        <td className="p-3 text-foreground">{sub.name}</td>
-                        <td className="p-3 text-center font-semibold text-primary">{sub.grade}</td>
-                        <td className="p-3 text-center text-muted-foreground">{sub.credits}</td>
+                      <tr key={sub.name} className="hover:bg-muted/20 transition-colors">
+                        <td className="p-3.5 text-foreground">{sub.name}</td>
+                        <td className="p-3.5 text-center font-semibold text-primary">{sub.grade}</td>
+                        <td className="p-3.5 text-center text-muted-foreground tabular-nums">{sub.credits}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
-                <div className="p-3 border-t border-border">
+                <div className="p-4 border-t border-border">
                   <button onClick={() => downloadSemesterPDF(sem.sem)}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-all">
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-all btn-lift">
                     <Download className="h-4 w-4" /> Download Semester {sem.sem} Report
                   </button>
                 </div>

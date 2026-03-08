@@ -35,29 +35,29 @@ const AppSidebar = ({ open, onClose }: AppSidebarProps) => {
       {/* Overlay on mobile */}
       {open && (
         <div
-          className="fixed inset-0 bg-foreground/40 z-40 lg:hidden"
+          className="fixed inset-0 bg-foreground/40 backdrop-blur-sm z-40 lg:hidden"
           onClick={onClose}
         />
       )}
 
       <aside
-        className={`fixed top-0 left-0 h-full z-50 bg-sidebar text-sidebar-foreground w-60 
+        className={`fixed top-0 left-0 h-full z-50 bg-sidebar text-sidebar-foreground w-[15rem] 
         transition-transform duration-300 ease-in-out flex flex-col
         lg:translate-x-0 lg:static lg:z-auto
         ${open ? "translate-x-0" : "-translate-x-full"}`}
       >
         {/* Header with logo */}
-        <div className="p-4 flex items-center justify-between border-b border-sidebar-border">
+        <div className="h-14 px-4 flex items-center justify-between border-b border-sidebar-border shrink-0">
           <div className="flex items-center gap-2">
-            <img src={jgLogoWhite} alt="JG University" className="h-9 w-auto" />
+            <img src={jgLogoWhite} alt="JG University" className="h-8 w-auto rounded" />
           </div>
-          <button onClick={onClose} className="p-1 rounded hover:bg-sidebar-accent lg:hidden">
-            <X className="h-5 w-5" />
+          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-sidebar-accent lg:hidden transition-colors">
+            <X className="h-4.5 w-4.5" />
           </button>
         </div>
 
         {/* Nav Items */}
-        <nav className="flex-1 py-4 px-2 space-y-1 overflow-y-auto">
+        <nav className="flex-1 py-3 px-2.5 space-y-0.5 overflow-y-auto">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
             return (
@@ -65,18 +65,18 @@ const AppSidebar = ({ open, onClose }: AppSidebarProps) => {
                 key={item.path}
                 to={item.path}
                 onClick={onClose}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200
+                className={`relative flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200
                   ${isActive
-                    ? "bg-sidebar-primary text-sidebar-primary-foreground"
-                    : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                    ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm"
+                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                   }`}
               >
-                <item.icon className="h-5 w-5 shrink-0" />
+                <item.icon className="h-[18px] w-[18px] shrink-0" />
                 <span>{item.title}</span>
                 {isActive && (
                   <motion.div
                     layoutId="sidebar-indicator"
-                    className="absolute left-0 w-1 h-6 bg-sidebar-primary-foreground rounded-r"
+                    className="absolute left-0 w-[3px] h-5 bg-sidebar-primary-foreground rounded-r-full"
                   />
                 )}
               </RouterNavLink>
@@ -85,9 +85,9 @@ const AppSidebar = ({ open, onClose }: AppSidebarProps) => {
         </nav>
 
         {/* Footer */}
-        <div className="p-4 border-t border-sidebar-border">
-          <div className="flex items-center gap-2 text-xs text-sidebar-foreground/50">
-            <GraduationCap className="h-4 w-4" />
+        <div className="px-4 py-3 border-t border-sidebar-border">
+          <div className="flex items-center gap-2 text-[11px] text-sidebar-foreground/40">
+            <GraduationCap className="h-3.5 w-3.5" />
             <span>Smart Academic Portal</span>
           </div>
         </div>

@@ -53,37 +53,37 @@ const Profile = () => {
   ];
 
   return (
-    <div className="space-y-4 md:space-y-6 animate-fade-in max-w-2xl">
-      <h1 className="text-xl md:text-2xl font-bold text-foreground">Profile</h1>
+    <div className="space-y-5 md:space-y-6 animate-fade-in max-w-2xl">
+      <h1 className="text-xl md:text-2xl font-bold text-foreground tracking-tight">Profile</h1>
 
       {/* Avatar & Name */}
-      <div className="bg-card rounded-xl border border-border p-4 md:p-6 flex items-center gap-4">
-        <div className="h-16 w-16 md:h-20 md:w-20 rounded-full overflow-hidden border-2 border-primary shadow-md shrink-0">
+      <div className="bg-card rounded-xl border border-border p-5 md:p-6 flex items-center gap-4 card-shadow">
+        <div className="h-16 w-16 md:h-20 md:w-20 rounded-full overflow-hidden border-2 border-primary/20 shadow-md shrink-0">
           <img src={avatarAnanya} alt={user.name} className="h-full w-full object-cover" />
         </div>
         <div className="min-w-0">
           <h2 className="text-lg md:text-xl font-bold text-foreground truncate">{user.name}</h2>
-          <p className="text-xs md:text-sm text-muted-foreground truncate">{user.program}</p>
+          <p className="text-xs md:text-sm text-muted-foreground truncate mt-0.5">{user.program}</p>
           <p className="text-xs text-muted-foreground">{user.semester} • {user.division}</p>
         </div>
       </div>
 
       {/* Personal Info */}
-      <div className="bg-card rounded-xl border border-border p-3 md:p-4">
-        <h3 className="font-semibold text-foreground mb-3 md:mb-4 text-sm">Personal Information</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+      <div className="bg-card rounded-xl border border-border p-4 md:p-5 card-shadow">
+        <h3 className="font-semibold text-foreground mb-4 text-sm">Personal Information</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {info.map((item) => (
-            <div key={item.label} className="p-2.5 rounded-lg bg-muted/30">
-              <p className="text-[10px] md:text-xs text-muted-foreground">{item.label}</p>
+            <div key={item.label} className="p-3 rounded-xl bg-muted/30">
+              <p className="text-[10px] md:text-xs text-muted-foreground mb-0.5">{item.label}</p>
               <p className="text-sm font-medium text-foreground truncate">{item.value}</p>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Redesigned Theme Selector */}
-      <div className="bg-card rounded-xl border border-border p-3 md:p-4">
-        <h3 className="font-semibold text-foreground mb-3 md:mb-4 text-sm flex items-center gap-2">
+      {/* Theme Selector */}
+      <div className="bg-card rounded-xl border border-border p-4 md:p-5 card-shadow">
+        <h3 className="font-semibold text-foreground mb-4 text-sm flex items-center gap-2">
           <Palette className="h-4 w-4 text-primary" /> Choose Theme
         </h3>
         <div className="space-y-2">
@@ -96,7 +96,7 @@ const Profile = () => {
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setTheme(t.name)}
                 className={`relative w-full rounded-xl border-2 transition-all overflow-hidden
-                  ${isActive ? "border-primary shadow-lg ring-2 ring-primary/20" : "border-border hover:border-muted-foreground/30"}`}
+                  ${isActive ? "border-primary shadow-md ring-2 ring-primary/15" : "border-border hover:border-muted-foreground/30"}`}
               >
                 <div className="flex items-center gap-3 p-3">
                   {/* Color orbs preview */}
@@ -132,7 +132,7 @@ const Profile = () => {
                         animate={{ scale: 1 }}
                         exit={{ scale: 0 }}
                         transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                        className="h-6 w-6 rounded-full bg-primary flex items-center justify-center shrink-0"
+                        className="h-6 w-6 rounded-full bg-primary flex items-center justify-center shrink-0 shadow-sm"
                       >
                         <Check className="h-3.5 w-3.5 text-primary-foreground" />
                       </motion.div>
@@ -158,7 +158,7 @@ const Profile = () => {
       {/* Logout */}
       <button
         onClick={logout}
-        className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-destructive text-destructive-foreground text-sm font-medium btn-lift"
+        className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-destructive text-destructive-foreground text-sm font-medium btn-lift"
       >
         <LogOut className="h-4 w-4" /> Logout
       </button>
