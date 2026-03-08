@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send, Bot, Sparkles, Loader2, ImageIcon } from "lucide-react";
+import { MessageCircle, X, Send, Bot, Sparkles, Loader2, ImageIcon, Download } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 interface Message {
