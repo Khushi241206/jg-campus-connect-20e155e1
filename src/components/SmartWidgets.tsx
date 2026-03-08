@@ -2,6 +2,14 @@ import { motion } from "framer-motion";
 import { Brain, TrendingUp, Bell, Activity, Sparkles } from "lucide-react";
 import { attendanceData } from "@/data/mockData";
 
+const aiChip = (
+  <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium flex items-center gap-0.5">
+    <Sparkles className="h-2.5 w-2.5" /> AI
+  </span>
+);
+
+const widgetCard = "bg-card rounded-xl border border-border p-4 md:p-5 card-hover card-shadow";
+
 // Attendance Prediction Indicator
 export const AttendancePrediction = () => {
   const avg = attendanceData.reduce((s, a) => s + a.percentage, 0) / attendanceData.length;
@@ -9,21 +17,18 @@ export const AttendancePrediction = () => {
   const prediction = avg > 82 ? Math.min(avg + 1.5, 95).toFixed(1) : Math.max(avg - 2, 60).toFixed(1);
 
   return (
-    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-      className="bg-card rounded-xl border border-border p-3 md:p-4 card-hover">
-      <div className="flex items-center gap-2 mb-2">
-        <div className="p-1.5 rounded-lg bg-primary/10"><Brain className="h-4 w-4 text-primary" /></div>
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className={widgetCard}>
+      <div className="flex items-center gap-2 mb-3">
+        <div className="p-2 rounded-xl bg-primary/10"><Brain className="h-4 w-4 text-primary" /></div>
         <h3 className="font-semibold text-foreground text-sm">Attendance Prediction</h3>
-        <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium flex items-center gap-0.5">
-          <Sparkles className="h-2.5 w-2.5" /> AI
-        </span>
+        {aiChip}
       </div>
       <div className="flex items-end gap-3">
         <div>
-          <p className="text-2xl font-bold text-primary">{prediction}%</p>
-          <p className="text-[10px] text-muted-foreground">Predicted end-of-sem</p>
+          <p className="text-2xl font-bold text-primary leading-none">{prediction}%</p>
+          <p className="text-[10px] text-muted-foreground mt-1.5">Predicted end-of-sem</p>
         </div>
-        <div className={`text-xs px-2 py-1 rounded-lg font-medium mb-1
+        <div className={`text-xs px-2.5 py-1 rounded-lg font-medium mb-0.5
           ${trend === "stable" ? "bg-success/10 text-success" : trend === "declining" ? "bg-warning/10 text-warning" : "bg-destructive/10 text-destructive"}`}>
           {trend === "stable" ? "↑ Stable" : trend === "declining" ? "→ Needs attention" : "↓ Critical"}
         </div>
@@ -35,7 +40,7 @@ export const AttendancePrediction = () => {
 // Academic Health Score
 export const AcademicHealthScore = () => {
   const attendanceScore = attendanceData.reduce((s, a) => s + a.percentage, 0) / attendanceData.length;
-  const healthScore = Math.round((attendanceScore * 0.4 + 84 * 0.35 + 80 * 0.25)); // attendance + CGPA-scaled + assignments
+  const healthScore = Math.round((attendanceScore * 0.4 + 84 * 0.35 + 80 * 0.25));
 
   const getColor = (score: number) => score >= 80 ? "text-success" : score >= 65 ? "text-warning" : "text-destructive";
   const getLabel = (score: number) => score >= 80 ? "Excellent" : score >= 65 ? "Good" : "Needs Improvement";
@@ -44,14 +49,11 @@ export const AcademicHealthScore = () => {
   const offset = circumference - (healthScore / 100) * circumference;
 
   return (
-    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-      className="bg-card rounded-xl border border-border p-3 md:p-4 card-hover">
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className={widgetCard}>
       <div className="flex items-center gap-2 mb-3">
-        <div className="p-1.5 rounded-lg bg-primary/10"><Activity className="h-4 w-4 text-primary" /></div>
+        <div className="p-2 rounded-xl bg-primary/10"><Activity className="h-4 w-4 text-primary" /></div>
         <h3 className="font-semibold text-foreground text-sm">Academic Health</h3>
-        <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium flex items-center gap-0.5">
-          <Sparkles className="h-2.5 w-2.5" /> AI
-        </span>
+        {aiChip}
       </div>
       <div className="flex items-center gap-4">
         <div className="relative w-20 h-20 shrink-0">
@@ -92,19 +94,16 @@ export const SmartReminders = () => {
   ];
 
   return (
-    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-      className="bg-card rounded-xl border border-border p-3 md:p-4 card-hover">
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className={widgetCard}>
       <div className="flex items-center gap-2 mb-3">
-        <div className="p-1.5 rounded-lg bg-primary/10"><Bell className="h-4 w-4 text-primary" /></div>
+        <div className="p-2 rounded-xl bg-primary/10"><Bell className="h-4 w-4 text-primary" /></div>
         <h3 className="font-semibold text-foreground text-sm">Smart Reminders</h3>
-        <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium flex items-center gap-0.5">
-          <Sparkles className="h-2.5 w-2.5" /> AI
-        </span>
+        {aiChip}
       </div>
       <div className="space-y-2">
         {reminders.map((r, i) => (
           <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.08 }}
-            className={`flex items-start gap-2 p-2 rounded-lg text-xs
+            className={`flex items-start gap-2.5 p-2.5 rounded-lg text-xs leading-relaxed
               ${r.type === "warning" ? "bg-warning/5" : r.type === "success" ? "bg-success/5" : "bg-muted/30"}`}>
             <span className="shrink-0 mt-0.5">{r.icon}</span>
             <span className="text-foreground">{r.text}</span>
@@ -124,20 +123,17 @@ export const PerformanceAnalytics = () => {
   }));
 
   return (
-    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-      className="bg-card rounded-xl border border-border p-3 md:p-4 card-hover">
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className={widgetCard}>
       <div className="flex items-center gap-2 mb-3">
-        <div className="p-1.5 rounded-lg bg-primary/10"><TrendingUp className="h-4 w-4 text-primary" /></div>
+        <div className="p-2 rounded-xl bg-primary/10"><TrendingUp className="h-4 w-4 text-primary" /></div>
         <h3 className="font-semibold text-foreground text-sm">Performance Insights</h3>
-        <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium flex items-center gap-0.5">
-          <Sparkles className="h-2.5 w-2.5" /> AI
-        </span>
+        {aiChip}
       </div>
-      <div className="space-y-2">
+      <div className="space-y-2.5">
         {subjects.map((s, i) => (
-          <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-muted/30">
+          <div key={i} className="flex items-center justify-between p-2.5 rounded-lg bg-muted/30">
             <div className="min-w-0 flex-1">
-              <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center justify-between mb-1.5">
                 <p className="text-sm font-medium text-foreground truncate">{s.name}</p>
                 <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium shrink-0 ml-2
                   ${s.risk === "high" ? "bg-destructive/10 text-destructive" : s.risk === "medium" ? "bg-warning/10 text-warning" : "bg-success/10 text-success"}`}>
@@ -146,12 +142,14 @@ export const PerformanceAnalytics = () => {
               </div>
               <div className="flex items-center gap-2">
                 <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
-                  <div
-                    className={`h-full rounded-full transition-all ${s.risk === "high" ? "bg-destructive" : s.risk === "medium" ? "bg-warning" : "bg-success"}`}
-                    style={{ width: `${s.attendance}%` }}
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${s.attendance}%` }}
+                    transition={{ duration: 0.8, delay: i * 0.1 }}
+                    className={`h-full rounded-full ${s.risk === "high" ? "bg-destructive" : s.risk === "medium" ? "bg-warning" : "bg-success"}`}
                   />
                 </div>
-                <span className="text-[10px] text-muted-foreground shrink-0">{s.attendance}%</span>
+                <span className="text-[10px] text-muted-foreground shrink-0 tabular-nums">{s.attendance}%</span>
               </div>
             </div>
           </div>
