@@ -201,7 +201,7 @@ const LandingPage = () => {
                 whileTap={{ scale: 0.95 }}
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}
               >
-                <span className="relative z-10">Start Matching</span>
+                <span className="relative z-10">Get Started</span>
                 <motion.span
                   className="relative z-10 text-lg"
                   animate={{ x: [0, 4, 0] }}
