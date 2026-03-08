@@ -252,8 +252,11 @@ const Attendance = () => {
 
               <div className="flex items-center justify-center gap-1 mt-3">
                 <input type="date" value={dateStr}
-                  onChange={e => setSelectedDate(new Date(e.target.value + "T00:00:00"))}
-                  className="bg-muted/50 text-foreground text-xs px-3 py-1.5 rounded-lg border border-border outline-none" />
+                  onChange={e => {
+                    const [y, m, d] = e.target.value.split('-').map(Number);
+                    setSelectedDate(new Date(y, m - 1, d));
+                  }}
+                  className="bg-muted/50 text-foreground text-xs px-3 py-1.5 rounded-lg border border-border outline-none min-w-[140px] w-auto" />
               </div>
             </div>
 
