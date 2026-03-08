@@ -328,7 +328,23 @@ const LandingPage = () => {
                   <button
                     type="button"
                     onClick={() => {
-                      window.open("https://mail.google.com/mail/?view=cm&fs=1&to=connect@jguni.in&su=Forgot%20Password%20-%20Request%20for%20Username%20and%20Password&body=Dear%20JG%20University%20Admin%2C%0A%0AI%20forgot%20my%20password.%20Please%20mail%20my%20username%20and%20password%20again%20to%20my%20registered%20email%20ID.%0A%0AThank%20you.", "_blank", "noopener,noreferrer");
+                      const subject = encodeURIComponent("Forgot Password - Request for Username and Password");
+                      const body = encodeURIComponent("Dear JG University Admin,\n\nI forgot my password. Please mail my username and password again to my registered email ID.\n\nThank you.");
+                      window.location.href = `mailto:connect@jguni.in?subject=${subject}&body=${body}`;
+                      toast({
+                        title: "Opening mail app...",
+                        description: "If your mail app didn't open, click below to use Gmail.",
+                        action: (
+                          <a
+                            href={`https://mail.google.com/mail/?view=cm&fs=1&to=connect@jguni.in&su=${subject}&body=${body}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs font-semibold text-primary underline"
+                          >
+                            Open Gmail
+                          </a>
+                        ),
+                      });
                     }}
                     className="text-xs font-medium transition-colors duration-200"
                     style={{ color: "#8B0000" }}
