@@ -122,13 +122,13 @@ const Attendance = () => {
     { name: "Absent", value: total - overall, fill: "hsl(var(--destructive))" },
   ];
 
-  const dateStr = selectedDate.toISOString().split("T")[0];
+  const dateStr = toLocalDateStr(selectedDate);
   const dailyLectures = dailyAttendanceData[dateStr] || [];
   const formatDate = (d: Date) => d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
   const dayName = selectedDate.toLocaleDateString("en-US", { weekday: "long" });
 
   // Check if selected date is in the future
-  const isFutureDate = dateStr > new Date().toISOString().split("T")[0];
+  const isFutureDate = dateStr > toLocalDateStr(new Date());
 
   const changeDate = (delta: number) => {
     const d = new Date(selectedDate);
