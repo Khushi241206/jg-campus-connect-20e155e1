@@ -13,22 +13,22 @@ const features = [
 
 const About = () => {
   return (
-    <div className="space-y-6 animate-fade-in max-w-3xl">
-      <h1 className="text-xl md:text-2xl font-bold text-foreground">About</h1>
+    <div className="space-y-5 md:space-y-6 animate-fade-in max-w-3xl">
+      <h1 className="text-xl md:text-2xl font-bold text-foreground tracking-tight">About</h1>
 
       {/* Hero Card */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-card rounded-xl border border-border p-5 md:p-8 card-hover"
+        className="bg-card rounded-xl border border-border p-5 md:p-8 card-hover card-shadow"
       >
-        <div className="flex items-center gap-4 mb-4">
-          <div className="h-16 w-32 rounded-xl overflow-hidden border border-border shadow-md shrink-0 bg-white">
+        <div className="flex items-center gap-4 mb-5">
+          <div className="h-14 w-28 rounded-xl overflow-hidden border border-border shadow-sm shrink-0 bg-white flex items-center justify-center">
             <img src={jgLogoWhite} alt="JG University" className="h-full w-full object-contain" />
           </div>
           <div>
-            <h2 className="text-lg md:text-xl font-bold text-foreground">JG University Portal</h2>
-            <p className="text-sm text-muted-foreground">Smart Academic Companion</p>
+            <h2 className="text-lg md:text-xl font-bold text-foreground leading-snug">JG University Portal</h2>
+            <p className="text-sm text-muted-foreground mt-0.5">Smart Academic Companion</p>
           </div>
         </div>
         <p className="text-sm text-muted-foreground leading-relaxed">
@@ -50,14 +50,14 @@ const About = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.06 }}
-            className="bg-card rounded-xl border border-border p-4 card-hover"
+            className="bg-card rounded-xl border border-border p-4 card-hover card-shadow"
           >
             <div className="flex items-start gap-3">
-              <div className="p-2 rounded-lg bg-primary/10 shrink-0">
+              <div className="p-2 rounded-xl bg-primary/10 shrink-0">
                 <f.icon className="h-4 w-4 text-primary" />
               </div>
               <div>
-                <h3 className="text-sm font-semibold text-foreground mb-1">{f.title}</h3>
+                <h3 className="text-sm font-semibold text-foreground mb-1 leading-snug">{f.title}</h3>
                 <p className="text-xs text-muted-foreground leading-relaxed">{f.desc}</p>
               </div>
             </div>
@@ -66,18 +66,18 @@ const About = () => {
       </div>
 
       {/* Version Info */}
-      <div className="bg-card rounded-xl border border-border p-4">
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-muted-foreground">Version</span>
-          <span className="font-medium text-foreground">2.0.0</span>
-        </div>
-        <div className="flex items-center justify-between text-sm mt-2">
-          <span className="text-muted-foreground">Developer</span>
-          <span className="font-medium text-foreground">JG University Tech Team</span>
-        </div>
-        <div className="flex items-center justify-between text-sm mt-2">
-          <span className="text-muted-foreground">Last Updated</span>
-          <span className="font-medium text-foreground">March 2026</span>
+      <div className="bg-card rounded-xl border border-border p-4 card-shadow">
+        <div className="space-y-2.5">
+          {[
+            { label: "Version", value: "2.0.0" },
+            { label: "Developer", value: "JG University Tech Team" },
+            { label: "Last Updated", value: "March 2026" },
+          ].map(item => (
+            <div key={item.label} className="flex items-center justify-between text-sm">
+              <span className="text-muted-foreground">{item.label}</span>
+              <span className="font-medium text-foreground">{item.value}</span>
+            </div>
+          ))}
         </div>
       </div>
 

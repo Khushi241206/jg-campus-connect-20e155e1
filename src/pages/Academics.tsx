@@ -33,14 +33,14 @@ const Academics = () => {
   ];
 
   return (
-    <div className="space-y-4 md:space-y-6 animate-fade-in">
-      <h1 className="text-xl md:text-2xl font-bold text-foreground">Academics</h1>
+    <div className="space-y-5 md:space-y-6 animate-fade-in">
+      <h1 className="text-xl md:text-2xl font-bold text-foreground tracking-tight">Academics</h1>
 
-      <div className="flex gap-1.5 md:gap-2 overflow-x-auto pb-1 -mx-1 px-1">
+      <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1">
         {tabs.map(t => (
           <button key={t.key} onClick={() => setTab(t.key)}
-            className={`flex-1 md:flex-none px-3 md:px-4 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-all
-              ${tab === t.key ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}>
+            className={`flex-1 md:flex-none px-4 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-all btn-lift
+              ${tab === t.key ? "bg-primary text-primary-foreground shadow-sm" : "bg-muted text-muted-foreground hover:text-foreground"}`}>
             {t.label}
           </button>
         ))}
@@ -49,66 +49,52 @@ const Academics = () => {
       {/* Class Info */}
       {tab === "class-info" && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
-          <div className="bg-card rounded-xl border border-border p-4 md:p-5">
+          <div className="bg-card rounded-xl border border-border p-5 card-shadow">
             <div className="flex items-center gap-3 mb-4">
-              <div className="p-2.5 rounded-lg bg-primary/10">
+              <div className="p-2.5 rounded-xl bg-primary/10">
                 <GraduationCap className="h-5 w-5 text-primary" />
               </div>
               <div>
                 <h3 className="font-semibold text-foreground">B.Tech - AI & ML</h3>
-                <p className="text-xs text-muted-foreground">Semester 4 • 2025-2026</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Semester 4 • 2025-2026</p>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-3 md:gap-4">
-              <div className="bg-muted/50 rounded-lg p-3">
-                <div className="flex items-center gap-2 text-muted-foreground mb-1">
-                  <Users className="h-3.5 w-3.5" />
-                  <span className="text-xs">Division</span>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { icon: Users, label: "Division", value: "Division B" },
+                { icon: MapPin, label: "Room", value: "Room 403" },
+                { icon: Clock, label: "Timings", value: "1:30 - 4:50 PM" },
+                { icon: BookOpen, label: "Total Credits", value: String(courses.reduce((s, c) => s + c.credits, 0)) },
+              ].map(item => (
+                <div key={item.label} className="bg-muted/30 rounded-xl p-3">
+                  <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                    <item.icon className="h-3.5 w-3.5" />
+                    <span className="text-xs">{item.label}</span>
+                  </div>
+                  <p className="font-semibold text-foreground text-sm">{item.value}</p>
                 </div>
-                <p className="font-semibold text-foreground text-sm">Division B</p>
-              </div>
-              <div className="bg-muted/50 rounded-lg p-3">
-                <div className="flex items-center gap-2 text-muted-foreground mb-1">
-                  <MapPin className="h-3.5 w-3.5" />
-                  <span className="text-xs">Room</span>
-                </div>
-                <p className="font-semibold text-foreground text-sm">Room 403</p>
-              </div>
-              <div className="bg-muted/50 rounded-lg p-3">
-                <div className="flex items-center gap-2 text-muted-foreground mb-1">
-                  <Clock className="h-3.5 w-3.5" />
-                  <span className="text-xs">Timings</span>
-                </div>
-                <p className="font-semibold text-foreground text-sm">1:30 - 4:50 PM</p>
-              </div>
-              <div className="bg-muted/50 rounded-lg p-3">
-                <div className="flex items-center gap-2 text-muted-foreground mb-1">
-                  <BookOpen className="h-3.5 w-3.5" />
-                  <span className="text-xs">Total Credits</span>
-                </div>
-                <p className="font-semibold text-foreground text-sm">{courses.reduce((s, c) => s + c.credits, 0)}</p>
-              </div>
+              ))}
             </div>
           </div>
 
           {/* Exam Schedule */}
-          <div className="bg-card rounded-xl border border-border p-4 md:p-5">
-            <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
+          <div className="bg-card rounded-xl border border-border p-5 card-shadow">
+            <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2 text-sm">
               <CalendarDays className="h-4 w-4 text-primary" /> Upcoming Exam Schedule
             </h3>
             <div className="space-y-2">
               {examSchedule.map((exam, i) => (
                 <motion.div key={exam.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}
-                  className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex flex-col items-center justify-center shrink-0">
+                  className="flex items-center gap-3 p-3 rounded-xl bg-muted/30">
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex flex-col items-center justify-center shrink-0">
                     <span className="text-[10px] text-primary font-medium">{new Date(exam.date).toLocaleDateString("en", { month: "short" })}</span>
-                    <span className="text-base font-bold text-primary">{new Date(exam.date).getDate()}</span>
+                    <span className="text-base font-bold text-primary leading-none">{new Date(exam.date).getDate()}</span>
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-foreground text-sm truncate">{exam.subject}</p>
-                    <p className="text-xs text-muted-foreground">{exam.time} • {exam.room}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{exam.time} • {exam.room}</p>
                   </div>
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-warning/10 text-warning font-medium shrink-0">{exam.type}</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-warning/10 text-warning font-medium shrink-0">{exam.type}</span>
                 </motion.div>
               ))}
             </div>
@@ -121,20 +107,20 @@ const Academics = () => {
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-2.5">
           {courses.map((course, i) => (
             <motion.div key={course.code} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-              className="bg-card rounded-xl border border-border p-3 md:p-4 card-hover">
+              className="bg-card rounded-xl border border-border p-4 card-hover card-shadow">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="p-2 rounded-lg bg-primary/10 shrink-0">
+                  <div className="p-2 rounded-xl bg-primary/10 shrink-0">
                     <BookOpen className="h-4 w-4 text-primary" />
                   </div>
                   <div className="min-w-0">
                     <p className="font-semibold text-foreground text-sm truncate">{course.name}</p>
-                    <p className="text-xs text-muted-foreground truncate">{course.code} • {course.faculty}</p>
+                    <p className="text-xs text-muted-foreground truncate mt-0.5">{course.code} • {course.faculty}</p>
                   </div>
                 </div>
-                <div className="text-right shrink-0 ml-2">
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-accent text-accent-foreground font-medium">{course.type}</span>
-                  <p className="text-xs text-muted-foreground mt-1">{course.credits} Credits</p>
+                <div className="text-right shrink-0 ml-3">
+                  <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-accent text-accent-foreground font-medium">{course.type}</span>
+                  <p className="text-xs text-muted-foreground mt-1 tabular-nums">{course.credits} Credits</p>
                 </div>
               </div>
             </motion.div>
@@ -144,20 +130,20 @@ const Academics = () => {
 
       {/* Academic Calendar */}
       {tab === "calendar" && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
-          <div className="bg-card rounded-xl border border-border p-4 md:p-5">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
+          <div className="bg-card rounded-xl border border-border p-5 card-shadow">
             <h3 className="font-semibold text-foreground mb-4">Semester 4 Academic Calendar (2025-2026)</h3>
-            <div className="space-y-3">
+            <div className="space-y-2.5">
               {academicCalendar.map((item, i) => (
                 <motion.div key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.06 }}
-                  className="flex items-center gap-4 p-3 rounded-lg bg-muted/50">
-                  <div className={`w-2 h-10 rounded-full shrink-0
+                  className="flex items-center gap-4 p-3 rounded-xl bg-muted/30">
+                  <div className={`w-[3px] h-10 rounded-full shrink-0
                     ${item.type === "exam" ? "bg-destructive" : "bg-primary"}`} />
                   <div className="flex-1">
                     <p className="font-medium text-foreground text-sm">{item.event}</p>
-                    <p className="text-xs text-muted-foreground">{item.date}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{item.date}</p>
                   </div>
-                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium shrink-0
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium shrink-0
                     ${item.type === "exam" ? "bg-destructive/10 text-destructive" : "bg-primary/10 text-primary"}`}>
                     {item.type === "exam" ? "Exam" : "Academic"}
                   </span>
