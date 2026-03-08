@@ -6,7 +6,6 @@ import { useToast } from "@/hooks/use-toast";
 import { Modal } from "@/components/ui/modal";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
 
 type Category = "All" | "Sports" | "Hackathon" | "Workshop";
 
