@@ -104,27 +104,19 @@ const Login = () => {
                   const subject = encodeURIComponent("Forgot Password - Request for Username and Password");
                   const body = encodeURIComponent("Dear JG University Admin,\n\nI forgot my password. Please mail my username and password again to my registered email ID.\n\nThank you.");
                   const mailtoUrl = `mailto:connect@jguni.in?subject=${subject}&body=${body}`;
-                  const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=connect@jguni.in&su=${subject}&body=${body}`;
+
+                  if (window.self !== window.top) {
+                    toast({
+                      title: "Email support",
+                      description: "Preview blocks Gmail. Please open the published app/new tab or email connect@jguni.in directly.",
+                    });
+                    return;
+                  }
 
                   const opened = window.open(mailtoUrl, "_blank", "noopener,noreferrer");
                   if (!opened) {
                     window.location.href = mailtoUrl;
                   }
-
-                  toast({
-                    title: "Opening mail app...",
-                    description: "If your mail app didn't open, click below to use Gmail.",
-                    action: (
-                      <a
-                        href={gmailUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs font-semibold text-primary underline"
-                      >
-                        Open Gmail
-                      </a>
-                    ),
-                  });
                 }}
                 className="text-xs text-primary hover:underline"
               >
