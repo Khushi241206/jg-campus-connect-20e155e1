@@ -49,6 +49,7 @@ const Exams = () => {
     }]);
     setAvailableTests(prev => prev.map(t => t.id === activeTest.id ? { ...t, status: "completed" as const, score: totalScore } : t));
     toast({ title: "Test Submitted!", description: `You scored ${totalScore}/${activeTest.totalMarks}` });
+    window.dispatchEvent(new CustomEvent("exam-mode", { detail: false }));
   }, [activeTest, answers, toast]);
 
   useEffect(() => {
