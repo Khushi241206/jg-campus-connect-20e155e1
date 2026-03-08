@@ -156,9 +156,6 @@ export const PerformanceAnalytics = () => {
             </div>
           </div>
         ))}
-        {subjects.every(s => s.risk === "low") && (
-          <p className="text-sm text-success text-center py-2">✅ All subjects on track!</p>
-        )}
       </div>
     </motion.div>
   );
