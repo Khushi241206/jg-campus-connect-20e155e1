@@ -611,10 +611,92 @@ const LandingPage = () => {
       </section>
 
       {/* FOOTER */}
-      <footer className="py-8" style={{ background: "#111122" }}>
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
-          <p className="text-white/40 text-sm font-light tracking-wide">
-            © 2026 JG University. All rights reserved. | Excellence by Choice
+      <footer style={{ background: "linear-gradient(180deg, #0d0d1a 0%, #111122 100%)" }}>
+        {/* Top divider */}
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div style={{ height: "1px", background: "linear-gradient(90deg, transparent 0%, rgba(200,155,60,0.3) 50%, transparent 100%)" }} />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-14">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 items-start">
+            {/* Brand */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <img src={jgLogoWhite} alt="JG University" className="h-10 w-auto rounded-lg" />
+              </div>
+              <p className="text-white/40 text-sm font-light leading-relaxed max-w-xs">
+                Empowering students with seamless access to academics, resources, and campus life — all in one place.
+              </p>
+            </motion.div>
+
+            {/* Quick Links */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="md:text-center"
+            >
+              <h4 className="text-white/80 text-sm font-semibold uppercase tracking-widest mb-5">Quick Links</h4>
+              <ul className="space-y-3">
+                {[
+                  { label: "About", id: "about" },
+                  { label: "Privacy Policy", id: "contact" },
+                  { label: "Community Guidelines", id: "features" },
+                  { label: "Contact", id: "contact" },
+                ].map((link) => (
+                  <li key={link.label}>
+                    <button
+                      onClick={() => scrollTo(link.id)}
+                      className="text-white/40 text-sm font-light transition-all duration-300 hover:text-[#C89B3C] hover:tracking-wide"
+                    >
+                      {link.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+
+            {/* Contact Snippet */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="md:text-right"
+            >
+              <h4 className="text-white/80 text-sm font-semibold uppercase tracking-widest mb-5">Get In Touch</h4>
+              <div className="space-y-3">
+                <p className="text-white/40 text-sm font-light flex items-center gap-2 md:justify-end">
+                  <Mail className="h-4 w-4 shrink-0" style={{ color: "#C89B3C" }} /> connect@jguni.in
+                </p>
+                <p className="text-white/40 text-sm font-light flex items-center gap-2 md:justify-end">
+                  <Phone className="h-4 w-4 shrink-0" style={{ color: "#C89B3C" }} /> +91 7567 7567 58/59
+                </p>
+                <p className="text-white/40 text-sm font-light flex items-center gap-2 md:justify-end">
+                  <MapPin className="h-4 w-4 shrink-0" style={{ color: "#C89B3C" }} /> Ahmedabad, Gujarat
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Bottom divider */}
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div style={{ height: "1px", background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%)" }} />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-white/30 text-xs font-light tracking-wide">
+            © 2026 Campus Connect. All rights reserved.
+          </p>
+          <p className="text-white/20 text-xs font-light">
+            Excellence by Choice
           </p>
         </div>
       </footer>
