@@ -47,21 +47,43 @@ const LandingPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 scroll-smooth">
+    <div className="min-h-screen scroll-smooth" style={{ fontFamily: "'Inter', sans-serif", background: "#fafafa" }}>
       {/* NAVBAR */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "shadow-lg backdrop-blur-sm" : ""}`}
-        style={{ background: scrolled ? "rgba(26, 26, 46, 0.95)" : "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)" }}>
-        <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <img src={jgLogoWhite} alt="JG University" className="h-10 w-auto" />
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "shadow-xl" : ""}`}
+        style={{
+          background: scrolled
+            ? "rgba(26, 26, 46, 0.97)"
+            : "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
+          backdropFilter: scrolled ? "blur(20px)" : "none",
+        }}
+      >
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <img src={jgLogoWhite} alt="JG University" className="h-10 w-auto rounded-lg" />
           </div>
-          <div className="hidden md:flex items-center gap-8">
-            <button onClick={() => scrollTo("features")} className="text-white/80 hover:text-white text-sm font-medium transition-colors">Features</button>
-            <button onClick={() => scrollTo("about")} className="text-white/80 hover:text-white text-sm font-medium transition-colors">About</button>
-            <button onClick={() => scrollTo("contact")} className="text-white/80 hover:text-white text-sm font-medium transition-colors">Contact</button>
+          <div className="hidden md:flex items-center gap-10">
+            {["features", "about", "contact"].map((id) => (
+              <button
+                key={id}
+                onClick={() => scrollTo(id)}
+                className="text-white/70 hover:text-white text-sm font-medium tracking-wide transition-all duration-300 hover:tracking-wider capitalize"
+              >
+                {id}
+              </button>
+            ))}
           </div>
-          <button onClick={() => { setShowLogin(true); setTimeout(() => document.getElementById("login-card")?.scrollIntoView({ behavior: "smooth", block: "center" }), 100); }}
-            className="px-5 py-2 bg-white text-gray-900 rounded-full text-sm font-semibold hover:bg-white/90 transition-all">
+          <button
+            onClick={() => {
+              setShowLogin(true);
+              setTimeout(() => document.getElementById("login-card")?.scrollIntoView({ behavior: "smooth", block: "center" }), 100);
+            }}
+            className="px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg"
+            style={{
+              background: "linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%)",
+              color: "#1a1a2e",
+            }}
+          >
             Student Login
           </button>
         </div>
@@ -71,27 +93,67 @@ const LandingPage = () => {
       <section id="hero" className="relative min-h-screen flex items-center">
         <div className="absolute inset-0">
           <img src={jgCampus} alt="JG University Campus" className="w-full h-full object-cover" />
-          <div className="absolute inset-0" style={{ background: "rgba(0,0,0,0.5)" }} />
+          <div
+            className="absolute inset-0"
+            style={{
+              background: "linear-gradient(135deg, rgba(26,26,46,0.75) 0%, rgba(15,52,96,0.6) 50%, rgba(0,0,0,0.5) 100%)",
+            }}
+          />
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 pt-20 w-full grid lg:grid-cols-2 gap-12 items-center">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 pt-24 pb-16 w-full grid lg:grid-cols-2 gap-16 items-center">
           {/* Left text */}
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-            <h1 className="text-5xl md:text-6xl font-bold leading-tight" style={{ fontFamily: "'Georgia', 'Times New Roman', serif" }}>
-              <span className="text-white">Your Academic<br />Journey,</span><br />
-              <span style={{ color: "#C89B3C" }}>Simplified</span>
+          <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }}>
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="inline-block mb-6 px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase"
+              style={{ background: "rgba(200, 155, 60, 0.2)", color: "#C89B3C", border: "1px solid rgba(200, 155, 60, 0.3)" }}
+            >
+              Welcome to JG University
+            </motion.div>
+
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.1] tracking-tight">
+              <span className="text-white">Your Academic</span>
+              <br />
+              <span className="text-white">Journey,</span>
+              <br />
+              <span
+                className="bg-clip-text text-transparent"
+                style={{ backgroundImage: "linear-gradient(135deg, #C89B3C 0%, #E8C872 50%, #C89B3C 100%)" }}
+              >
+                Simplified
+              </span>
             </h1>
-            <p className="mt-6 text-white/80 text-lg max-w-lg leading-relaxed">
+
+            <p className="mt-8 text-white/75 text-lg md:text-xl max-w-lg leading-relaxed font-light">
               Access your timetable, track attendance, view results, manage fees, and stay updated with university notices — all in one place.
             </p>
-            <div className="mt-8 flex gap-4">
-              <button onClick={() => { setShowLogin(true); setTimeout(() => document.getElementById("login-card")?.scrollIntoView({ behavior: "smooth", block: "center" }), 100); }}
-                className="px-6 py-3 rounded-lg text-white font-semibold text-sm transition-all hover:opacity-90 flex items-center gap-2"
-                style={{ background: "linear-gradient(135deg, #8B0000, #A1122F)" }}>
-                Get Started <span>→</span>
+
+            <div className="mt-10 flex flex-wrap gap-4">
+              <button
+                onClick={() => {
+                  setShowLogin(true);
+                  setTimeout(() => document.getElementById("login-card")?.scrollIntoView({ behavior: "smooth", block: "center" }), 100);
+                }}
+                className="px-8 py-3.5 rounded-[14px] text-white font-semibold text-sm transition-all duration-300 hover:scale-105 hover:shadow-2xl flex items-center gap-2.5"
+                style={{
+                  background: "linear-gradient(135deg, #8B0000 0%, #B91C3C 100%)",
+                  boxShadow: "0 8px 32px rgba(139, 0, 0, 0.35)",
+                }}
+              >
+                Get Started <span className="text-lg">→</span>
               </button>
-              <button onClick={() => scrollTo("features")}
-                className="px-6 py-3 rounded-lg border-2 border-white/40 text-white font-semibold text-sm hover:bg-white/10 transition-all">
+              <button
+                onClick={() => scrollTo("features")}
+                className="px-8 py-3.5 rounded-[14px] text-white font-semibold text-sm transition-all duration-300 hover:bg-white/15"
+                style={{
+                  border: "1.5px solid rgba(255,255,255,0.3)",
+                  backdropFilter: "blur(10px)",
+                  background: "rgba(255,255,255,0.05)",
+                }}
+              >
                 Explore Features
               </button>
             </div>
@@ -101,47 +163,108 @@ const LandingPage = () => {
           {showLogin && (
             <motion.div
               id="login-card"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="w-full max-w-md mx-auto lg:ml-auto bg-white rounded-2xl p-8 shadow-2xl"
+              initial={{ opacity: 0, y: 30, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="w-full max-w-md mx-auto lg:ml-auto"
+              style={{
+                background: "rgba(255, 255, 255, 0.92)",
+                backdropFilter: "blur(24px)",
+                borderRadius: "20px",
+                padding: "40px 36px",
+                boxShadow: "0 24px 64px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.2)",
+                border: "1px solid rgba(255, 255, 255, 0.3)",
+              }}
             >
-              <div className="flex flex-col items-center mb-6">
-                <img src={jgLogo} alt="JG University" className="h-24 w-64 object-contain mb-2" />
+              <div className="flex flex-col items-center mb-8">
+                <img src={jgLogo} alt="JG University" className="h-28 w-72 object-contain mb-3" />
+                <p className="text-xs font-medium tracking-wide" style={{ color: "#8B8B8B" }}>
+                  Sponsored by ASIA Charitable Trust
+                </p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Username</label>
+                  <label className="block text-sm font-semibold mb-2" style={{ color: "#374151" }}>
+                    Username
+                  </label>
                   <input
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     placeholder="Enter your username"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-red-900/30 transition-all"
+                    className="w-full px-4 py-3.5 text-sm transition-all duration-300 focus:outline-none"
+                    style={{
+                      borderRadius: "12px",
+                      border: "1.5px solid #E5E7EB",
+                      background: "#F9FAFB",
+                      color: "#1F2937",
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = "#8B0000";
+                      e.target.style.boxShadow = "0 0 0 3px rgba(139, 0, 0, 0.1)";
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = "#E5E7EB";
+                      e.target.style.boxShadow = "none";
+                    }}
                     required
                   />
                 </div>
+
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Password</label>
+                  <label className="block text-sm font-semibold mb-2" style={{ color: "#374151" }}>
+                    Password
+                  </label>
                   <div className="relative">
                     <input
                       type={showPassword ? "text" : "password"}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Enter your password"
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-red-900/30 transition-all pr-10"
+                      className="w-full px-4 py-3.5 text-sm transition-all duration-300 focus:outline-none pr-11"
+                      style={{
+                        borderRadius: "12px",
+                        border: "1.5px solid #E5E7EB",
+                        background: "#F9FAFB",
+                        color: "#1F2937",
+                      }}
+                      onFocus={(e) => {
+                        e.target.style.borderColor = "#8B0000";
+                        e.target.style.boxShadow = "0 0 0 3px rgba(139, 0, 0, 0.1)";
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.borderColor = "#E5E7EB";
+                        e.target.style.boxShadow = "none";
+                      }}
                       required
                     />
-                    <button type="button" onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 transition-colors duration-200"
+                      style={{ color: "#9CA3AF" }}
+                    >
+                      {showPassword ? <EyeOff className="h-4.5 w-4.5" /> : <Eye className="h-4.5 w-4.5" />}
                     </button>
                   </div>
                 </div>
-                <button type="submit"
-                  className="w-full py-3 rounded-xl text-white font-semibold text-sm transition-all hover:opacity-90"
-                  style={{ background: "linear-gradient(135deg, #8B0000, #A1122F)" }}>
+
+                <div className="flex justify-end pt-1">
+                  <button type="button" className="text-xs font-medium transition-colors duration-200" style={{ color: "#8B0000" }}>
+                    Forgot Password?
+                  </button>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full py-3.5 text-white font-semibold text-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-xl active:scale-[0.98]"
+                  style={{
+                    borderRadius: "14px",
+                    background: "linear-gradient(135deg, #8B0000 0%, #B91C3C 100%)",
+                    boxShadow: "0 6px 24px rgba(139, 0, 0, 0.3)",
+                  }}
+                >
                   Login
                 </button>
               </form>
@@ -151,31 +274,70 @@ const LandingPage = () => {
       </section>
 
       {/* FEATURES SECTION */}
-      <section id="features" className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-6">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            className="text-center mb-14">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900" style={{ fontFamily: "'Georgia', serif" }}>
+      <section id="features" className="py-24 lg:py-28" style={{ background: "#F5F5F7" }}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <p
+              className="text-sm font-semibold tracking-widest uppercase mb-3"
+              style={{ color: "#8B0000" }}
+            >
+              Platform Features
+            </p>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight" style={{ color: "#1a1a2e" }}>
               Everything You Need
             </h2>
-            <p className="mt-3 text-gray-500 text-lg">One platform to manage your entire academic life at JG University</p>
+            <p className="mt-4 text-lg max-w-2xl mx-auto font-light" style={{ color: "#6B7280" }}>
+              One platform to manage your entire academic life at JG University
+            </p>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
             {features.map((f, i) => (
-              <motion.div key={f.title}
-                initial={{ opacity: 0, y: 20 }}
+              <motion.div
+                key={f.title}
+                initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-center"
+                transition={{ delay: i * 0.08, duration: 0.5 }}
+                className="group cursor-pointer text-center"
+                style={{
+                  background: "rgba(255, 255, 255, 0.8)",
+                  backdropFilter: "blur(16px)",
+                  borderRadius: "18px",
+                  padding: "32px 24px",
+                  border: "1px solid rgba(0, 0, 0, 0.06)",
+                  boxShadow: "0 4px 24px rgba(0, 0, 0, 0.04)",
+                  transition: "all 0.4s cubic-bezier(0.22, 1, 0.36, 1)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-6px)";
+                  e.currentTarget.style.boxShadow = "0 20px 48px rgba(139, 0, 0, 0.1)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "0 4px 24px rgba(0, 0, 0, 0.04)";
+                }}
               >
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4"
-                  style={{ background: "linear-gradient(135deg, #8B0000, #A1122F)" }}>
+                <div
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5 transition-all duration-300"
+                  style={{
+                    background: "linear-gradient(135deg, #8B0000 0%, #B91C3C 100%)",
+                    boxShadow: "0 4px 16px rgba(139, 0, 0, 0.25)",
+                  }}
+                >
                   <f.icon className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-2">{f.title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{f.desc}</p>
+                <h3 className="font-bold text-base mb-2" style={{ color: "#1a1a2e" }}>
+                  {f.title}
+                </h3>
+                <p className="text-sm leading-relaxed font-light" style={{ color: "#6B7280" }}>
+                  {f.desc}
+                </p>
               </motion.div>
             ))}
           </div>
@@ -183,47 +345,82 @@ const LandingPage = () => {
       </section>
 
       {/* ABOUT SECTION */}
-      <section id="about" className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
-          <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6" style={{ fontFamily: "'Georgia', serif" }}>
+      <section id="about" className="py-24 lg:py-28" style={{ background: "#FFFFFF" }}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 grid lg:grid-cols-2 gap-16 items-center">
+          <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
+            <p
+              className="text-sm font-semibold tracking-widest uppercase mb-3"
+              style={{ color: "#8B0000" }}
+            >
+              About Us
+            </p>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight mb-8" style={{ color: "#1a1a2e" }}>
               About JG University
             </h2>
-            <p className="text-gray-600 leading-relaxed mb-4">
+            <p className="text-base leading-relaxed mb-4 font-light" style={{ color: "#4B5563" }}>
               JG University is committed to providing excellence in education with a focus on innovation, research, and holistic development. Our state-of-the-art campus features modern facilities for an enriching academic experience.
             </p>
-            <p className="text-gray-600 leading-relaxed mb-8">
+            <p className="text-base leading-relaxed mb-10 font-light" style={{ color: "#4B5563" }}>
               Sponsored by ASIA Charitable Trust, we offer programs in Engineering, Management, Sciences, and more with a mission to nurture future leaders.
             </p>
-            <div className="flex gap-8">
+
+            <div className="flex gap-10">
               {[
                 { num: "5000+", label: "Students", icon: Users },
                 { num: "200+", label: "Faculty", icon: GraduationCap },
                 { num: "50+", label: "Programs", icon: BookOpen },
               ].map((s) => (
                 <div key={s.label} className="text-center">
-                  <p className="text-2xl font-bold" style={{ color: "#8B0000" }}>{s.num}</p>
-                  <p className="text-sm text-gray-500">{s.label}</p>
+                  <p
+                    className="text-3xl font-extrabold tracking-tight"
+                    style={{
+                      backgroundImage: "linear-gradient(135deg, #8B0000 0%, #B91C3C 100%)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                    }}
+                  >
+                    {s.num}
+                  </p>
+                  <p className="text-sm font-medium mt-1" style={{ color: "#6B7280" }}>
+                    {s.label}
+                  </p>
                 </div>
               ))}
             </div>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
-            <img src={jgCampus} alt="JG University Campus" className="rounded-2xl shadow-xl w-full object-cover h-80" />
+          <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
+            <div style={{ borderRadius: "20px", overflow: "hidden", boxShadow: "0 24px 64px rgba(0, 0, 0, 0.12)" }}>
+              <img src={jgCampus} alt="JG University Campus" className="w-full object-cover h-96" />
+            </div>
           </motion.div>
         </div>
       </section>
 
       {/* CONTACT SECTION */}
-      <section id="contact" className="py-20" style={{ background: "linear-gradient(135deg, #8B0000, #C0392B)" }}>
-        <div className="max-w-7xl mx-auto px-6">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            className="text-center mb-14">
-            <h2 className="text-3xl md:text-4xl font-bold text-white" style={{ fontFamily: "'Georgia', serif" }}>
+      <section
+        id="contact"
+        className="py-24 lg:py-28"
+        style={{
+          background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
+        }}
+      >
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <p className="text-sm font-semibold tracking-widest uppercase mb-3" style={{ color: "#C89B3C" }}>
+              Contact
+            </p>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
               Get In Touch
             </h2>
-            <p className="mt-3 text-white/80 text-lg">Have questions? Reach out to us and we'll be happy to help.</p>
+            <p className="mt-4 text-lg text-white/60 font-light max-w-2xl mx-auto">
+              Have questions? Reach out to us and we'll be happy to help.
+            </p>
           </motion.div>
 
           <div className="grid sm:grid-cols-3 gap-6">
@@ -232,19 +429,41 @@ const LandingPage = () => {
               { icon: Phone, title: "Phone", lines: ["+91 7567 7567 58/59"] },
               { icon: MapPin, title: "Address", lines: ["JG University, ASIA Campus, Drive in Rd,", "Thaltej, Ahmedabad - 380054, Gujarat, India"] },
             ].map((c, i) => (
-              <motion.div key={c.title}
-                initial={{ opacity: 0, y: 20 }}
+              <motion.div
+                key={c.title}
+                initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="bg-white rounded-2xl p-6 text-center shadow-lg"
+                transition={{ delay: i * 0.1, duration: 0.5 }}
+                className="text-center"
+                style={{
+                  background: "rgba(255, 255, 255, 0.06)",
+                  backdropFilter: "blur(20px)",
+                  borderRadius: "18px",
+                  padding: "36px 28px",
+                  border: "1px solid rgba(255, 255, 255, 0.1)",
+                  transition: "all 0.4s cubic-bezier(0.22, 1, 0.36, 1)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
+                  e.currentTarget.style.transform = "translateY(-4px)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.06)";
+                  e.currentTarget.style.transform = "translateY(0)";
+                }}
               >
-                <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: "#8B000015" }}>
-                  <c.icon className="h-5 w-5" style={{ color: "#8B0000" }} />
+                <div
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5"
+                  style={{ background: "rgba(200, 155, 60, 0.15)", border: "1px solid rgba(200, 155, 60, 0.2)" }}
+                >
+                  <c.icon className="h-5.5 w-5.5" style={{ color: "#C89B3C" }} />
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-2">{c.title}</h3>
+                <h3 className="font-bold text-white text-base mb-3">{c.title}</h3>
                 {c.lines.map((line, j) => (
-                  <p key={j} className="text-sm text-gray-600">{line}</p>
+                  <p key={j} className="text-sm text-white/60 leading-relaxed font-light">
+                    {line}
+                  </p>
                 ))}
               </motion.div>
             ))}
@@ -253,9 +472,11 @@ const LandingPage = () => {
       </section>
 
       {/* FOOTER */}
-      <footer style={{ background: "#1a1a2e" }} className="py-6">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <p className="text-white/60 text-sm">© 2026 JG University. All rights reserved. | Excellence by Choice</p>
+      <footer className="py-8" style={{ background: "#111122" }}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
+          <p className="text-white/40 text-sm font-light tracking-wide">
+            © 2026 JG University. All rights reserved. | Excellence by Choice
+          </p>
         </div>
       </footer>
     </div>
