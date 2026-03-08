@@ -46,44 +46,41 @@
 
   /* Dark Academic */
   [data-theme="dark-academic"] {
-    --background: 250 20% 7%;
-    --foreground: 40 30% 92%;
-    --card: 250 18% 11%;
-    --card-foreground: 40 30% 92%;
-    --popover: 250 18% 11%;
-    --popover-foreground: 40 30% 92%;
-    --primary: 35 85% 55%;
-    --primary-foreground: 250 20% 7%;
-    --secondary: 250 14% 16%;
-    --secondary-foreground: 40 20% 85%;
-    --muted: 250 12% 15%;
-    --muted-foreground: 40 10% 55%;
-    --accent: 15 75% 50%;
-    --accent-foreground: 40 30% 95%;
-    --destructive: 0 72% 50%;
+    --background: 230 12% 12%;
+    --foreground: 38 15% 82%;
+    --card: 230 10% 15%;
+    --card-foreground: 38 15% 82%;
+    --popover: 230 10% 15%;
+    --popover-foreground: 38 15% 82%;
+    --primary: 38 55% 58%;
+    --primary-foreground: 230 12% 10%;
+    --secondary: 230 8% 19%;
+    --secondary-foreground: 38 12% 78%;
+    --muted: 230 8% 18%;
+    --muted-foreground: 230 6% 52%;
+    --accent: 20 45% 52%;
+    --accent-foreground: 38 20% 92%;
+    --destructive: 0 55% 52%;
     --destructive-foreground: 0 0% 100%;
-    --border: 250 12% 18%;
-    --input: 250 12% 18%;
-    --ring: 35 85% 55%;
+    --border: 230 8% 22%;
+    --input: 230 8% 20%;
+    --ring: 38 45% 50%;
     --radius: 0.75rem;
-    --sidebar-background: 250 25% 5%;
-    --sidebar-foreground: 40 20% 88%;
-    --sidebar-primary: 35 85% 55%;
-    --sidebar-primary-foreground: 250 20% 7%;
-    --sidebar-accent: 250 18% 13%;
-    --sidebar-accent-foreground: 40 20% 88%;
-    --sidebar-border: 250 15% 14%;
-    --sidebar-ring: 35 85% 55%;
-    --success: 152 60% 42%;
+    --sidebar-background: 230 14% 9%;
+    --sidebar-foreground: 38 12% 80%;
+    --sidebar-primary: 38 55% 58%;
+    --sidebar-primary-foreground: 230 14% 9%;
+    --sidebar-accent: 230 10% 16%;
+    --sidebar-accent-foreground: 38 12% 80%;
+    --sidebar-border: 230 10% 16%;
+    --sidebar-ring: 38 45% 50%;
+    --success: 152 40% 45%;
     --success-foreground: 0 0% 100%;
-    --warning: 38 92% 50%;
+    --warning: 38 65% 52%;
     --warning-foreground: 0 0% 100%;
-    --glass: 250 18% 11% / 0.85;
-    --glass-border: 35 50% 30% / 0.15;
-    --shadow-color: 250 30% 3%;
-    --gradient-start: 250 20% 9%;
-    --gradient-end: 280 18% 12%;
-    --gradient-accent: 35 85% 55%;
+    --glass: 230 10% 14% / 0.88;
+    --glass-border: 38 20% 35% / 0.12;
+    --shadow-color: 230 15% 5%;
   }
 
   /* Modern Blue */
