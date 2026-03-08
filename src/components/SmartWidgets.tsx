@@ -92,7 +92,6 @@ export const SmartReminders = () => {
   // Academic calendar milestones
   const milestones = [
     { name: "Mid-Term Exams", start: new Date(2026, 1, 16), end: new Date(2026, 1, 21) },
-    { name: "Holi Break", start: new Date(2026, 2, 16), end: new Date(2026, 2, 18) },
     { name: "Internal Exams", start: new Date(2026, 3, 6), end: new Date(2026, 3, 15) },
     { name: "External Exams", start: new Date(2026, 3, 23), end: new Date(2026, 3, 30) },
   ];
