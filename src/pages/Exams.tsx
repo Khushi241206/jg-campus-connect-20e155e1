@@ -49,6 +49,7 @@ const Exams = () => {
     }]);
     setAvailableTests(prev => prev.map(t => t.id === activeTest.id ? { ...t, status: "completed" as const, score: totalScore } : t));
     toast({ title: "Test Submitted!", description: `You scored ${totalScore}/${activeTest.totalMarks}` });
+    window.dispatchEvent(new CustomEvent("exam-mode", { detail: false }));
   }, [activeTest, answers, toast]);
 
   useEffect(() => {
@@ -71,12 +72,14 @@ const Exams = () => {
     setSubmitted(false);
     setScore(0);
     setTimeLeft(test.duration * 60);
+    window.dispatchEvent(new CustomEvent("exam-mode", { detail: true }));
   };
 
   const exitTest = () => {
     setActiveTest(null);
     setSubmitted(false);
     setAnswers({});
+    window.dispatchEvent(new CustomEvent("exam-mode", { detail: false }));
   };
 
   const timerMinutes = Math.floor(timeLeft / 60);

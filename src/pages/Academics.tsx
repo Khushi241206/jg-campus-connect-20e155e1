@@ -91,7 +91,7 @@ const Academics = () => {
                     <span className="text-base font-bold text-primary leading-none">{new Date(exam.date).getDate()}</span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-foreground text-sm truncate">{exam.subject}</p>
+                    <p className="font-medium text-foreground text-sm">{exam.subject}</p>
                     <p className="text-xs text-muted-foreground mt-0.5">{exam.time} • {exam.room}</p>
                   </div>
                   <span className="text-[10px] px-2 py-0.5 rounded-full bg-warning/10 text-warning font-medium shrink-0">{exam.type}</span>

@@ -147,11 +147,11 @@ export const attendanceTrend = [
 ];
 
 export const examSchedule = [
-  { id: 1, subject: "Software Engineering", date: "2026-03-10", time: "10:00 AM - 1:00 PM", room: "Hall A", type: "Mid-Sem" as const },
-  { id: 2, subject: "Computer Networks", date: "2026-03-14", time: "2:00 PM - 5:00 PM", room: "Hall A", type: "Mid-Sem" as const },
-  { id: 3, subject: "Machine Learning", date: "2026-03-16", time: "10:00 AM - 1:00 PM", room: "Hall C", type: "Mid-Sem" as const },
-  { id: 4, subject: "UI/UX Design", date: "2026-03-18", time: "2:00 PM - 5:00 PM", room: "Hall B", type: "Mid-Sem" as const },
-  { id: 5, subject: "Vector Calculus", date: "2026-03-20", time: "10:00 AM - 1:00 PM", room: "Hall A", type: "Mid-Sem" as const },
+  { id: 1, subject: "Software Engineering", date: "2026-04-06", time: "10:00 AM - 1:00 PM", room: "Hall A", type: "Internal" as const },
+  { id: 2, subject: "Computer Networks", date: "2026-04-08", time: "2:00 PM - 5:00 PM", room: "Hall A", type: "Internal" as const },
+  { id: 3, subject: "Machine Learning", date: "2026-04-10", time: "10:00 AM - 1:00 PM", room: "Hall C", type: "Internal" as const },
+  { id: 4, subject: "UI/UX Design", date: "2026-04-12", time: "2:00 PM - 5:00 PM", room: "Hall B", type: "Internal" as const },
+  { id: 5, subject: "Vector Calculus", date: "2026-04-14", time: "10:00 AM - 1:00 PM", room: "Hall A", type: "Internal" as const },
 ];
 
 export interface MCQQuestion {
@@ -405,13 +405,13 @@ const entrepreneurshipQuestions: MCQQuestion[] = [
 ];
 
 export const onlineTests: OnlineTest[] = [
-  { id: 1, subject: "Machine Learning", title: "ML Unit Test 1", totalMarks: 30, duration: 10, date: "2026-02-25", status: "available", questions: mlQuestions },
-  { id: 2, subject: "Computer Networks", title: "CN Unit Test 1", totalMarks: 30, duration: 10, date: "2026-02-28", status: "available", questions: cnQuestions },
-  { id: 3, subject: "Software Engineering", title: "SE Unit Test 1", totalMarks: 30, duration: 10, date: "2026-02-20", status: "available", questions: seQuestions },
-  { id: 4, subject: "UI/UX Design", title: "UI/UX Unit Test 1", totalMarks: 30, duration: 10, date: "2026-03-05", status: "available", questions: uiuxQuestions },
-  { id: 5, subject: "Vector Calculus", title: "VC Unit Test 1", totalMarks: 30, duration: 10, date: "2026-03-01", status: "available", questions: vcQuestions },
-  { id: 6, subject: "Sustainable Energy", title: "SE Unit Test 1", totalMarks: 30, duration: 10, date: "2026-03-03", status: "available", questions: senergyQuestions },
-  { id: 7, subject: "Entrepreneurship", title: "Entrepreneurship Unit Test 1", totalMarks: 30, duration: 10, date: "2026-03-07", status: "available", questions: entrepreneurshipQuestions },
+  { id: 1, subject: "Machine Learning", title: "ML Unit Test 1", totalMarks: 30, duration: 30, date: "2026-02-25", status: "available", questions: mlQuestions },
+  { id: 2, subject: "Computer Networks", title: "CN Unit Test 1", totalMarks: 30, duration: 30, date: "2026-02-28", status: "available", questions: cnQuestions },
+  { id: 3, subject: "Software Engineering", title: "SE Unit Test 1", totalMarks: 30, duration: 30, date: "2026-02-20", status: "available", questions: seQuestions },
+  { id: 4, subject: "UI/UX Design", title: "UI/UX Unit Test 1", totalMarks: 30, duration: 30, date: "2026-03-05", status: "available", questions: uiuxQuestions },
+  { id: 5, subject: "Vector Calculus", title: "VC Unit Test 1", totalMarks: 30, duration: 30, date: "2026-03-01", status: "available", questions: vcQuestions },
+  { id: 6, subject: "Sustainable Energy", title: "SE Unit Test 1", totalMarks: 30, duration: 30, date: "2026-03-03", status: "available", questions: senergyQuestions },
+  { id: 7, subject: "Entrepreneurship", title: "Entrepreneurship Unit Test 1", totalMarks: 30, duration: 30, date: "2026-03-07", status: "available", questions: entrepreneurshipQuestions },
 ];
 
 export const events = [

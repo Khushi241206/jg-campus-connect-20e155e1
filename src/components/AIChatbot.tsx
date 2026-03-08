@@ -27,7 +27,17 @@ const AIChatbot = () => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [imageMode, setImageMode] = useState(false);
+  const [examMode, setExamMode] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      setExamMode((e as CustomEvent).detail);
+      if ((e as CustomEvent).detail) setIsOpen(false);
+    };
+    window.addEventListener("exam-mode", handler);
+    return () => window.removeEventListener("exam-mode", handler);
+  }, []);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -154,6 +164,8 @@ const AIChatbot = () => {
       setIsLoading(false);
     }
   };
+
+  if (examMode) return null;
 
   return (
     <>

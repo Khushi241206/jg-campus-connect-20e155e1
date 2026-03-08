@@ -91,8 +91,8 @@ const Timetable = () => {
                     <span>{cls.time.split(" - ")[0]}</span>
                   </div>
                   <div className="min-w-0">
-                    <p className="font-medium text-foreground text-sm truncate">{cls.subject}</p>
-                    <p className="text-xs text-muted-foreground truncate">{cls.faculty || ""}</p>
+                    <p className="font-medium text-foreground text-sm">{cls.subject}</p>
+                    <p className="text-xs text-muted-foreground">{cls.faculty || ""}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
