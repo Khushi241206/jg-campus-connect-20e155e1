@@ -6,7 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import jgCampus from "@/assets/jg-campus.jpeg";
 import jgLogoWhite from "@/assets/jg-logo.jpeg";
-import jgLogo from "@/assets/jg-logo.jpeg";
+import jgLogo from "@/assets/jg-logo-white.png";
 
 const LandingPage = () => {
   const [username, setUsername] = useState("");
@@ -107,7 +107,7 @@ const LandingPage = () => {
               className="w-full max-w-md mx-auto lg:ml-auto bg-white rounded-2xl p-8 shadow-2xl"
             >
               <div className="flex flex-col items-center mb-6">
-                <img src={jgLogo} alt="JG University" className="h-16 w-auto rounded-lg mb-2" />
+                <img src={jgLogo} alt="JG University" className="h-20 w-auto mb-2" />
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-5">
