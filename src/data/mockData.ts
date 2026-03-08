@@ -70,6 +70,7 @@ export const results = {
       { name: "Object Oriented Programming with C++", grade: "A", credits: 4 },
       { name: "Computer Architecture", grade: "B+", credits: 3 },
       { name: "Mathematics", grade: "A", credits: 4 },
+      { name: "Communication Skills", grade: "A", credits: 2 },
     ]},
     { sem: 3, sgpa: 8.6, subjects: [
       { name: "Web Technology", grade: "A+", credits: 4 },
