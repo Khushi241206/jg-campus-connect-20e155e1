@@ -46,41 +46,44 @@
 
   /* Dark Academic */
   [data-theme="dark-academic"] {
-    --background: 240 16% 8%;
-    --foreground: 0 0% 95%;
-    --card: 240 14% 12%;
-    --card-foreground: 0 0% 95%;
-    --popover: 240 14% 12%;
-    --popover-foreground: 0 0% 95%;
-    --primary: 0 100% 27%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 240 10% 16%;
-    --secondary-foreground: 0 0% 90%;
-    --muted: 240 10% 16%;
-    --muted-foreground: 240 5% 60%;
-    --accent: 40 72% 50%;
-    --accent-foreground: 0 0% 100%;
+    --background: 250 20% 7%;
+    --foreground: 40 30% 92%;
+    --card: 250 18% 11%;
+    --card-foreground: 40 30% 92%;
+    --popover: 250 18% 11%;
+    --popover-foreground: 40 30% 92%;
+    --primary: 35 85% 55%;
+    --primary-foreground: 250 20% 7%;
+    --secondary: 250 14% 16%;
+    --secondary-foreground: 40 20% 85%;
+    --muted: 250 12% 15%;
+    --muted-foreground: 40 10% 55%;
+    --accent: 15 75% 50%;
+    --accent-foreground: 40 30% 95%;
     --destructive: 0 72% 50%;
     --destructive-foreground: 0 0% 100%;
-    --border: 240 8% 20%;
-    --input: 240 8% 20%;
-    --ring: 0 100% 27%;
+    --border: 250 12% 18%;
+    --input: 250 12% 18%;
+    --ring: 35 85% 55%;
     --radius: 0.75rem;
-    --sidebar-background: 240 20% 5%;
-    --sidebar-foreground: 0 0% 90%;
-    --sidebar-primary: 0 100% 27%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 15% 14%;
-    --sidebar-accent-foreground: 0 0% 90%;
-    --sidebar-border: 240 10% 14%;
-    --sidebar-ring: 0 100% 27%;
+    --sidebar-background: 250 25% 5%;
+    --sidebar-foreground: 40 20% 88%;
+    --sidebar-primary: 35 85% 55%;
+    --sidebar-primary-foreground: 250 20% 7%;
+    --sidebar-accent: 250 18% 13%;
+    --sidebar-accent-foreground: 40 20% 88%;
+    --sidebar-border: 250 15% 14%;
+    --sidebar-ring: 35 85% 55%;
     --success: 152 60% 42%;
     --success-foreground: 0 0% 100%;
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
-    --glass: 240 14% 12% / 0.8;
-    --glass-border: 240 14% 24% / 0.3;
-    --shadow-color: 240 20% 4%;
+    --glass: 250 18% 11% / 0.85;
+    --glass-border: 35 50% 30% / 0.15;
+    --shadow-color: 250 30% 3%;
+    --gradient-start: 250 20% 9%;
+    --gradient-end: 280 18% 12%;
+    --gradient-accent: 35 85% 55%;
   }
 
   /* Modern Blue */
@@ -195,6 +198,17 @@
 }
 
 @layer utilities {
+  /* Dark Academic gradient enhancements */
+  [data-theme="dark-academic"] .bg-background {
+    background: linear-gradient(135deg, hsl(250 20% 7%), hsl(280 18% 10%));
+  }
+  [data-theme="dark-academic"] .bg-card {
+    background: linear-gradient(145deg, hsl(250 18% 12%), hsl(260 16% 10%));
+    border-color: hsl(35 50% 30% / 0.12);
+  }
+  [data-theme="dark-academic"] .bg-sidebar {
+    background: linear-gradient(180deg, hsl(250 25% 6%), hsl(270 22% 4%));
+  }
   /* Glass card */
   .glass-card {
     background: hsl(var(--glass));
