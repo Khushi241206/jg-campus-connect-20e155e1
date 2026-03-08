@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Brain, TrendingUp, Bell, Activity, Sparkles } from "lucide-react";
-import { attendanceData } from "@/data/mockData";
+import { attendanceData, assignments, fees } from "@/data/mockData";
 
 const aiChip = (
   <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium flex items-center gap-0.5">
@@ -87,15 +87,66 @@ export const AcademicHealthScore = () => {
 // Smart Reminders
 export const SmartReminders = () => {
   const today = new Date();
-  const internalsStart = new Date(2026, 3, 6); // April 6
-  const daysToInternals = Math.ceil((internalsStart.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+  const daysUntil = (date: Date) => Math.ceil((date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 
-  const reminders = [
-    { text: "CN attendance below 80% — attend next 3 classes", type: "warning" as const, icon: "⚠️" },
-    { text: "ML Assignment due in 2 days", type: "info" as const, icon: "📝" },
-    ...(daysToInternals > 0 ? [{ text: `Internal exams in ${daysToInternals} days`, type: "info" as const, icon: "📅" }] : []),
-    { text: "Fee payment completed ✓", type: "success" as const, icon: "✅" },
+  // Academic calendar milestones
+  const milestones = [
+    { name: "Mid-Term Exams", start: new Date(2026, 1, 16), end: new Date(2026, 1, 21) },
+    { name: "Holi Break", start: new Date(2026, 2, 16), end: new Date(2026, 2, 18) },
+    { name: "Internal Exams", start: new Date(2026, 3, 6), end: new Date(2026, 3, 15) },
+    { name: "External Exams", start: new Date(2026, 3, 23), end: new Date(2026, 3, 30) },
   ];
+
+  const reminders: { text: string; type: "warning" | "info" | "success"; icon: string }[] = [];
+
+  // Attendance warnings — flag subjects below 80%
+  const lowAttendance = attendanceData.filter(a => a.percentage < 80);
+  lowAttendance.forEach(a => {
+    const classesNeeded = Math.ceil((80 * a.total - 100 * a.present) / (100 - 80));
+    reminders.push({
+      text: `${a.subject} attendance ${a.percentage}% — attend next ${Math.max(classesNeeded, 1)} classes`,
+      type: "warning",
+      icon: "⚠️",
+    });
+  });
+
+  // Pending assignments — show upcoming ones
+  const pendingAssignments = assignments
+    .filter(a => a.status === "pending")
+    .map(a => ({ ...a, deadlineDate: new Date(a.deadline + "T00:00:00") }))
+    .filter(a => a.deadlineDate >= today)
+    .sort((a, b) => a.deadlineDate.getTime() - b.deadlineDate.getTime());
+
+  pendingAssignments.forEach(a => {
+    const days = daysUntil(a.deadlineDate);
+    reminders.push({
+      text: `${a.title} due ${days === 0 ? "today" : days === 1 ? "tomorrow" : `in ${days} days`}`,
+      type: days <= 2 ? "warning" : "info",
+      icon: "📝",
+    });
+  });
+
+  // Upcoming academic milestones
+  milestones.forEach(m => {
+    const days = daysUntil(m.start);
+    if (days > 0 && days <= 30) {
+      reminders.push({ text: `${m.name} in ${days} days`, type: "info", icon: "📅" });
+    } else if (days <= 0 && daysUntil(m.end) >= 0) {
+      reminders.push({ text: `${m.name} ongoing now`, type: "warning", icon: "🔴" });
+    }
+  });
+
+  // Fee status
+  if (fees.outstanding > 0) {
+    reminders.push({ text: `Fee outstanding: ₹${fees.outstanding.toLocaleString()}`, type: "warning", icon: "💰" });
+  } else {
+    reminders.push({ text: "Fee payment completed ✓", type: "success", icon: "✅" });
+  }
+
+  // If no reminders, show all-clear
+  if (reminders.length === 0) {
+    reminders.push({ text: "You're all caught up! No pending items.", type: "success", icon: "🎉" });
+  }
 
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className={widgetCard}>
