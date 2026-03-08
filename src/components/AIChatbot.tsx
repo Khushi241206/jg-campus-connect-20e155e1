@@ -235,7 +235,16 @@ const AIChatbot = () => {
                       <span className="whitespace-pre-line">{msg.text}</span>
                     )}
                     {msg.imageUrl && (
-                      <img src={msg.imageUrl} alt="Generated" className="mt-2 rounded-lg w-full max-w-[260px]" />
+                      <div className="mt-2">
+                        <img src={msg.imageUrl} alt="Generated" className="rounded-lg w-full max-w-[260px]" />
+                        <a
+                          href={msg.imageUrl}
+                          download={`jg-assistant-${msg.id}.png`}
+                          className="mt-1.5 inline-flex items-center gap-1 text-[10px] px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                        >
+                          <Download className="h-3 w-3" /> Download Image
+                        </a>
+                      </div>
                     )}
                   </div>
                 </motion.div>
