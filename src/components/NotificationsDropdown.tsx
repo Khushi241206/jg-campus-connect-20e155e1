@@ -60,7 +60,7 @@ const NotificationsDropdown = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-            className="absolute right-0 top-12 w-[calc(100vw-2rem)] sm:w-80 max-w-sm bg-card border border-border rounded-lg shadow-lg z-50 overflow-hidden"
+            className="fixed sm:absolute right-4 sm:right-0 top-14 sm:top-12 w-[calc(100vw-2rem)] sm:w-80 max-w-sm bg-card border border-border rounded-lg shadow-lg z-50 overflow-hidden"
           >
             <div className="flex items-center justify-between p-3 border-b border-border">
               <h3 className="font-semibold text-foreground text-sm">Notifications</h3>
