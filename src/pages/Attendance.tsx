@@ -5,12 +5,20 @@ import { AlertTriangle, CheckCircle, CalendarDays, FileText, ChevronLeft, Chevro
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, PieChart, Pie } from "recharts";
 import { useToast } from "@/hooks/use-toast";
 
+// Timezone-safe local date string helper
+const toLocalDateStr = (d: Date) => {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+};
+
 // Generate realistic daily attendance using exact timetable schedule
 const generateDailyAttendance = () => {
   const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] as const;
   const data: Record<string, { subject: string; faculty: string; time: string; type: string; status: "P" | "A" | "N" }[]> = {};
   const today = new Date();
-  const todayStr = today.toISOString().split("T")[0];
+  const todayStr = toLocalDateStr(today);
 
   // Seed-based pseudo-random for consistency
   const seededRandom = (seed: number) => {
