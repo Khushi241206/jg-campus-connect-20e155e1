@@ -230,6 +230,57 @@
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 
+  /* Loading skeleton shimmer */
+  .skeleton {
+    position: relative;
+    overflow: hidden;
+    background: hsl(var(--muted));
+    border-radius: 8px;
+  }
+  .skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--background) / 0.4),
+      transparent
+    );
+    animation: skeleton-shimmer 1.8s ease-in-out infinite;
+  }
+  @keyframes skeleton-shimmer {
+    100% { transform: translateX(100%); }
+  }
+
+  /* Scroll-triggered fade-in (use with IntersectionObserver or framer-motion) */
+  .scroll-fade-in {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  .scroll-fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Smooth hover scale for interactive elements */
+  .hover-scale {
+    @apply transition-transform duration-200;
+  }
+  .hover-scale:hover {
+    transform: scale(1.04);
+  }
+  .hover-scale:active {
+    transform: scale(0.97);
+  }
+
+  /* Button glow on hover */
+  .btn-glow:hover {
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.25);
+  }
+
   /* Mobile-friendly touch targets */
   @media (max-width: 768px) {
     button, a, input, select, textarea {
