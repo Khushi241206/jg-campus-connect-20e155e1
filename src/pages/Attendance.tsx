@@ -31,7 +31,7 @@ const generateDailyAttendance = () => {
     for (let d = 1; d <= daysInMonth; d++) {
       const date = new Date(2026, m, d);
       const dayName = dayNames[date.getDay()];
-      const dateStr = date.toISOString().split("T")[0];
+      const dateStr = toLocalDateStr(date);
 
       // Don't generate attendance for future dates
       if (dateStr > todayStr) continue;
