@@ -8,13 +8,13 @@ interface ThemeContextType {
   isTransitioning: boolean;
 }
 
-const ThemeContext = createContext<ThemeContextType>({ theme: "elegant-light", setTheme: () => {}, isTransitioning: false });
+const ThemeContext = createContext<ThemeContextType>({ theme: "modern-blue", setTheme: () => {}, isTransitioning: false });
 
 export const useTheme = () => useContext(ThemeContext);
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const [theme, setThemeState] = useState<ThemeName>(() => 
-    (localStorage.getItem("jg-theme") as ThemeName) || "elegant-light"
+    (localStorage.getItem("jg-theme") as ThemeName) || "modern-blue"
   );
   const [isTransitioning, setIsTransitioning] = useState(false);
 
