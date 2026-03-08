@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { GraduationCap, Sparkles, Shield, Smartphone, Palette, Brain, Heart } from "lucide-react";
-import jgLogo from "@/assets/jg-logo.jpeg";
+import jgLogoWhite from "@/assets/jg-logo-white.png";
 
 const features = [
   { icon: Brain, title: "AI-Powered Insights", desc: "Smart attendance predictions, academic health scores, and personalized reminders powered by artificial intelligence." },
@@ -23,8 +23,8 @@ const About = () => {
         className="bg-card rounded-xl border border-border p-5 md:p-8 card-hover"
       >
         <div className="flex items-center gap-4 mb-4">
-          <div className="h-16 w-28 rounded-xl overflow-hidden border border-border shadow-md shrink-0">
-            <img src={jgLogo} alt="JG University" className="h-full w-full object-contain bg-black" />
+          <div className="h-16 w-32 rounded-xl overflow-hidden border border-border shadow-md shrink-0 bg-white">
+            <img src={jgLogoWhite} alt="JG University" className="h-full w-full object-contain" />
           </div>
           <div>
             <h2 className="text-lg md:text-xl font-bold text-foreground">JG University Portal</h2>

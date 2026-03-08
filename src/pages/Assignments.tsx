@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Upload, X, FileText, Image } from "lucide-react";
+import { Modal } from "@/components/ui/modal";
 import { assignments } from "@/data/mockData";
 import { useToast } from "@/hooks/use-toast";
 
@@ -93,59 +94,41 @@ const Assignments = () => {
         })}
       </div>
 
-      {/* Upload Modal */}
-      <AnimatePresence>
-        {submitId !== null && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
-            onClick={() => { setSubmitId(null); setFile(null); }}>
-            <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }}
-              onClick={e => e.stopPropagation()}
-              className="bg-card rounded-lg border border-border p-6 w-full max-w-md space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-foreground">Submit Assignment</h3>
-                <button onClick={() => { setSubmitId(null); setFile(null); }} className="p-1 hover:bg-muted rounded-lg">
-                  <X className="h-5 w-5 text-muted-foreground" />
-                </button>
-              </div>
-              <p className="text-sm text-muted-foreground">Upload a PDF or image file (max 10MB)</p>
+      <Modal open={submitId !== null} onClose={() => { setSubmitId(null); setFile(null); }}
+        title="Submit Assignment" description="Upload a PDF or image file (max 10MB)">
+        <input ref={fileRef} type="file" accept=".pdf,image/*" onChange={handleFileChange} className="hidden" />
 
-              <input ref={fileRef} type="file" accept=".pdf,image/*" onChange={handleFileChange} className="hidden" />
-
-              {!file ? (
-                <button onClick={() => fileRef.current?.click()}
-                  className="w-full border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary/50 hover:bg-primary/5 transition-all">
-                  <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
-                  <p className="text-sm text-muted-foreground">Click to browse files</p>
-                  <p className="text-xs text-muted-foreground mt-1">PDF, PNG, JPG supported</p>
-                </button>
-              ) : (
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border">
-                  {file.type === "application/pdf" ? <FileText className="h-8 w-8 text-primary" /> : <Image className="h-8 w-8 text-primary" />}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-foreground truncate">{file.name}</p>
-                    <p className="text-xs text-muted-foreground">{(file.size / 1024).toFixed(1)} KB</p>
-                  </div>
-                  <button onClick={() => setFile(null)} className="p-1 hover:bg-muted rounded-lg">
-                    <X className="h-4 w-4 text-muted-foreground" />
-                  </button>
-                </div>
-              )}
-
-              <div className="flex gap-3">
-                <button onClick={handleSubmit} disabled={!file}
-                  className="flex-1 px-4 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-semibold disabled:opacity-50 hover:opacity-90 transition-all">
-                  Submit
-                </button>
-                <button onClick={() => { setSubmitId(null); setFile(null); }}
-                  className="px-4 py-2.5 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-muted transition-all">
-                  Cancel
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
+        {!file ? (
+          <button onClick={() => fileRef.current?.click()}
+            className="w-full border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary/50 hover:bg-primary/5 transition-all">
+            <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
+            <p className="text-sm text-muted-foreground">Click to browse files</p>
+            <p className="text-xs text-muted-foreground mt-1">PDF, PNG, JPG supported</p>
+          </button>
+        ) : (
+          <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border">
+            {file.type === "application/pdf" ? <FileText className="h-8 w-8 text-primary" /> : <Image className="h-8 w-8 text-primary" />}
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-foreground truncate">{file.name}</p>
+              <p className="text-xs text-muted-foreground">{(file.size / 1024).toFixed(1)} KB</p>
+            </div>
+            <button onClick={() => setFile(null)} className="p-1 hover:bg-muted rounded-lg">
+              <X className="h-4 w-4 text-muted-foreground" />
+            </button>
+          </div>
         )}
-      </AnimatePresence>
+
+        <div className="flex gap-3 mt-4">
+          <button onClick={handleSubmit} disabled={!file}
+            className="flex-1 px-4 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-semibold disabled:opacity-50 hover:opacity-90 transition-all">
+            Submit
+          </button>
+          <button onClick={() => { setSubmitId(null); setFile(null); }}
+            className="px-4 py-2.5 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-muted transition-all">
+            Cancel
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 };
