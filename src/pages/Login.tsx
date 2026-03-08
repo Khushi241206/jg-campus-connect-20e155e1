@@ -98,12 +98,15 @@ const Login = () => {
             </div>
 
             <div className="flex justify-end">
-              <a
-                href="mailto:connect@jguni.in?subject=Forgot%20Password%20-%20Request%20for%20Username%20and%20Password&body=Dear%20JG%20University%20Admin%2C%0A%0AI%20have%20forgotten%20my%20password.%20Could%20you%20please%20send%20my%20username%20and%20password%20again%20to%20my%20registered%20email%20address%3F%0A%0AThank%20you."
+              <button
+                type="button"
+                onClick={() => {
+                  window.open("mailto:connect@jguni.in?subject=Forgot%20Password%20-%20Request%20for%20Username%20and%20Password&body=Dear%20JG%20University%20Admin%2C%0A%0AI%20have%20forgotten%20my%20password.%20Could%20you%20please%20send%20my%20username%20and%20password%20again%20to%20my%20registered%20email%20address%3F%0A%0AThank%20you.", "_blank");
+                }}
                 className="text-xs text-primary hover:underline"
               >
                 Forgot Password?
-              </a>
+              </button>
             </div>
 
             <button
