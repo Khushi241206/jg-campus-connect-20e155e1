@@ -5,7 +5,7 @@ import { Eye, EyeOff, GraduationCap } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import jgCampus from "@/assets/jg-campus.jpeg";
-import jgLogo from "@/assets/jg-logo.jpeg";
+import jgLogo from "@/assets/jg-logo-white.png";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -59,7 +59,7 @@ const Login = () => {
           className="w-full max-w-md glass-card rounded-2xl p-8 shadow-2xl"
         >
           <div className="flex flex-col items-center mb-8">
-            <img src={jgLogo} alt="JG University" className="h-16 w-auto rounded-lg mb-3" />
+            <img src={jgLogo} alt="JG University" className="h-20 w-auto mb-3" />
             <p className="text-xs text-muted-foreground">Sponsored by ASIA Charitable Trust</p>
           </div>
 
