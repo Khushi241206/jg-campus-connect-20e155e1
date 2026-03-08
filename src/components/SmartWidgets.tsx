@@ -102,7 +102,7 @@ export const SmartReminders = () => {
   // Attendance warnings — flag subjects below 80%
   const lowAttendance = attendanceData.filter(a => a.percentage < 80);
   lowAttendance.forEach(a => {
-    const classesNeeded = Math.ceil((80 * a.totalClasses - 100 * a.attended) / (100 - 80));
+    const classesNeeded = Math.ceil((80 * a.total - 100 * a.present) / (100 - 80));
     reminders.push({
       text: `${a.subject} attendance ${a.percentage}% — attend next ${Math.max(classesNeeded, 1)} classes`,
       type: "warning",
