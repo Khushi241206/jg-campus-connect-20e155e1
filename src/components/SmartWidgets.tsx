@@ -86,10 +86,20 @@ export const AcademicHealthScore = () => {
 
 // Smart Reminders
 export const SmartReminders = () => {
+  const today = new Date();
+  const internalsStart = new Date(2026, 3, 6); // April 6
+  const externalsStart = new Date(2026, 3, 23); // April 23
+  const daysToInternals = Math.ceil((internalsStart.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+  const daysToExternals = Math.ceil((externalsStart.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
   const reminders = [
     { text: "CN attendance below 80% — attend next 3 classes", type: "warning" as const, icon: "⚠️" },
     { text: "ML Assignment due in 2 days", type: "info" as const, icon: "📝" },
-    { text: "Mid-term exams in 11 days", type: "info" as const, icon: "📅" },
+    ...(daysToInternals > 0
+      ? [{ text: `Internal exams in ${daysToInternals} days`, type: "info" as const, icon: "📅" }]
+      : daysToExternals > 0
+        ? [{ text: `External exams in ${daysToExternals} days`, type: "info" as const, icon: "📅" }]
+        : []),
     { text: "Fee payment completed ✓", type: "success" as const, icon: "✅" },
   ];
 
