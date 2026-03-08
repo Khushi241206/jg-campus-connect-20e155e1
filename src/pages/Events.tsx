@@ -42,15 +42,15 @@ const Events = () => {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <h1 className="text-2xl font-bold text-foreground">Events & Activities</h1>
+    <div className="space-y-5 md:space-y-6 animate-fade-in">
+      <h1 className="text-xl md:text-2xl font-bold text-foreground tracking-tight">Events & Activities</h1>
 
       <div className="flex items-center gap-2 overflow-x-auto pb-1">
         <Filter className="h-4 w-4 text-muted-foreground shrink-0" />
         {categories.map((c) => (
           <button key={c} onClick={() => setFilter(c)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all
-              ${filter === c ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}>
+            className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all btn-lift
+              ${filter === c ? "bg-primary text-primary-foreground shadow-sm" : "bg-muted text-muted-foreground hover:text-foreground"}`}>
             {c}
           </button>
         ))}
@@ -61,16 +61,16 @@ const Events = () => {
           const config = categoryConfig[event.category];
           return (
             <motion.div key={event.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}
-              className="bg-card rounded-lg border border-border overflow-hidden card-hover">
+              className="bg-card rounded-xl border border-border overflow-hidden card-hover card-shadow">
               <div className="p-5">
                 <div className="flex items-start justify-between mb-3">
                   <div className="text-4xl">{event.image}</div>
-                  <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${config?.color || "bg-muted text-muted-foreground"}`}>
+                  <span className={`text-[11px] px-2.5 py-1 rounded-full font-medium ${config?.color || "bg-muted text-muted-foreground"}`}>
                     {event.category}
                   </span>
                 </div>
-                <h3 className="font-semibold text-foreground text-lg mb-1">{event.title}</h3>
-                <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{event.description}</p>
+                <h3 className="font-semibold text-foreground text-lg mb-1.5 leading-snug">{event.title}</h3>
+                <p className="text-sm text-muted-foreground mb-3 line-clamp-2 leading-relaxed">{event.description}</p>
                 <div className="space-y-1.5 text-xs text-muted-foreground">
                   <div className="flex items-center gap-1.5">
                     <Calendar className="h-3.5 w-3.5" />
@@ -85,11 +85,11 @@ const Events = () => {
                 <div className="mt-4">
                   {event.registrationOpen ? (
                     <button onClick={() => setRegistering(event.id)}
-                      className="w-full py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-all">
+                      className="w-full py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-all btn-lift">
                       Register Now
                     </button>
                   ) : (
-                    <button disabled className="w-full py-2 rounded-lg bg-muted text-muted-foreground text-sm font-medium cursor-not-allowed">
+                    <button disabled className="w-full py-2.5 rounded-xl bg-muted text-muted-foreground text-sm font-medium cursor-not-allowed">
                       Registration Closed
                     </button>
                   )}
@@ -104,22 +104,22 @@ const Events = () => {
         title="Register for Event" description={activeEvent ? `${activeEvent.title} • ${activeEvent.venue}` : ""}>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label className="mb-1.5 block">Full Name *</Label>
+            <Label className="mb-1.5 block text-sm">Full Name *</Label>
             <Input required value={form.name} onChange={e => setForm({...form, name: e.target.value})} />
           </div>
           <div>
-            <Label className="mb-1.5 block">Email *</Label>
+            <Label className="mb-1.5 block text-sm">Email *</Label>
             <Input required type="email" value={form.email} onChange={e => setForm({...form, email: e.target.value})} />
           </div>
           <div>
-            <Label className="mb-1.5 block">Phone *</Label>
+            <Label className="mb-1.5 block text-sm">Phone *</Label>
             <Input required type="tel" value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label className="mb-1.5 block">Department *</Label>
+              <Label className="mb-1.5 block text-sm">Department *</Label>
               <select required value={form.department} onChange={e => setForm({...form, department: e.target.value})}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                 <option value="">Select</option>
                 <option value="CSE">CSE</option>
                 <option value="ECE">ECE</option>
@@ -129,9 +129,9 @@ const Events = () => {
               </select>
             </div>
             <div>
-              <Label className="mb-1.5 block">Year *</Label>
+              <Label className="mb-1.5 block text-sm">Year *</Label>
               <select required value={form.year} onChange={e => setForm({...form, year: e.target.value})}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                 <option value="">Select</option>
                 <option value="1">1st Year</option>
                 <option value="2">2nd Year</option>
@@ -142,12 +142,12 @@ const Events = () => {
           </div>
           {activeEvent && (activeEvent.category === "Sports" || activeEvent.category === "Hackathon") && (
             <div>
-              <Label className="mb-1.5 block">Team Name (optional)</Label>
+              <Label className="mb-1.5 block text-sm">Team Name (optional)</Label>
               <Input value={form.teamName || ""} onChange={e => setForm({...form, teamName: e.target.value})} />
             </div>
           )}
           <button type="submit"
-            className="w-full py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-all">
+            className="w-full py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-all btn-lift">
             Submit Registration
           </button>
         </form>
