@@ -5,7 +5,7 @@ import { Eye, EyeOff, GraduationCap } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import jgCampus from "@/assets/jg-campus.jpeg";
-import jgLogo from "@/assets/jg-logo-white.png";
+import jgLogo from "@/assets/jg-logo.jpeg";
 
 const Login = () => {
   const [username, setUsername] = useState("");
