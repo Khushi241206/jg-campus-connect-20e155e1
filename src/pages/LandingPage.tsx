@@ -49,6 +49,7 @@ const LandingPage = () => {
     { icon: FileText, title: "Assignments", desc: "Track deadlines and submit assignments on time" },
     { icon: BarChart3, title: "Results", desc: "Subject-wise marks with downloadable results" },
     { icon: Bell, title: "Notices", desc: "Centralized university notices with urgent alerts" },
+    { icon: GraduationCap, title: "Academics", desc: "Course details, calendar & class info at a glance" },
   ];
 
   const sectionVariants = {
