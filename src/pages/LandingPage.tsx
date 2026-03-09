@@ -49,6 +49,7 @@ const LandingPage = () => {
     { icon: FileText, title: "Assignments", desc: "Track deadlines and submit assignments on time" },
     { icon: BarChart3, title: "Results", desc: "Subject-wise marks with downloadable results" },
     { icon: Bell, title: "Notices", desc: "Centralized university notices with urgent alerts" },
+    { icon: GraduationCap, title: "Academics", desc: "Course details, calendar & class info at a glance" },
   ];
 
   const sectionVariants = {
@@ -57,7 +58,7 @@ const LandingPage = () => {
   };
 
   return (
-    <div className="min-h-screen scroll-smooth" style={{ fontFamily: "'Inter', sans-serif", background: "#fafafa" }}>
+    <div className="min-h-screen scroll-smooth" style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif", background: "#fafafa", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale" }}>
       {/* NAVBAR */}
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "shadow-xl" : ""}`}
@@ -393,7 +394,7 @@ const LandingPage = () => {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-5">
             {features.map((f, i) => (
               <motion.div
                 key={f.title}
