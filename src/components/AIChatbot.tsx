@@ -209,6 +209,13 @@ const AIChatbot = () => {
                 <p className="font-semibold text-sm">JG Assistant</p>
                 <p className="text-[10px] opacity-80 flex items-center gap-1"><Sparkles className="h-2.5 w-2.5" /> AI-Powered</p>
               </div>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="p-1.5 rounded-lg hover:bg-primary-foreground/20 transition-colors active:scale-95"
+                aria-label="Close chatbot"
+              >
+                <X className="h-4 w-4" />
+              </button>
             </div>
 
             <div ref={scrollRef} className="flex-1 overflow-y-auto p-3 space-y-3" style={{ minHeight: 200 }}>
