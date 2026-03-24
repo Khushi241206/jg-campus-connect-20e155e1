@@ -5,7 +5,7 @@ import { Eye, EyeOff, Clock, UserCheck, FileText, BarChart3, Bell, Mail, Phone, 
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import jgCampus from "@/assets/jg-campus.jpeg";
-import jgLogoWhite from "@/assets/jg-logo.jpeg";
+import jgLogoWhite from "@/assets/jg-logo-nobg.png";
 import jgLogo from "@/assets/jg-logo-white.png";
 
 const LandingPage = () => {
