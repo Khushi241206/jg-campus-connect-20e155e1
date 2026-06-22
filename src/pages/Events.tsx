@@ -1,157 +1,113 @@
-import { useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Calendar, MapPin, Trophy, Code, Wrench, Filter } from "lucide-react";
-import { events } from "@/data/mockData";
+import { CalendarDays, MapPin, Users, Loader2, Check } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import { Modal } from "@/components/ui/modal";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
-type Category = "All" | "Sports" | "Hackathon" | "Workshop";
-
-const categoryConfig: Record<string, { icon: typeof Trophy; color: string }> = {
-  Sports: { icon: Trophy, color: "bg-success/10 text-success" },
-  Hackathon: { icon: Code, color: "bg-primary/10 text-primary" },
-  Workshop: { icon: Wrench, color: "bg-warning/10 text-warning" },
-};
-
-interface RegistrationForm {
-  name: string;
-  email: string;
-  phone: string;
-  department: string;
-  year: string;
-  teamName?: string;
+interface EventRow {
+  id: string;
+  title: string;
+  description: string | null;
+  event_date: string;
+  location: string | null;
+  capacity: number | null;
 }
 
 const Events = () => {
-  const [filter, setFilter] = useState<Category>("All");
-  const [registering, setRegistering] = useState<number | null>(null);
-  const [form, setForm] = useState<RegistrationForm>({ name: "", email: "", phone: "", department: "", year: "" });
+  const { user } = useAuth();
   const { toast } = useToast();
-  const categories: Category[] = ["All", "Sports", "Hackathon", "Workshop"];
+  const [events, setEvents] = useState<EventRow[]>([]);
+  const [registered, setRegistered] = useState<Set<string>>(new Set());
+  const [counts, setCounts] = useState<Record<string, number>>({});
+  const [loading, setLoading] = useState(true);
 
-  const filtered = filter === "All" ? events : events.filter(e => e.category === filter);
-  const activeEvent = events.find(e => e.id === registering);
+  const load = useCallback(async () => {
+    setLoading(true);
+    const { data: evs } = await supabase
+      .from("events")
+      .select("id, title, description, event_date, location, capacity")
+      .order("event_date", { ascending: true });
+    setEvents(evs ?? []);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    toast({ title: "Registration Successful! 🎉", description: `You are registered for ${activeEvent?.title}. Confirmation sent to ${form.email}` });
-    setRegistering(null);
-    setForm({ name: "", email: "", phone: "", department: "", year: "" });
+    if (user) {
+      const { data: regs } = await supabase
+        .from("event_registrations")
+        .select("event_id")
+        .eq("student_id", user.id);
+      setRegistered(new Set((regs ?? []).map((r) => r.event_id)));
+    }
+
+    // Per-event counts (admin sees all; students see only own row, so count may be low — that's fine)
+    if (evs?.length) {
+      const map: Record<string, number> = {};
+      for (const e of evs) {
+        const { count } = await supabase
+          .from("event_registrations")
+          .select("*", { count: "exact", head: true })
+          .eq("event_id", e.id);
+        map[e.id] = count ?? 0;
+      }
+      setCounts(map);
+    }
+    setLoading(false);
+  }, [user]);
+
+  useEffect(() => { load(); }, [load]);
+
+  const toggle = async (eventId: string) => {
+    if (!user) return;
+    if (registered.has(eventId)) {
+      const { error } = await supabase.from("event_registrations").delete()
+        .eq("event_id", eventId).eq("student_id", user.id);
+      if (error) return toast({ title: "Failed", description: error.message, variant: "destructive" });
+      toast({ title: "Unregistered" });
+    } else {
+      const { error } = await supabase.from("event_registrations").insert({ event_id: eventId, student_id: user.id });
+      if (error) return toast({ title: "Failed", description: error.message, variant: "destructive" });
+      toast({ title: "Registered!" });
+    }
+    load();
   };
 
   return (
-    <div className="space-y-5 md:space-y-6 animate-fade-in">
-      <h1 className="text-xl md:text-2xl font-bold text-foreground tracking-tight">Events & Activities</h1>
-
-      <div className="flex items-center gap-2 overflow-x-auto pb-1">
-        <Filter className="h-4 w-4 text-muted-foreground shrink-0" />
-        {categories.map((c) => (
-          <button key={c} onClick={() => setFilter(c)}
-            className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all btn-lift
-              ${filter === c ? "bg-primary text-primary-foreground shadow-sm" : "bg-muted text-muted-foreground hover:text-foreground"}`}>
-            {c}
-          </button>
-        ))}
+    <div className="space-y-5 animate-fade-in">
+      <div className="flex items-center gap-2">
+        <CalendarDays className="h-5 w-5 text-primary" />
+        <h1 className="text-xl md:text-2xl font-bold">Events</h1>
       </div>
 
-      <div className="grid sm:grid-cols-2 gap-4">
-        {filtered.map((event, i) => {
-          const config = categoryConfig[event.category];
-          return (
-            <motion.div key={event.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}
-              className="bg-card rounded-xl border border-border overflow-hidden card-hover card-shadow">
-              <div className="p-5">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="text-4xl">{event.image}</div>
-                  <span className={`text-[11px] px-2.5 py-1 rounded-full font-medium ${config?.color || "bg-muted text-muted-foreground"}`}>
-                    {event.category}
-                  </span>
+      {loading ? (
+        <div className="flex justify-center py-16"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+      ) : events.length === 0 ? (
+        <div className="text-center py-16 text-muted-foreground">
+          <CalendarDays className="h-10 w-10 mx-auto mb-3 opacity-50" />
+          <p className="font-medium">No events scheduled</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {events.map((e, i) => {
+            const isReg = registered.has(e.id);
+            return (
+              <motion.div key={e.id}
+                initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
+                className="bg-card border border-border rounded-xl p-5 card-hover">
+                <h3 className="font-semibold text-foreground text-base mb-1.5">{e.title}</h3>
+                {e.description && <p className="text-sm text-muted-foreground mb-3 line-clamp-3">{e.description}</p>}
+                <div className="space-y-1.5 text-xs text-muted-foreground mb-4">
+                  <div className="flex items-center gap-1.5"><CalendarDays className="h-3.5 w-3.5" />{new Date(e.event_date).toLocaleString()}</div>
+                  {e.location && <div className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" />{e.location}</div>}
+                  <div className="flex items-center gap-1.5"><Users className="h-3.5 w-3.5" />{counts[e.id] ?? 0}{e.capacity ? ` / ${e.capacity}` : ""} registered</div>
                 </div>
-                <h3 className="font-semibold text-foreground text-lg mb-1.5 leading-snug">{event.title}</h3>
-                <p className="text-sm text-muted-foreground mb-3 line-clamp-2 leading-relaxed">{event.description}</p>
-                <div className="space-y-1.5 text-xs text-muted-foreground">
-                  <div className="flex items-center gap-1.5">
-                    <Calendar className="h-3.5 w-3.5" />
-                    {event.date === event.endDate
-                      ? new Date(event.date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })
-                      : `${new Date(event.date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })} - ${new Date(event.endDate).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}`}
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <MapPin className="h-3.5 w-3.5" /> {event.venue}
-                  </div>
-                </div>
-                <div className="mt-4">
-                  {event.registrationOpen ? (
-                    <button onClick={() => setRegistering(event.id)}
-                      className="w-full py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-all btn-lift">
-                      Register Now
-                    </button>
-                  ) : (
-                    <button disabled className="w-full py-2.5 rounded-xl bg-muted text-muted-foreground text-sm font-medium cursor-not-allowed">
-                      Registration Closed
-                    </button>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          );
-        })}
-      </div>
-
-      <Modal open={!!registering && !!activeEvent} onClose={() => { setRegistering(null); setForm({ name: "", email: "", phone: "", department: "", year: "" }); }}
-        title="Register for Event" description={activeEvent ? `${activeEvent.title} • ${activeEvent.venue}` : ""}>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Label className="mb-1.5 block text-sm">Full Name *</Label>
-            <Input required value={form.name} onChange={e => setForm({...form, name: e.target.value})} />
-          </div>
-          <div>
-            <Label className="mb-1.5 block text-sm">Email *</Label>
-            <Input required type="email" value={form.email} onChange={e => setForm({...form, email: e.target.value})} />
-          </div>
-          <div>
-            <Label className="mb-1.5 block text-sm">Phone *</Label>
-            <Input required type="tel" value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} />
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <Label className="mb-1.5 block text-sm">Department *</Label>
-              <select required value={form.department} onChange={e => setForm({...form, department: e.target.value})}
-                className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                <option value="">Select</option>
-                <option value="CSE">CSE</option>
-                <option value="ECE">ECE</option>
-                <option value="ME">ME</option>
-                <option value="CE">CE</option>
-                <option value="MBA">MBA</option>
-              </select>
-            </div>
-            <div>
-              <Label className="mb-1.5 block text-sm">Year *</Label>
-              <select required value={form.year} onChange={e => setForm({...form, year: e.target.value})}
-                className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                <option value="">Select</option>
-                <option value="1">1st Year</option>
-                <option value="2">2nd Year</option>
-                <option value="3">3rd Year</option>
-                <option value="4">4th Year</option>
-              </select>
-            </div>
-          </div>
-          {activeEvent && (activeEvent.category === "Sports" || activeEvent.category === "Hackathon") && (
-            <div>
-              <Label className="mb-1.5 block text-sm">Team Name (optional)</Label>
-              <Input value={form.teamName || ""} onChange={e => setForm({...form, teamName: e.target.value})} />
-            </div>
-          )}
-          <button type="submit"
-            className="w-full py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-all btn-lift">
-            Submit Registration
-          </button>
-        </form>
-      </Modal>
+                <button onClick={() => toggle(e.id)}
+                  className={`w-full py-2 rounded-lg text-sm font-medium transition-all ${isReg ? "bg-success/10 text-success border border-success/30" : "bg-primary text-primary-foreground hover:opacity-90"}`}>
+                  {isReg ? <span className="inline-flex items-center gap-1.5"><Check className="h-4 w-4" />Registered</span> : "Register"}
+                </button>
+              </motion.div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

@@ -1,134 +1,124 @@
-import { useState, useRef } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Upload, X, FileText, Image } from "lucide-react";
-import { Modal } from "@/components/ui/modal";
-import { assignments } from "@/data/mockData";
+import { FileText, Loader2, Upload, CheckCircle2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
-type Filter = "all" | "pending" | "submitted" | "graded";
-
-const statusStyles = {
-  pending: "bg-warning/10 text-warning",
-  submitted: "bg-primary/10 text-primary",
-  graded: "bg-success/10 text-success",
-};
+interface Assignment {
+  id: string;
+  title: string;
+  subject: string;
+  description: string | null;
+  due_date: string | null;
+}
 
 const Assignments = () => {
-  const [filter, setFilter] = useState<Filter>("all");
-  const [submitId, setSubmitId] = useState<number | null>(null);
-  const [file, setFile] = useState<File | null>(null);
-  const [submittedIds, setSubmittedIds] = useState<number[]>([]);
-  const fileRef = useRef<HTMLInputElement>(null);
+  const { user } = useAuth();
   const { toast } = useToast();
+  const [items, setItems] = useState<Assignment[]>([]);
+  const [submissions, setSubmissions] = useState<Record<string, { id: string; grade: string | null }>>({});
+  const [loading, setLoading] = useState(true);
+  const [openId, setOpenId] = useState<string | null>(null);
+  const [content, setContent] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  const filters: Filter[] = ["all", "pending", "submitted", "graded"];
-  const filtered = filter === "all" ? assignments : assignments.filter(a => {
-    if (submittedIds.includes(a.id) && a.status === "pending") return filter === "submitted";
-    return a.status === filter;
-  });
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0];
-    if (f) {
-      const validTypes = ["application/pdf", "image/png", "image/jpeg", "image/jpg", "image/webp"];
-      if (!validTypes.includes(f.type)) {
-        toast({ title: "Invalid file", description: "Please upload a PDF or image file.", variant: "destructive" });
-        return;
-      }
-      if (f.size > 10 * 1024 * 1024) {
-        toast({ title: "File too large", description: "Max file size is 10MB.", variant: "destructive" });
-        return;
-      }
-      setFile(f);
+  const load = useCallback(async () => {
+    setLoading(true);
+    const { data: a } = await supabase
+      .from("assignments")
+      .select("id, title, subject, description, due_date")
+      .order("due_date", { ascending: true, nullsFirst: false });
+    setItems(a ?? []);
+    if (user) {
+      const { data: s } = await supabase
+        .from("assignment_submissions")
+        .select("id, assignment_id, grade")
+        .eq("student_id", user.id);
+      const map: Record<string, { id: string; grade: string | null }> = {};
+      (s ?? []).forEach((x) => { map[x.assignment_id] = { id: x.id, grade: x.grade }; });
+      setSubmissions(map);
     }
-  };
+    setLoading(false);
+  }, [user]);
 
-  const handleSubmit = () => {
-    if (!file || !submitId) return;
-    setSubmittedIds([...submittedIds, submitId]);
-    toast({ title: "Assignment Submitted! ✅", description: `"${file.name}" uploaded successfully.` });
-    setFile(null);
-    setSubmitId(null);
+  useEffect(() => { load(); }, [load]);
+
+  const submit = async (assignmentId: string) => {
+    if (!user || !content.trim()) return;
+    setSubmitting(true);
+    const { error } = await supabase.from("assignment_submissions").insert({
+      assignment_id: assignmentId,
+      student_id: user.id,
+      content,
+    });
+    setSubmitting(false);
+    if (error) return toast({ title: "Submit failed", description: error.message, variant: "destructive" });
+    toast({ title: "Submitted!" });
+    setOpenId(null);
+    setContent("");
+    load();
   };
 
   return (
-    <div className="space-y-5 md:space-y-6 animate-fade-in">
-      <h1 className="text-xl md:text-2xl font-bold text-foreground tracking-tight">Assignments</h1>
-
-      <div className="flex gap-2 flex-wrap">
-        {filters.map((f) => (
-          <button key={f} onClick={() => setFilter(f)}
-            className={`px-4 py-2 rounded-xl text-sm font-medium capitalize transition-all btn-lift
-              ${filter === f ? "bg-primary text-primary-foreground shadow-sm" : "bg-card border border-border text-foreground hover:bg-muted card-shadow"}`}>
-            {f}
-          </button>
-        ))}
+    <div className="space-y-5 animate-fade-in">
+      <div className="flex items-center gap-2">
+        <FileText className="h-5 w-5 text-primary" />
+        <h1 className="text-xl md:text-2xl font-bold">Assignments</h1>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4">
-        {filtered.map((a, i) => {
-          const isSubmitted = submittedIds.includes(a.id);
-          const effectiveStatus = isSubmitted && a.status === "pending" ? "submitted" : a.status;
-          return (
-            <motion.div key={a.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-              className="bg-card rounded-xl border border-border p-5 card-hover card-shadow">
-              <div className="flex items-start justify-between mb-2">
-                <h3 className="font-semibold text-foreground leading-snug">{a.title}</h3>
-                <span className={`text-[11px] px-2.5 py-1 rounded-full font-medium capitalize ${statusStyles[effectiveStatus]}`}>
-                  {effectiveStatus === "graded" ? `Graded (${a.grade})` : effectiveStatus}
-                </span>
-              </div>
-              <p className="text-sm text-primary font-medium">{a.subject}</p>
-              <p className="text-sm text-muted-foreground mt-1 leading-relaxed">{a.desc}</p>
-              <div className="flex items-center justify-between mt-4 pt-3 border-t border-border">
-                <span className="text-xs text-muted-foreground">Deadline: {a.deadline}</span>
-                {a.status === "pending" && !isSubmitted && (
-                  <button onClick={() => setSubmitId(a.id)}
-                    className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-medium btn-lift flex items-center gap-1.5">
-                    <Upload className="h-3 w-3" /> Submit
-                  </button>
-                )}
-              </div>
-            </motion.div>
-          );
-        })}
-      </div>
-
-      <Modal open={submitId !== null} onClose={() => { setSubmitId(null); setFile(null); }}
-        title="Submit Assignment" description="Upload a PDF or image file (max 10MB)">
-        <input ref={fileRef} type="file" accept=".pdf,image/*" onChange={handleFileChange} className="hidden" />
-
-        {!file ? (
-          <button onClick={() => fileRef.current?.click()}
-            className="w-full border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-primary/40 hover:bg-primary/5 transition-all">
-            <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
-            <p className="text-sm text-muted-foreground">Click to browse files</p>
-            <p className="text-xs text-muted-foreground mt-1">PDF, PNG, JPG supported</p>
-          </button>
-        ) : (
-          <div className="flex items-center gap-3 p-3.5 rounded-xl bg-muted/40 border border-border">
-            {file.type === "application/pdf" ? <FileText className="h-8 w-8 text-primary" /> : <Image className="h-8 w-8 text-primary" />}
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-foreground truncate">{file.name}</p>
-              <p className="text-xs text-muted-foreground">{(file.size / 1024).toFixed(1)} KB</p>
-            </div>
-            <button onClick={() => setFile(null)} className="p-1.5 hover:bg-muted rounded-lg transition-colors">
-              <X className="h-4 w-4 text-muted-foreground" />
-            </button>
-          </div>
-        )}
-
-        <div className="flex gap-3 mt-4">
-          <button onClick={handleSubmit} disabled={!file}
-            className="flex-1 px-4 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold disabled:opacity-50 hover:opacity-90 transition-all">
-            Submit
-          </button>
-          <button onClick={() => { setSubmitId(null); setFile(null); }}
-            className="px-4 py-2.5 rounded-xl border border-border text-sm font-medium text-foreground hover:bg-muted transition-all">
-            Cancel
-          </button>
+      {loading ? (
+        <div className="flex justify-center py-16"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+      ) : items.length === 0 ? (
+        <div className="text-center py-16 text-muted-foreground">
+          <FileText className="h-10 w-10 mx-auto mb-3 opacity-50" />
+          <p className="font-medium">No assignments yet</p>
         </div>
-      </Modal>
+      ) : (
+        <div className="space-y-3">
+          {items.map((a, i) => {
+            const sub = submissions[a.id];
+            return (
+              <motion.div key={a.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}
+                className="bg-card border border-border rounded-xl p-4 md:p-5">
+                <div className="flex items-start justify-between gap-3 mb-2">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-foreground">{a.title}</h3>
+                    <p className="text-xs text-muted-foreground">{a.subject}{a.due_date ? ` • Due ${new Date(a.due_date).toLocaleDateString()}` : ""}</p>
+                  </div>
+                  {sub ? (
+                    <span className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md bg-success/10 text-success border border-success/30">
+                      <CheckCircle2 className="h-3.5 w-3.5" /> {sub.grade ? `Graded: ${sub.grade}` : "Submitted"}
+                    </span>
+                  ) : null}
+                </div>
+                {a.description && <p className="text-sm text-muted-foreground mb-3 whitespace-pre-line">{a.description}</p>}
+
+                {!sub && (
+                  openId === a.id ? (
+                    <div className="space-y-2">
+                      <textarea value={content} onChange={(e) => setContent(e.target.value)} rows={3}
+                        placeholder="Your answer / link to work…"
+                        className="w-full px-3 py-2 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                      <div className="flex gap-2">
+                        <button onClick={() => submit(a.id)} disabled={submitting}
+                          className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 disabled:opacity-50">
+                          {submitting ? "Submitting…" : "Submit"}
+                        </button>
+                        <button onClick={() => { setOpenId(null); setContent(""); }} className="px-3 py-1.5 rounded-lg text-sm text-muted-foreground hover:bg-muted">Cancel</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <button onClick={() => setOpenId(a.id)} className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline">
+                      <Upload className="h-4 w-4" /> Submit work
+                    </button>
+                  )
+                )}
+              </motion.div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
