@@ -9,7 +9,7 @@ const gradePoints: Record<string, number> = { "A+": 10, "A": 9, "B+": 8, "B": 7,
 
 const Results = () => {
   const [expandedSem, setExpandedSem] = useState<number | null>(null);
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const { toast } = useToast();
 
   const downloadSemesterPDF = (semNum: number) => {
@@ -21,8 +21,8 @@ const Results = () => {
            JG UNIVERSITY - SEMESTER RESULT REPORT
 ========================================================
 
-Student Name:     ${user?.name || "Rahul Sharma"}
-Enrollment No:    ${user?.enrollment || "JGU2022CSE1142"}
+Student Name:     ${profile?.full_name || user?.email || "Student"}
+Enrollment No:    ${profile?.enrollment_number || "N/A"}
 Program:          B.Tech - AI-ML
 Semester:         ${sem.sem}
 SGPA:             ${sem.sgpa}
@@ -52,7 +52,7 @@ This is a computer-generated result report.
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `JGU_Semester_${sem.sem}_Result_${user?.enrollment || "student"}.txt`;
+    a.download = `JGU_Semester_${sem.sem}_Result_${profile?.enrollment_number || "student"}.txt`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
