@@ -10,7 +10,8 @@ import avatarAnanya from "@/assets/avatar-ananya.png";
 
 const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { user, logout } = useAuth();
+  const { user, profile, logout } = useAuth();
+  const displayName = profile?.full_name || user?.email || "";
 
   return (
     <div className="flex h-screen w-full overflow-hidden bg-background">
@@ -32,9 +33,9 @@ const DashboardLayout = () => {
 
           <div className="hidden sm:flex items-center gap-2.5 text-sm">
             <div className="h-8 w-8 rounded-full overflow-hidden border-2 border-border/60 shadow-sm">
-              <img src={avatarAnanya} alt={user?.name || ""} className="h-full w-full object-cover" />
+              <img src={avatarAnanya} alt={displayName} className="h-full w-full object-cover" />
             </div>
-            <span className="font-medium text-foreground">{user?.name}</span>
+            <span className="font-medium text-foreground">{displayName}</span>
           </div>
 
           <button

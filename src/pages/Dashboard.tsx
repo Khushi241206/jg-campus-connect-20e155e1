@@ -12,7 +12,7 @@ import { AttendancePrediction, AcademicHealthScore, SmartReminders, PerformanceA
 const card = "bg-card rounded-xl border border-border p-4 md:p-5 card-hover card-shadow";
 
 const Dashboard = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const navigate = useNavigate();
   const avgAttendance = (attendanceData.reduce((s, a) => s + a.percentage, 0) / attendanceData.length).toFixed(1);
   const pendingAssignments = assignments.filter(a => a.status === "pending").length;
@@ -27,16 +27,17 @@ const Dashboard = () => {
     { label: "Fee Due", value: `₹${(fees.outstanding).toLocaleString()}`, icon: CreditCard, color: "text-primary" },
   ];
 
+  const displayName = profile?.full_name || user?.email || "Student";
   return (
     <div className="space-y-5 md:space-y-6 animate-fade-in">
       {/* Greeting */}
       <div className="flex items-center gap-3">
         <div className="h-11 w-11 md:hidden rounded-full overflow-hidden border-2 border-border/60 shadow-sm shrink-0">
-          <img src={avatarAnanya} alt={user?.name || ""} className="h-full w-full object-cover" />
+          <img src={avatarAnanya} alt={displayName} className="h-full w-full object-cover" />
         </div>
         <div>
-          <h1 className="text-lg md:text-2xl font-bold text-foreground tracking-tight">Welcome, {user?.name}</h1>
-          <p className="text-xs md:text-sm text-muted-foreground mt-0.5">{user?.program} • {user?.semester}</p>
+          <h1 className="text-lg md:text-2xl font-bold text-foreground tracking-tight">Welcome, {displayName}</h1>
+          <p className="text-xs md:text-sm text-muted-foreground mt-0.5">{profile?.program || "—"} • Sem {profile?.semester || "—"}</p>
         </div>
       </div>
 

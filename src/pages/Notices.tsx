@@ -1,57 +1,74 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { notices } from "@/data/mockData";
-import { AlertTriangle } from "lucide-react";
+import { Bell, Pin, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
-const categories = ["All", "Exam", "Event", "General", "Fees", "Attendance"];
+interface Notice {
+  id: string;
+  title: string;
+  body: string;
+  category: string | null;
+  pinned: boolean;
+  created_at: string;
+}
 
 const Notices = () => {
-  const [filter, setFilter] = useState("All");
-  const filtered = filter === "All" ? notices : notices.filter(n => n.category === filter);
+  const [notices, setNotices] = useState<Notice[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabase
+        .from("notices")
+        .select("id, title, body, category, pinned, created_at")
+        .order("pinned", { ascending: false })
+        .order("created_at", { ascending: false });
+      setNotices(data ?? []);
+      setLoading(false);
+    })();
+  }, []);
 
   return (
-    <div className="space-y-5 md:space-y-6 animate-fade-in">
-      <h1 className="text-xl md:text-2xl font-bold text-foreground tracking-tight">Notices</h1>
-
-      <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1">
-        {categories.map((c) => (
-          <button
-            key={c}
-            onClick={() => setFilter(c)}
-            className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all btn-lift
-              ${filter === c ? "bg-primary text-primary-foreground shadow-sm" : "bg-card border border-border text-foreground hover:bg-muted card-shadow"}`}
-          >
-            {c}
-          </button>
-        ))}
+    <div className="space-y-5 animate-fade-in">
+      <div className="flex items-center gap-2">
+        <Bell className="h-5 w-5 text-primary" />
+        <h1 className="text-xl md:text-2xl font-bold">Notices</h1>
       </div>
 
-      <div className="space-y-3">
-        {filtered.map((n, i) => (
-          <motion.div
-            key={n.id}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.05 }}
-            className={`bg-card rounded-xl border p-4 md:p-5 card-hover card-shadow ${n.urgent ? "border-destructive/30" : "border-border"}`}
-          >
-            <div className="flex items-start gap-3">
-              {n.urgent && <AlertTriangle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />}
-              <div className="flex-1">
-                <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                  {n.urgent && (
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-destructive/10 text-destructive font-medium">Urgent</span>
+      {loading ? (
+        <div className="flex justify-center py-16"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+      ) : notices.length === 0 ? (
+        <div className="text-center py-16 text-muted-foreground">
+          <Bell className="h-10 w-10 mx-auto mb-3 opacity-50" />
+          <p className="font-medium">No notices yet</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {notices.map((n, i) => (
+            <motion.div
+              key={n.id}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.04 }}
+              className="bg-card border border-border rounded-xl p-4 md:p-5 card-hover"
+            >
+              <div className="flex items-start justify-between gap-3 mb-2">
+                <div className="flex items-center gap-2 flex-wrap">
+                  {n.pinned && <Pin className="h-4 w-4 text-primary" />}
+                  <h3 className="font-semibold text-foreground">{n.title}</h3>
+                  {n.category && (
+                    <span className="px-2 py-0.5 rounded-md bg-muted text-xs text-muted-foreground">{n.category}</span>
                   )}
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium">{n.category}</span>
                 </div>
-                <h3 className="font-semibold text-foreground leading-snug">{n.title}</h3>
-                <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed">{n.content}</p>
-                <p className="text-xs text-muted-foreground mt-2">{n.date}</p>
+                <span className="text-xs text-muted-foreground whitespace-nowrap">
+                  {new Date(n.created_at).toLocaleDateString()}
+                </span>
               </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
+              <p className="text-sm text-muted-foreground whitespace-pre-line leading-relaxed">{n.body}</p>
+            </motion.div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

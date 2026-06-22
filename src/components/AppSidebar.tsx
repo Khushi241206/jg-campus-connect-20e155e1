@@ -2,9 +2,10 @@ import { NavLink as RouterNavLink, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   LayoutDashboard, Clock, UserCheck, FileText, BarChart3,
-  Bell, CreditCard, User, X, GraduationCap, ClipboardList, CalendarDays, MessageSquare, BookOpen, Info,
+  Bell, CreditCard, User, X, GraduationCap, ClipboardList, CalendarDays, MessageSquare, BookOpen, Info, ShieldCheck,
 } from "lucide-react";
 import jgLogoWhite from "@/assets/jg-logo-nobg.png";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navItems = [
   { title: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
@@ -29,6 +30,10 @@ interface AppSidebarProps {
 
 const AppSidebar = ({ open, onClose }: AppSidebarProps) => {
   const location = useLocation();
+  const { isAdmin } = useAuth();
+  const items = isAdmin
+    ? [...navItems, { title: "Admin", path: "/admin", icon: ShieldCheck }]
+    : navItems;
 
   return (
     <>
@@ -58,7 +63,7 @@ const AppSidebar = ({ open, onClose }: AppSidebarProps) => {
 
         {/* Nav Items */}
         <nav className="flex-1 py-3 px-2.5 space-y-0.5 overflow-y-auto">
-          {navItems.map((item) => {
+          {items.map((item) => {
             const isActive = location.pathname === item.path;
             return (
               <RouterNavLink

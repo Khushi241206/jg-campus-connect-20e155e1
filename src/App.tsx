@@ -6,8 +6,9 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import DashboardLayout from "@/components/DashboardLayout";
-import Login from "@/pages/Login";
+import AdminRoute from "@/components/AdminRoute";
 import LandingPage from "@/pages/LandingPage";
+import Login from "@/pages/Login";
 import Dashboard from "@/pages/Dashboard";
 import Timetable from "@/pages/Timetable";
 import Attendance from "@/pages/Attendance";
@@ -23,23 +24,35 @@ import Academics from "@/pages/Academics";
 import About from "@/pages/About";
 import NotFound from "@/pages/NotFound";
 import InstallPrompt from "@/components/InstallPrompt";
+import AdminLayout from "@/pages/admin/AdminLayout";
+import AdminDashboard from "@/pages/admin/AdminDashboard";
+import ManageNotices from "@/pages/admin/ManageNotices";
+import ManageEvents from "@/pages/admin/ManageEvents";
+import ManageAssignments from "@/pages/admin/ManageAssignments";
+import ManageAttendance from "@/pages/admin/ManageAttendance";
+import ManageFees from "@/pages/admin/ManageFees";
+import ManageFeedback from "@/pages/admin/ManageFeedback";
+import { Loader2 } from "lucide-react";
 
 const queryClient = new QueryClient();
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
+  if (loading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>;
   return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
 };
 
 const PublicRoute = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
+  if (loading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>;
   return isAuthenticated ? <Navigate to="/dashboard" replace /> : <>{children}</>;
 };
 
 const AppRoutes = () => (
   <Routes>
     <Route path="/" element={<PublicRoute><LandingPage /></PublicRoute>} />
-    <Route path="/login" element={<PublicRoute><LandingPage /></PublicRoute>} />
+    <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+    <Route path="/register" element={<PublicRoute><Login /></PublicRoute>} />
     <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/timetable" element={<Timetable />} />
@@ -54,6 +67,16 @@ const AppRoutes = () => (
       <Route path="/feedback" element={<Feedback />} />
       <Route path="/about" element={<About />} />
       <Route path="/profile" element={<Profile />} />
+
+      <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
+        <Route index element={<AdminDashboard />} />
+        <Route path="notices" element={<ManageNotices />} />
+        <Route path="events" element={<ManageEvents />} />
+        <Route path="assignments" element={<ManageAssignments />} />
+        <Route path="attendance" element={<ManageAttendance />} />
+        <Route path="fees" element={<ManageFees />} />
+        <Route path="feedback" element={<ManageFeedback />} />
+      </Route>
     </Route>
     <Route path="*" element={<NotFound />} />
   </Routes>

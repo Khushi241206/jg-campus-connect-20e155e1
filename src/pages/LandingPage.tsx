@@ -24,9 +24,10 @@ const LandingPage = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (login(username, password)) {
+    const ok = await login(username, password);
+    if (ok) {
       toast({ title: "Welcome back!", description: "Login successful." });
       navigate("/dashboard");
     } else {
