@@ -12,7 +12,7 @@ import { AttendancePrediction, AcademicHealthScore, SmartReminders, PerformanceA
 const card = "bg-card rounded-xl border border-border p-4 md:p-5 card-hover card-shadow";
 
 const Dashboard = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const navigate = useNavigate();
   const avgAttendance = (attendanceData.reduce((s, a) => s + a.percentage, 0) / attendanceData.length).toFixed(1);
   const pendingAssignments = assignments.filter(a => a.status === "pending").length;
