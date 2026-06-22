@@ -22,6 +22,7 @@ import Profile from "@/pages/Profile";
 import Academics from "@/pages/Academics";
 import About from "@/pages/About";
 import NotFound from "@/pages/NotFound";
+import InstallPrompt from "@/components/InstallPrompt";
 
 const queryClient = new QueryClient();
 
@@ -67,6 +68,7 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <AppRoutes />
+            <InstallPrompt />
           </BrowserRouter>
         </TooltipProvider>
       </AuthProvider>
