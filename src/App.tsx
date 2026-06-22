@@ -8,6 +8,7 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import DashboardLayout from "@/components/DashboardLayout";
 import AdminRoute from "@/components/AdminRoute";
 import LandingPage from "@/pages/LandingPage";
+import Login from "@/pages/Login";
 import Dashboard from "@/pages/Dashboard";
 import Timetable from "@/pages/Timetable";
 import Attendance from "@/pages/Attendance";
@@ -50,7 +51,8 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
 const AppRoutes = () => (
   <Routes>
     <Route path="/" element={<PublicRoute><LandingPage /></PublicRoute>} />
-    <Route path="/login" element={<PublicRoute><LandingPage /></PublicRoute>} />
+    <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+    <Route path="/register" element={<PublicRoute><Login /></PublicRoute>} />
     <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/timetable" element={<Timetable />} />
