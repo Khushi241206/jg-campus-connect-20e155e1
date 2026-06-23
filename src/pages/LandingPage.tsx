@@ -88,19 +88,30 @@ const LandingPage = () => {
               </button>
             ))}
           </div>
-          <motion.button
-            onClick={openLogin}
-            className="px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold"
-            style={{
-              background: "linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%)",
-              color: "#1a1a2e",
-            }}
-            whileHover={{ scale: 1.05, boxShadow: "0 8px 24px rgba(255,255,255,0.2)" }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
-          >
-            Student Login
-          </motion.button>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <motion.button
+              onClick={openRegister}
+              className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold border border-white/30 text-white hover:bg-white/10 transition-colors"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Register
+            </motion.button>
+            <motion.button
+              onClick={openLogin}
+              className="px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold"
+              style={{
+                background: "linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%)",
+                color: "#1a1a2e",
+              }}
+              whileHover={{ scale: 1.05, boxShadow: "0 8px 24px rgba(255,255,255,0.2)" }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            >
+              Student Login
+            </motion.button>
+          </div>
+
         </div>
       </nav>
 
