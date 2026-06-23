@@ -21,6 +21,7 @@ const Assignments = () => {
   const [loading, setLoading] = useState(true);
   const [openId, setOpenId] = useState<string | null>(null);
   const [content, setContent] = useState("");
+  const [file, setFile] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   const load = useCallback(async () => {
@@ -45,18 +46,33 @@ const Assignments = () => {
   useEffect(() => { load(); }, [load]);
 
   const submit = async (assignmentId: string) => {
-    if (!user || !content.trim()) return;
+    if (!user) return;
+    if (!file && !content.trim()) {
+      return toast({ title: "Add a file or note", variant: "destructive" });
+    }
     setSubmitting(true);
+    let attachment_url: string | null = null;
+    if (file) {
+      const path = `${user.id}/${assignmentId}/${Date.now()}-${file.name}`;
+      const { error: upErr } = await supabase.storage.from("assignment-submissions").upload(path, file);
+      if (upErr) {
+        setSubmitting(false);
+        return toast({ title: "Upload failed", description: upErr.message, variant: "destructive" });
+      }
+      attachment_url = path;
+    }
     const { error } = await supabase.from("assignment_submissions").insert({
       assignment_id: assignmentId,
       student_id: user.id,
-      content,
+      content: content.trim() || null,
+      attachment_url,
     });
     setSubmitting(false);
     if (error) return toast({ title: "Submit failed", description: error.message, variant: "destructive" });
-    toast({ title: "Submitted!" });
+    toast({ title: "Submitted!", description: file ? `Uploaded ${file.name}` : "Your work was recorded." });
     setOpenId(null);
     setContent("");
+    setFile(null);
     load();
   };
 
@@ -97,15 +113,21 @@ const Assignments = () => {
                 {!sub && (
                   openId === a.id ? (
                     <div className="space-y-2">
-                      <textarea value={content} onChange={(e) => setContent(e.target.value)} rows={3}
-                        placeholder="Your answer / link to work…"
+                      <input
+                        type="file"
+                        onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+                        className="block w-full text-sm text-foreground file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-primary-foreground hover:file:opacity-90"
+                      />
+                      {file && <p className="text-xs text-muted-foreground">Selected: {file.name}</p>}
+                      <textarea value={content} onChange={(e) => setContent(e.target.value)} rows={2}
+                        placeholder="Optional note…"
                         className="w-full px-3 py-2 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30" />
                       <div className="flex gap-2">
                         <button onClick={() => submit(a.id)} disabled={submitting}
                           className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 disabled:opacity-50">
                           {submitting ? "Submitting…" : "Submit"}
                         </button>
-                        <button onClick={() => { setOpenId(null); setContent(""); }} className="px-3 py-1.5 rounded-lg text-sm text-muted-foreground hover:bg-muted">Cancel</button>
+                        <button onClick={() => { setOpenId(null); setContent(""); setFile(null); }} className="px-3 py-1.5 rounded-lg text-sm text-muted-foreground hover:bg-muted">Cancel</button>
                       </div>
                     </div>
                   ) : (

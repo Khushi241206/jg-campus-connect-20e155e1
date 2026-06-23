@@ -135,20 +135,32 @@ export type Database = {
       }
       event_registrations: {
         Row: {
+          enrollment_number: string | null
           event_id: string
+          full_name: string | null
           id: string
+          notes: string | null
+          phone: string | null
           registered_at: string
           student_id: string
         }
         Insert: {
+          enrollment_number?: string | null
           event_id: string
+          full_name?: string | null
           id?: string
+          notes?: string | null
+          phone?: string | null
           registered_at?: string
           student_id: string
         }
         Update: {
+          enrollment_number?: string | null
           event_id?: string
+          full_name?: string | null
           id?: string
+          notes?: string | null
+          phone?: string | null
           registered_at?: string
           student_id?: string
         }
