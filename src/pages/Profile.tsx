@@ -1,13 +1,22 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Loader2, Save, ShieldCheck } from "lucide-react";
+import { Loader2, Save, ShieldCheck, Palette, Check } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useTheme, type ThemeName } from "@/contexts/ThemeContext";
+
+const THEMES: { id: ThemeName; label: string; swatches: string[] }[] = [
+  { id: "elegant-light", label: "Elegant Light", swatches: ["#f8fafc", "#e2e8f0", "#0f172a"] },
+  { id: "dark-academic", label: "Dark Academic", swatches: ["#1a1410", "#2d2218", "#d4a574"] },
+  { id: "modern-blue", label: "Modern Blue", swatches: ["#eff6ff", "#3b82f6", "#1e3a8a"] },
+  { id: "calm-mint", label: "Calm Mint", swatches: ["#ecfdf5", "#10b981", "#064e3b"] },
+];
 
 const Profile = () => {
   const { profile, user, isAdmin, refreshProfile, signOut } = useAuth();
   const { toast } = useToast();
+  const { theme, setTheme } = useTheme();
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
     full_name: "",
@@ -86,6 +95,36 @@ const Profile = () => {
           <button onClick={() => signOut()} className="px-4 py-2.5 rounded-lg border border-border text-sm font-medium hover:bg-muted">
             Sign out
           </button>
+        </div>
+      </div>
+
+      <div className="bg-card border border-border rounded-xl p-5 md:p-6 space-y-4">
+        <div className="flex items-center gap-2">
+          <Palette className="h-4 w-4 text-primary" />
+          <h2 className="text-sm font-semibold">Appearance</h2>
+        </div>
+        <p className="text-xs text-muted-foreground">Choose a theme for your portal.</p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {THEMES.map((t) => {
+            const active = theme === t.id;
+            return (
+              <button
+                key={t.id}
+                onClick={() => setTheme(t.id)}
+                className={`relative text-left p-3 rounded-xl border transition-all ${active ? "border-primary ring-2 ring-primary/30" : "border-border hover:border-primary/50"}`}
+              >
+                <div className="flex gap-1 mb-2">
+                  {t.swatches.map((c, i) => (
+                    <span key={i} className="h-6 w-6 rounded-md border border-border/60" style={{ background: c }} />
+                  ))}
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-medium">{t.label}</span>
+                  {active && <Check className="h-3.5 w-3.5 text-primary" />}
+                </div>
+              </button>
+            );
+          })}
         </div>
       </div>
     </motion.div>
