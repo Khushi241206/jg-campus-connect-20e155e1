@@ -1,9 +1,17 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Loader2, Save, ShieldCheck } from "lucide-react";
+import { Loader2, Save, ShieldCheck, Palette, Check } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useTheme, type ThemeName } from "@/contexts/ThemeContext";
+
+const THEMES: { id: ThemeName; label: string; swatches: string[] }[] = [
+  { id: "elegant-light", label: "Elegant Light", swatches: ["#f8fafc", "#e2e8f0", "#0f172a"] },
+  { id: "dark-academic", label: "Dark Academic", swatches: ["#1a1410", "#2d2218", "#d4a574"] },
+  { id: "modern-blue", label: "Modern Blue", swatches: ["#eff6ff", "#3b82f6", "#1e3a8a"] },
+  { id: "calm-mint", label: "Calm Mint", swatches: ["#ecfdf5", "#10b981", "#064e3b"] },
+];
 
 const Profile = () => {
   const { profile, user, isAdmin, refreshProfile, signOut } = useAuth();
