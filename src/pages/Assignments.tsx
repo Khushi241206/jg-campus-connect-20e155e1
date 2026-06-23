@@ -113,15 +113,21 @@ const Assignments = () => {
                 {!sub && (
                   openId === a.id ? (
                     <div className="space-y-2">
-                      <textarea value={content} onChange={(e) => setContent(e.target.value)} rows={3}
-                        placeholder="Your answer / link to work…"
+                      <input
+                        type="file"
+                        onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+                        className="block w-full text-sm text-foreground file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-primary-foreground hover:file:opacity-90"
+                      />
+                      {file && <p className="text-xs text-muted-foreground">Selected: {file.name}</p>}
+                      <textarea value={content} onChange={(e) => setContent(e.target.value)} rows={2}
+                        placeholder="Optional note…"
                         className="w-full px-3 py-2 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30" />
                       <div className="flex gap-2">
                         <button onClick={() => submit(a.id)} disabled={submitting}
                           className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 disabled:opacity-50">
                           {submitting ? "Submitting…" : "Submit"}
                         </button>
-                        <button onClick={() => { setOpenId(null); setContent(""); }} className="px-3 py-1.5 rounded-lg text-sm text-muted-foreground hover:bg-muted">Cancel</button>
+                        <button onClick={() => { setOpenId(null); setContent(""); setFile(null); }} className="px-3 py-1.5 rounded-lg text-sm text-muted-foreground hover:bg-muted">Cancel</button>
                       </div>
                     </div>
                   ) : (
