@@ -40,8 +40,11 @@ const LandingPage = () => {
   };
 
   const openLogin = () => {
-    setShowLogin(true);
-    setTimeout(() => document.getElementById("login-card")?.scrollIntoView({ behavior: "smooth", block: "center" }), 100);
+    navigate("/login");
+  };
+
+  const openRegister = () => {
+    navigate("/login?mode=register");
   };
 
   const features = [
