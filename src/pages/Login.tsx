@@ -30,7 +30,12 @@ const Login = () => {
 
   const { signIn, signUpStudent, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (searchParams.get("mode") === "register") setMode("register");
+  }, [searchParams]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
