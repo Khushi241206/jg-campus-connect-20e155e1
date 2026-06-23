@@ -16,6 +16,7 @@ const THEMES: { id: ThemeName; label: string; swatches: string[] }[] = [
 const Profile = () => {
   const { profile, user, isAdmin, refreshProfile, signOut } = useAuth();
   const { toast } = useToast();
+  const { theme, setTheme } = useTheme();
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
     full_name: "",
