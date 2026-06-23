@@ -131,7 +131,7 @@ const Profile = () => {
   );
 };
 
-const Field2 = ({ label, v, on, type = "text" }: { label: string; v: string; on: (v: string) => void; type?: string }) => (
+const Field = ({ label, v, on, type = "text" }: { label: string; v: string; on: (v: string) => void; type?: string }) => (
   <div>
     <label className="block text-xs font-medium text-muted-foreground mb-1">{label}</label>
     <input type={type} value={v} onChange={(e) => on(e.target.value)}
