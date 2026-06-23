@@ -1,0 +1,5 @@
+ALTER TABLE public.event_registrations
+  ADD COLUMN IF NOT EXISTS full_name TEXT,
+  ADD COLUMN IF NOT EXISTS phone TEXT,
+  ADD COLUMN IF NOT EXISTS enrollment_number TEXT,
+  ADD COLUMN IF NOT EXISTS notes TEXT;
