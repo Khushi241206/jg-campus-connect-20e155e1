@@ -97,11 +97,41 @@ const Profile = () => {
           </button>
         </div>
       </div>
+
+      <div className="bg-card border border-border rounded-xl p-5 md:p-6 space-y-4">
+        <div className="flex items-center gap-2">
+          <Palette className="h-4 w-4 text-primary" />
+          <h2 className="text-sm font-semibold">Appearance</h2>
+        </div>
+        <p className="text-xs text-muted-foreground">Choose a theme for your portal.</p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {THEMES.map((t) => {
+            const active = theme === t.id;
+            return (
+              <button
+                key={t.id}
+                onClick={() => setTheme(t.id)}
+                className={`relative text-left p-3 rounded-xl border transition-all ${active ? "border-primary ring-2 ring-primary/30" : "border-border hover:border-primary/50"}`}
+              >
+                <div className="flex gap-1 mb-2">
+                  {t.swatches.map((c, i) => (
+                    <span key={i} className="h-6 w-6 rounded-md border border-border/60" style={{ background: c }} />
+                  ))}
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-medium">{t.label}</span>
+                  {active && <Check className="h-3.5 w-3.5 text-primary" />}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
     </motion.div>
   );
 };
 
-const Field = ({ label, v, on, type = "text" }: { label: string; v: string; on: (v: string) => void; type?: string }) => (
+const Field2 = ({ label, v, on, type = "text" }: { label: string; v: string; on: (v: string) => void; type?: string }) => (
   <div>
     <label className="block text-xs font-medium text-muted-foreground mb-1">{label}</label>
     <input type={type} value={v} onChange={(e) => on(e.target.value)}
