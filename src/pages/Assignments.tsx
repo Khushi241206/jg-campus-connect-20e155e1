@@ -21,6 +21,7 @@ const Assignments = () => {
   const [loading, setLoading] = useState(true);
   const [openId, setOpenId] = useState<string | null>(null);
   const [content, setContent] = useState("");
+  const [file, setFile] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   const load = useCallback(async () => {
@@ -45,18 +46,33 @@ const Assignments = () => {
   useEffect(() => { load(); }, [load]);
 
   const submit = async (assignmentId: string) => {
-    if (!user || !content.trim()) return;
+    if (!user) return;
+    if (!file && !content.trim()) {
+      return toast({ title: "Add a file or note", variant: "destructive" });
+    }
     setSubmitting(true);
+    let attachment_url: string | null = null;
+    if (file) {
+      const path = `${user.id}/${assignmentId}/${Date.now()}-${file.name}`;
+      const { error: upErr } = await supabase.storage.from("assignment-submissions").upload(path, file);
+      if (upErr) {
+        setSubmitting(false);
+        return toast({ title: "Upload failed", description: upErr.message, variant: "destructive" });
+      }
+      attachment_url = path;
+    }
     const { error } = await supabase.from("assignment_submissions").insert({
       assignment_id: assignmentId,
       student_id: user.id,
-      content,
+      content: content.trim() || null,
+      attachment_url,
     });
     setSubmitting(false);
     if (error) return toast({ title: "Submit failed", description: error.message, variant: "destructive" });
-    toast({ title: "Submitted!" });
+    toast({ title: "Submitted!", description: file ? `Uploaded ${file.name}` : "Your work was recorded." });
     setOpenId(null);
     setContent("");
+    setFile(null);
     load();
   };
 
