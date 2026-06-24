@@ -1,9 +1,10 @@
 import { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { UserCheck, Loader2, CheckCircle, XCircle, Clock } from "lucide-react";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { attendanceData } from "@/data/mockData";
 
 interface Row {
   id: string;
@@ -11,6 +12,17 @@ interface Row {
   date: string;
   status: "present" | "absent" | "late";
 }
+
+// Build display summary: prefer DB data; fall back to mock (synced with timetable subjects)
+const subjectMeta: Record<string, { faculty: string; code: string }> = {
+  "Software Engineering": { faculty: "Miss. Neelu Verma", code: "SE" },
+  "Computer Networks": { faculty: "Mr. Sharad Patidar", code: "CN" },
+  "Machine Learning": { faculty: "Mr. Sameer Deo", code: "ML" },
+  "UI/UX Design": { faculty: "Ms. Anukreeti Chaudhary", code: "UX" },
+  "Vector Calculus": { faculty: "Miss. Neelu Verma", code: "VC" },
+  "Sustainable Energy": { faculty: "Ms. Anukreeti Chaudhary", code: "SEN" },
+  "Entrepreneurship": { faculty: "Mr. Sharad Patidar", code: "ENT" },
+};
 
 const Attendance = () => {
   const { user } = useAuth();
@@ -30,24 +42,33 @@ const Attendance = () => {
     })();
   }, [user]);
 
+  // Subject summary: combine DB rows with mock baseline so the page always reflects timetable subjects
   const summary = useMemo(() => {
-    const bySub = new Map<string, { present: number; total: number }>();
-    rows.forEach((r) => {
-      const e = bySub.get(r.subject) ?? { present: 0, total: 0 };
-      e.total += 1;
-      if (r.status === "present") e.present += 1;
-      bySub.set(r.subject, e);
+    const map = new Map<string, { present: number; absent: number; late: number; total: number }>();
+    attendanceData.forEach((m) => {
+      map.set(m.subject, { present: m.present, absent: m.absent, late: 0, total: m.total });
     });
-    return Array.from(bySub.entries()).map(([subject, v]) => ({
+    rows.forEach((r) => {
+      const key = r.subject.replace(/\s*\(.*\)\s*/, "").trim();
+      const e = map.get(key) ?? { present: 0, absent: 0, late: 0, total: 0 };
+      e.total += 1;
+      e[r.status] += 1;
+      map.set(key, e);
+    });
+    return Array.from(map.entries()).map(([subject, v]) => ({
       subject,
       ...v,
+      faculty: subjectMeta[subject]?.faculty ?? "—",
+      code: subjectMeta[subject]?.code ?? subject.slice(0, 3).toUpperCase(),
       pct: v.total ? Math.round((v.present / v.total) * 100) : 0,
     }));
   }, [rows]);
 
-  const overallPresent = rows.filter((r) => r.status === "present").length;
-  const overallTotal = rows.length;
-  const overallPct = overallTotal ? Math.round((overallPresent / overallTotal) * 100) : 0;
+  const totals = summary.reduce(
+    (a, s) => ({ present: a.present + s.present, absent: a.absent + s.absent, late: a.late + s.late, total: a.total + s.total }),
+    { present: 0, absent: 0, late: 0, total: 0 }
+  );
+  const overallPct = totals.total ? Math.round((totals.present / totals.total) * 100) : 0;
 
   return (
     <div className="space-y-5 animate-fade-in">
@@ -55,14 +76,15 @@ const Attendance = () => {
         <UserCheck className="h-5 w-5 text-primary" />
         <h1 className="text-xl md:text-2xl font-bold">Attendance</h1>
       </div>
+      <p className="text-xs md:text-sm text-muted-foreground -mt-3">Subjects synced with your weekly time table · Year 2, Div B</p>
 
       <div className="grid grid-cols-3 gap-3 md:gap-4">
-        <Card label="Overall" value={`${overallPct}%`} color="text-primary" />
-        <Card label="Present" value={overallPresent} color="text-success" />
-        <Card label="Total Sessions" value={overallTotal} color="text-foreground" />
+        <Card label="Overall" value={`${overallPct}%`} color={overallPct >= 75 ? "text-success" : overallPct >= 60 ? "text-warning" : "text-destructive"} />
+        <Card label="Present" value={totals.present} color="text-success" />
+        <Card label="Total Sessions" value={totals.total} color="text-foreground" />
       </div>
 
-      {!loading && overallTotal > 0 && (
+      {!loading && totals.total > 0 && (
         <div className="grid md:grid-cols-2 gap-4">
           <div className="bg-card border border-border rounded-xl p-4">
             <h3 className="font-semibold mb-2 text-sm">Overall Distribution</h3>
@@ -71,9 +93,9 @@ const Attendance = () => {
                 <PieChart>
                   <Pie
                     data={[
-                      { name: "Present", value: rows.filter(r => r.status === "present").length },
-                      { name: "Absent", value: rows.filter(r => r.status === "absent").length },
-                      { name: "Late", value: rows.filter(r => r.status === "late").length },
+                      { name: "Present", value: totals.present },
+                      { name: "Absent", value: totals.absent },
+                      { name: "Late", value: totals.late },
                     ].filter(d => d.value > 0)}
                     dataKey="value"
                     nameKey="name"
@@ -92,13 +114,23 @@ const Attendance = () => {
               </ResponsiveContainer>
             </div>
           </div>
-          <div className="bg-card border border-border rounded-xl p-4 flex flex-col justify-center">
-            <h3 className="font-semibold mb-3 text-sm">At a Glance</h3>
-            <div className="space-y-2 text-sm">
-              <Stat label="Attendance %" value={`${overallPct}%`} accent={overallPct >= 75 ? "text-success" : overallPct >= 60 ? "text-warning" : "text-destructive"} />
-              <Stat label="Subjects Tracked" value={`${summary.length}`} />
-              <Stat label="Best Subject" value={summary.length ? summary.slice().sort((a, b) => b.pct - a.pct)[0].subject : "—"} />
-              <Stat label="Needs Focus" value={summary.length ? summary.slice().sort((a, b) => a.pct - b.pct)[0].subject : "—"} accent="text-destructive" />
+
+          <div className="bg-card border border-border rounded-xl p-4">
+            <h3 className="font-semibold mb-2 text-sm">Subject-wise %</h3>
+            <div className="h-56">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={summary.map(s => ({ name: s.code, pct: s.pct }))} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                  <XAxis dataKey="name" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
+                  <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
+                  <Tooltip contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }} formatter={(v: any) => [`${v}%`, "Attendance"]} />
+                  <Bar dataKey="pct" radius={[6, 6, 0, 0]}>
+                    {summary.map((s, i) => (
+                      <Cell key={i} fill={s.pct >= 75 ? "hsl(var(--success))" : s.pct >= 60 ? "hsl(var(--warning))" : "hsl(var(--destructive))"} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
             </div>
           </div>
         </div>
@@ -109,33 +141,33 @@ const Attendance = () => {
       ) : (
         <>
           <div className="bg-card border border-border rounded-xl p-4">
-            <h3 className="font-semibold mb-3 text-sm">By Subject</h3>
-            {summary.length === 0 ? (
-              <p className="text-sm text-muted-foreground py-6 text-center">No attendance records yet</p>
-            ) : (
-              <div className="space-y-3">
-                {summary.map((s) => (
-                  <div key={s.subject}>
-                    <div className="flex justify-between text-sm mb-1">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-semibold text-sm">By Subject (as per Time Table)</h3>
+              <span className="text-xs text-muted-foreground">{summary.length} subjects</span>
+            </div>
+            <div className="space-y-3">
+              {summary.map((s) => (
+                <div key={s.subject}>
+                  <div className="flex justify-between text-sm mb-1">
+                    <div className="min-w-0">
                       <span className="font-medium">{s.subject}</span>
-                      <span className="text-muted-foreground">{s.present}/{s.total} • {s.pct}%</span>
+                      <span className="text-[11px] text-muted-foreground ml-2">{s.faculty}</span>
                     </div>
-                    <div className="h-2 rounded-full bg-muted overflow-hidden">
-                      <div className={`h-full ${s.pct >= 75 ? "bg-success" : s.pct >= 60 ? "bg-warning" : "bg-destructive"}`} style={{ width: `${s.pct}%` }} />
-                    </div>
+                    <span className="text-muted-foreground whitespace-nowrap ml-2">{s.present}/{s.total} • <span className={s.pct >= 75 ? "text-success" : s.pct >= 60 ? "text-warning" : "text-destructive"}>{s.pct}%</span></span>
                   </div>
-                ))}
-              </div>
-            )}
+                  <div className="h-2 rounded-full bg-muted overflow-hidden">
+                    <div className={`h-full ${s.pct >= 75 ? "bg-success" : s.pct >= 60 ? "bg-warning" : "bg-destructive"}`} style={{ width: `${s.pct}%` }} />
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div className="bg-card border border-border rounded-xl p-4">
-            <h3 className="font-semibold mb-3 text-sm">Recent Records</h3>
-            {rows.length === 0 ? (
-              <p className="text-sm text-muted-foreground py-6 text-center">No records yet</p>
-            ) : (
+          {rows.length > 0 && (
+            <div className="bg-card border border-border rounded-xl p-4">
+              <h3 className="font-semibold mb-3 text-sm">Recent Records</h3>
               <div className="space-y-2">
-                {rows.slice(0, 30).map((r, i) => (
+                {rows.slice(0, 20).map((r, i) => (
                   <motion.div key={r.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.02 }}
                     className="flex items-center justify-between py-2 px-3 rounded-lg bg-muted/40">
                     <div>
@@ -146,8 +178,8 @@ const Attendance = () => {
                   </motion.div>
                 ))}
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </>
       )}
     </div>
@@ -158,13 +190,6 @@ const Card = ({ label, value, color }: { label: string; value: string | number; 
   <div className="bg-card border border-border rounded-xl p-3 md:p-4 text-center">
     <p className={`text-xl md:text-2xl font-bold ${color}`}>{value}</p>
     <p className="text-[10px] md:text-xs text-muted-foreground">{label}</p>
-  </div>
-);
-
-const Stat = ({ label, value, accent }: { label: string; value: string; accent?: string }) => (
-  <div className="flex items-center justify-between py-1.5 border-b border-border/40 last:border-0">
-    <span className="text-muted-foreground text-xs">{label}</span>
-    <span className={`font-semibold ${accent ?? "text-foreground"}`}>{value}</span>
   </div>
 );
 
