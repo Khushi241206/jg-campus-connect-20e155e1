@@ -156,9 +156,33 @@ const Fees = () => {
             </div>
           ))}
           <div className="flex justify-between py-2.5 text-sm font-bold border-t-2 border-border mt-1">
-            <span>Total</span>
+            <span>Per Semester Total</span>
             <span className="text-primary">₹{STRUCTURE_TOTAL.toLocaleString("en-IN")}</span>
           </div>
+        </div>
+      </div>
+
+      {/* Annual breakup */}
+      <div className="bg-card border border-border rounded-xl p-4">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-semibold text-sm">Annual Fee Breakup (Year-wise)</h3>
+          <span className="text-xs text-muted-foreground">2 semesters / year</span>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="rounded-lg border border-border p-3 bg-muted/30">
+            <p className="text-xs text-muted-foreground">Semester I (Odd)</p>
+            <p className="text-lg font-bold text-foreground">₹{STRUCTURE_TOTAL.toLocaleString("en-IN")}</p>
+            <p className="text-[11px] text-muted-foreground mt-1">Due: July</p>
+          </div>
+          <div className="rounded-lg border border-border p-3 bg-muted/30">
+            <p className="text-xs text-muted-foreground">Semester II (Even)</p>
+            <p className="text-lg font-bold text-foreground">₹{STRUCTURE_TOTAL.toLocaleString("en-IN")}</p>
+            <p className="text-[11px] text-muted-foreground mt-1">Due: January</p>
+          </div>
+        </div>
+        <div className="flex justify-between items-center mt-3 pt-3 border-t-2 border-border">
+          <span className="text-sm font-bold">Total Annual Fee</span>
+          <span className="text-lg font-bold text-primary">₹{(STRUCTURE_TOTAL * 2).toLocaleString("en-IN")}</span>
         </div>
       </div>
 
