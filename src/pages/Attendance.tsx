@@ -161,6 +161,13 @@ const Card = ({ label, value, color }: { label: string; value: string | number; 
   </div>
 );
 
+const Stat = ({ label, value, accent }: { label: string; value: string; accent?: string }) => (
+  <div className="flex items-center justify-between py-1.5 border-b border-border/40 last:border-0">
+    <span className="text-muted-foreground text-xs">{label}</span>
+    <span className={`font-semibold ${accent ?? "text-foreground"}`}>{value}</span>
+  </div>
+);
+
 const Badge = ({ status }: { status: "present" | "absent" | "late" }) => {
   if (status === "present") return <span className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md bg-success/10 text-success"><CheckCircle className="h-3 w-3" />Present</span>;
   if (status === "absent") return <span className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-md bg-destructive/10 text-destructive"><XCircle className="h-3 w-3" />Absent</span>;
