@@ -62,6 +62,48 @@ const Attendance = () => {
         <Card label="Total Sessions" value={overallTotal} color="text-foreground" />
       </div>
 
+      {!loading && overallTotal > 0 && (
+        <div className="grid md:grid-cols-2 gap-4">
+          <div className="bg-card border border-border rounded-xl p-4">
+            <h3 className="font-semibold mb-2 text-sm">Overall Distribution</h3>
+            <div className="h-56">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={[
+                      { name: "Present", value: rows.filter(r => r.status === "present").length },
+                      { name: "Absent", value: rows.filter(r => r.status === "absent").length },
+                      { name: "Late", value: rows.filter(r => r.status === "late").length },
+                    ].filter(d => d.value > 0)}
+                    dataKey="value"
+                    nameKey="name"
+                    innerRadius={45}
+                    outerRadius={75}
+                    paddingAngle={3}
+                    label={(e: any) => `${e.name} ${e.value}`}
+                  >
+                    {["hsl(var(--success))", "hsl(var(--destructive))", "hsl(var(--warning))"].map((c, i) => (
+                      <Cell key={i} fill={c} />
+                    ))}
+                  </Pie>
+                  <Tooltip contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }} />
+                  <Legend wrapperStyle={{ fontSize: 11 }} />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+          <div className="bg-card border border-border rounded-xl p-4 flex flex-col justify-center">
+            <h3 className="font-semibold mb-3 text-sm">At a Glance</h3>
+            <div className="space-y-2 text-sm">
+              <Stat label="Attendance %" value={`${overallPct}%`} accent={overallPct >= 75 ? "text-success" : overallPct >= 60 ? "text-warning" : "text-destructive"} />
+              <Stat label="Subjects Tracked" value={`${summary.length}`} />
+              <Stat label="Best Subject" value={summary.length ? summary.slice().sort((a, b) => b.pct - a.pct)[0].subject : "—"} />
+              <Stat label="Needs Focus" value={summary.length ? summary.slice().sort((a, b) => a.pct - b.pct)[0].subject : "—"} accent="text-destructive" />
+            </div>
+          </div>
+        </div>
+      )}
+
       {loading ? (
         <div className="flex justify-center py-16"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
       ) : (
