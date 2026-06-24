@@ -662,6 +662,7 @@ const LandingPage = () => {
           </p>
         </div>
       </footer>
+      <AIChatbot />
     </div>
   );
 };
