@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import jgCampus from "@/assets/jg-campus.jpeg";
 import jgLogoWhite from "@/assets/jg-logo-nobg.png";
 import jgLogo from "@/assets/jg-logo-white.png";
+import AIChatbot from "@/components/AIChatbot";
 
 const LandingPage = () => {
   const [username, setUsername] = useState("");
@@ -661,6 +662,7 @@ const LandingPage = () => {
           </p>
         </div>
       </footer>
+      <AIChatbot />
     </div>
   );
 };
