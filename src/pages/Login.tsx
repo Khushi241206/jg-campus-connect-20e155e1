@@ -81,6 +81,26 @@ const Login = () => {
     }
   };
 
+  const handleForgot = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!forgotEmail) return;
+    setForgotLoading(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(forgotEmail, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setForgotLoading(false);
+    if (error) {
+      toast({ title: "Couldn't send email", description: error.message, variant: "destructive" });
+      return;
+    }
+    toast({
+      title: "Reset link sent",
+      description: `Check ${forgotEmail} for a password reset link.`,
+    });
+    setForgotOpen(false);
+    setForgotEmail("");
+  };
+
   return (
     <div className="min-h-screen flex relative overflow-hidden">
       <div className="absolute inset-0">
