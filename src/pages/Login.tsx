@@ -12,6 +12,9 @@ type Mode = "login" | "register";
 
 const Login = () => {
   const [mode, setMode] = useState<Mode>("login");
+  const [forgotOpen, setForgotOpen] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotLoading, setForgotLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
