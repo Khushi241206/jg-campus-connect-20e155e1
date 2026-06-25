@@ -54,6 +54,7 @@ const AppRoutes = () => (
     <Route path="/" element={<PublicRoute><LandingPage /></PublicRoute>} />
     <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
     <Route path="/register" element={<PublicRoute><Login /></PublicRoute>} />
+    <Route path="/reset-password" element={<ResetPassword />} />
     <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/timetable" element={<Timetable />} />
