@@ -169,11 +169,14 @@ const Login = () => {
                   </button>
                 </div>
               </Field>
-              <div className="flex justify-end -mt-2">
+              <div className="flex items-center justify-between -mt-1">
+                <label className="flex items-center gap-2 text-xs text-muted-foreground select-none">
+                  <input type="checkbox" className="h-3.5 w-3.5 rounded border-input" /> Remember me
+                </label>
                 <button
                   type="button"
                   onClick={() => { setForgotEmail(email); setForgotOpen(true); }}
-                  className="text-xs font-medium text-primary hover:underline"
+                  className="text-sm font-semibold text-primary hover:underline underline-offset-2"
                 >
                   Forgot password?
                 </button>
