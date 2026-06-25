@@ -9,6 +9,7 @@ import DashboardLayout from "@/components/DashboardLayout";
 import AdminRoute from "@/components/AdminRoute";
 import LandingPage from "@/pages/LandingPage";
 import Login from "@/pages/Login";
+import ResetPassword from "@/pages/ResetPassword";
 import Dashboard from "@/pages/Dashboard";
 import Timetable from "@/pages/Timetable";
 import Attendance from "@/pages/Attendance";
