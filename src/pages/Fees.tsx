@@ -124,6 +124,19 @@ const Fees = () => {
     toast({ title: "Receipt downloaded", description: "Open the file and print to save as PDF." });
   };
 
+  const downloadGenericReceipt = () => {
+    const sem = profile?.semester || "4";
+    downloadReceipt({
+      id: crypto.randomUUID(),
+      semester: sem,
+      amount_total: STRUCTURE_TOTAL,
+      amount_paid: rows.find((r) => r.semester === sem)?.amount_paid ?? 0,
+      due_date: null,
+      status: rows.find((r) => r.semester === sem)?.status ?? "pending",
+      notes: null,
+    });
+  };
+
   return (
     <div className="space-y-5 animate-fade-in">
       <div className="flex items-center gap-2">
