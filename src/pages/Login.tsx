@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useAuth, StudentSignupData } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import jgCampus from "@/assets/jg-campus.jpeg";
 import jgLogo from "@/assets/jg-logo-white.png";
@@ -11,6 +12,9 @@ type Mode = "login" | "register";
 
 const Login = () => {
   const [mode, setMode] = useState<Mode>("login");
+  const [forgotOpen, setForgotOpen] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotLoading, setForgotLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -75,6 +79,26 @@ const Login = () => {
       setLoading(false);
       toast({ title: "Google sign-in failed", description: error, variant: "destructive" });
     }
+  };
+
+  const handleForgot = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!forgotEmail) return;
+    setForgotLoading(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(forgotEmail, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setForgotLoading(false);
+    if (error) {
+      toast({ title: "Couldn't send email", description: error.message, variant: "destructive" });
+      return;
+    }
+    toast({
+      title: "Reset link sent",
+      description: `Check ${forgotEmail} for a password reset link.`,
+    });
+    setForgotOpen(false);
+    setForgotEmail("");
   };
 
   return (
@@ -145,6 +169,15 @@ const Login = () => {
                   </button>
                 </div>
               </Field>
+              <div className="flex justify-end -mt-2">
+                <button
+                  type="button"
+                  onClick={() => { setForgotEmail(email); setForgotOpen(true); }}
+                  className="text-xs font-medium text-primary hover:underline"
+                >
+                  Forgot password?
+                </button>
+              </div>
               <button type="submit" disabled={loading} className={btnPrimary}>
                 {loading ? <Loader2 className="h-4 w-4 animate-spin mx-auto" /> : "Login"}
               </button>
@@ -181,6 +214,41 @@ const Login = () => {
           </button>
         </motion.div>
       </div>
+
+      {forgotOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/60 backdrop-blur-sm p-4" onClick={() => setForgotOpen(false)}>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-sm bg-card border border-border rounded-2xl p-6 shadow-2xl"
+          >
+            <h3 className="font-bold text-lg text-foreground">Reset your password</h3>
+            <p className="text-xs text-muted-foreground mt-1">
+              Enter your registered email. We'll send a secure password reset link to your inbox.
+            </p>
+            <form onSubmit={handleForgot} className="mt-4 space-y-3">
+              <input
+                type="email"
+                required
+                autoFocus
+                value={forgotEmail}
+                onChange={(e) => setForgotEmail(e.target.value)}
+                placeholder="you@example.com"
+                className={inputCls}
+              />
+              <div className="flex gap-2">
+                <button type="button" onClick={() => setForgotOpen(false)} className="flex-1 py-2.5 rounded-lg border border-input bg-background hover:bg-muted text-sm font-medium">
+                  Cancel
+                </button>
+                <button type="submit" disabled={forgotLoading} className="flex-1 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 disabled:opacity-50">
+                  {forgotLoading ? <Loader2 className="h-4 w-4 animate-spin mx-auto" /> : "Send Reset Link"}
+                </button>
+              </div>
+            </form>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 };

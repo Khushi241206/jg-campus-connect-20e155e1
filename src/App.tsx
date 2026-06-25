@@ -9,6 +9,7 @@ import DashboardLayout from "@/components/DashboardLayout";
 import AdminRoute from "@/components/AdminRoute";
 import LandingPage from "@/pages/LandingPage";
 import Login from "@/pages/Login";
+import ResetPassword from "@/pages/ResetPassword";
 import Dashboard from "@/pages/Dashboard";
 import Timetable from "@/pages/Timetable";
 import Attendance from "@/pages/Attendance";
@@ -53,6 +54,7 @@ const AppRoutes = () => (
     <Route path="/" element={<PublicRoute><LandingPage /></PublicRoute>} />
     <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
     <Route path="/register" element={<PublicRoute><Login /></PublicRoute>} />
+    <Route path="/reset-password" element={<ResetPassword />} />
     <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/timetable" element={<Timetable />} />
