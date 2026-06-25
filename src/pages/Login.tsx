@@ -169,6 +169,15 @@ const Login = () => {
                   </button>
                 </div>
               </Field>
+              <div className="flex justify-end -mt-2">
+                <button
+                  type="button"
+                  onClick={() => { setForgotEmail(email); setForgotOpen(true); }}
+                  className="text-xs font-medium text-primary hover:underline"
+                >
+                  Forgot password?
+                </button>
+              </div>
               <button type="submit" disabled={loading} className={btnPrimary}>
                 {loading ? <Loader2 className="h-4 w-4 animate-spin mx-auto" /> : "Login"}
               </button>
