@@ -173,6 +173,12 @@ const Fees = () => {
             <span className="text-primary">₹{STRUCTURE_TOTAL.toLocaleString("en-IN")}</span>
           </div>
         </div>
+        <button
+          onClick={downloadGenericReceipt}
+          className="mt-3 w-full inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-all"
+        >
+          <Download className="h-4 w-4" /> Download Fee Receipt
+        </button>
       </div>
 
       {/* Annual breakup */}
