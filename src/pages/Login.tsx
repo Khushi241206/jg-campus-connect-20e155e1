@@ -85,24 +85,69 @@ const Login = () => {
     }
   };
 
-  const handleForgot = async (e: React.FormEvent) => {
+  const openForgot = () => {
+    setForgotEmail(email);
+    setForgotOtp("");
+    setForgotNewPwd("");
+    setForgotConfirmPwd("");
+    setForgotStep("email");
+    setForgotOpen(true);
+  };
+
+  const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!forgotEmail) return;
     setForgotLoading(true);
-    const { error } = await supabase.auth.resetPasswordForEmail(forgotEmail, {
-      redirectTo: `${window.location.origin}/reset-password`,
-    });
+    const { error } = await supabase.auth.resetPasswordForEmail(forgotEmail);
     setForgotLoading(false);
     if (error) {
-      toast({ title: "Couldn't send email", description: error.message, variant: "destructive" });
+      toast({ title: "Couldn't send OTP", description: error.message, variant: "destructive" });
       return;
     }
     toast({
-      title: "Reset link sent",
-      description: `Check ${forgotEmail} for a password reset link.`,
+      title: "OTP sent",
+      description: `Check ${forgotEmail} for a 6-digit code.`,
     });
+    setForgotStep("otp");
+  };
+
+  const handleVerifyAndReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (forgotOtp.length < 6) {
+      toast({ title: "Enter the 6-digit OTP", variant: "destructive" });
+      return;
+    }
+    if (forgotNewPwd.length < 6) {
+      toast({ title: "Password too short", description: "Use at least 6 characters", variant: "destructive" });
+      return;
+    }
+    if (forgotNewPwd !== forgotConfirmPwd) {
+      toast({ title: "Passwords don't match", variant: "destructive" });
+      return;
+    }
+    setForgotLoading(true);
+    const { error: verifyError } = await supabase.auth.verifyOtp({
+      email: forgotEmail,
+      token: forgotOtp.trim(),
+      type: "recovery",
+    });
+    if (verifyError) {
+      setForgotLoading(false);
+      toast({ title: "Invalid or expired OTP", description: verifyError.message, variant: "destructive" });
+      return;
+    }
+    const { error: updateError } = await supabase.auth.updateUser({ password: forgotNewPwd });
+    if (updateError) {
+      setForgotLoading(false);
+      toast({ title: "Couldn't update password", description: updateError.message, variant: "destructive" });
+      return;
+    }
+    await supabase.auth.signOut();
+    setForgotLoading(false);
+    toast({ title: "Password updated", description: "You can now sign in with your new password." });
     setForgotOpen(false);
-    setForgotEmail("");
+    setEmail(forgotEmail);
+    setPassword("");
   };
 
   return (
