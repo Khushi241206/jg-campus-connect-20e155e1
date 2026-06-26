@@ -101,6 +101,7 @@ const Login = () => {
     const { error } = await supabase.auth.signInWithOtp({
       email: forgotEmail,
       options: {
+        emailRedirectTo: `${window.location.origin}/login?reset=otp`,
         shouldCreateUser: false,
       },
     });
@@ -131,23 +132,27 @@ const Login = () => {
       return;
     }
     setForgotLoading(true);
+    sessionStorage.setItem("passwordResetInProgress", "true");
     const { error: verifyError } = await supabase.auth.verifyOtp({
       email: forgotEmail,
       token: forgotOtp.trim(),
       type: "email",
     });
     if (verifyError) {
+      sessionStorage.removeItem("passwordResetInProgress");
       setForgotLoading(false);
       toast({ title: "Invalid or expired OTP", description: verifyError.message, variant: "destructive" });
       return;
     }
     const { error: updateError } = await supabase.auth.updateUser({ password: forgotNewPwd });
     if (updateError) {
+      sessionStorage.removeItem("passwordResetInProgress");
       setForgotLoading(false);
       toast({ title: "Couldn't update password", description: updateError.message, variant: "destructive" });
       return;
     }
     await supabase.auth.signOut();
+    sessionStorage.removeItem("passwordResetInProgress");
     setForgotLoading(false);
     toast({ title: "Password updated", description: "You can now sign in with your new password." });
     setForgotOpen(false);
@@ -296,7 +301,7 @@ const Login = () => {
             </h3>
             <p className="text-xs text-muted-foreground mt-1">
               {forgotStep === "email"
-                ? "Enter your registered email. We'll send a direct 6-digit OTP to your inbox."
+                ? "Enter your registered email. We'll send the 6-digit OTP to your inbox. Use the code, not the email link."
                 : `We sent a 6-digit code to ${forgotEmail}. Enter it below along with your new password.`}
             </p>
 

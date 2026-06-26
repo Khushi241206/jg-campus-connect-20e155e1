@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import DashboardLayout from "@/components/DashboardLayout";
@@ -45,8 +45,11 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
 const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, loading } = useAuth();
+  const location = useLocation();
+  const isPasswordResetFlow =
+    location.pathname === "/login" && sessionStorage.getItem("passwordResetInProgress") === "true";
   if (loading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>;
-  return isAuthenticated ? <Navigate to="/dashboard" replace /> : <>{children}</>;
+  return isAuthenticated && !isPasswordResetFlow ? <Navigate to="/dashboard" replace /> : <>{children}</>;
 };
 
 const AppRoutes = () => (
