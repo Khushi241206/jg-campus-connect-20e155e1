@@ -269,10 +269,10 @@ const Login = () => {
             Forgot your password?{" "}
             <button
               type="button"
-              onClick={() => { setForgotEmail(email); setForgotOpen(true); }}
+              onClick={openForgot}
               className="font-semibold text-primary hover:underline underline-offset-2"
             >
-              Reset it via email
+              Reset it via OTP
             </button>
           </p>
         </motion.div>
