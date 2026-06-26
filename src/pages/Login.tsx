@@ -224,7 +224,7 @@ const Login = () => {
                 </label>
                 <button
                   type="button"
-                  onClick={() => { setForgotEmail(email); setForgotOpen(true); }}
+                  onClick={openForgot}
                   className="text-sm font-semibold text-primary hover:underline underline-offset-2"
                 >
                   Forgot password?
