@@ -13,7 +13,11 @@ type Mode = "login" | "register";
 const Login = () => {
   const [mode, setMode] = useState<Mode>("login");
   const [forgotOpen, setForgotOpen] = useState(false);
+  const [forgotStep, setForgotStep] = useState<"email" | "otp">("email");
   const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotOtp, setForgotOtp] = useState("");
+  const [forgotNewPwd, setForgotNewPwd] = useState("");
+  const [forgotConfirmPwd, setForgotConfirmPwd] = useState("");
   const [forgotLoading, setForgotLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
