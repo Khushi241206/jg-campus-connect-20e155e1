@@ -98,7 +98,12 @@ const Login = () => {
     e.preventDefault();
     if (!forgotEmail) return;
     setForgotLoading(true);
-    const { error } = await supabase.auth.resetPasswordForEmail(forgotEmail);
+    const { error } = await supabase.auth.signInWithOtp({
+      email: forgotEmail,
+      options: {
+        shouldCreateUser: false,
+      },
+    });
     setForgotLoading(false);
     if (error) {
       toast({ title: "Couldn't send OTP", description: error.message, variant: "destructive" });
@@ -129,7 +134,7 @@ const Login = () => {
     const { error: verifyError } = await supabase.auth.verifyOtp({
       email: forgotEmail,
       token: forgotOtp.trim(),
-      type: "recovery",
+      type: "email",
     });
     if (verifyError) {
       setForgotLoading(false);
@@ -291,7 +296,7 @@ const Login = () => {
             </h3>
             <p className="text-xs text-muted-foreground mt-1">
               {forgotStep === "email"
-                ? "Enter your registered email. We'll send a 6-digit OTP to your inbox."
+                ? "Enter your registered email. We'll send a direct 6-digit OTP to your inbox."
                 : `We sent a 6-digit code to ${forgotEmail}. Enter it below along with your new password.`}
             </p>
 
