@@ -13,9 +13,9 @@ type Mode = "login" | "register";
 const Login = () => {
   const [mode, setMode] = useState<Mode>("login");
   const [forgotOpen, setForgotOpen] = useState(false);
-  const [forgotStep, setForgotStep] = useState<"email" | "otp">("email");
   const [forgotEmail, setForgotEmail] = useState("");
-  const [forgotOtp, setForgotOtp] = useState("");
+  const [forgotEnroll, setForgotEnroll] = useState("");
+  const [forgotDob, setForgotDob] = useState("");
   const [forgotNewPwd, setForgotNewPwd] = useState("");
   const [forgotConfirmPwd, setForgotConfirmPwd] = useState("");
   const [forgotLoading, setForgotLoading] = useState(false);
@@ -87,42 +87,15 @@ const Login = () => {
 
   const openForgot = () => {
     setForgotEmail(email);
-    setForgotOtp("");
+    setForgotEnroll("");
+    setForgotDob("");
     setForgotNewPwd("");
     setForgotConfirmPwd("");
-    setForgotStep("email");
     setForgotOpen(true);
   };
 
-  const handleSendOtp = async (e: React.FormEvent) => {
+  const handleSecurityReset = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!forgotEmail) return;
-    setForgotLoading(true);
-    const { error } = await supabase.auth.signInWithOtp({
-      email: forgotEmail,
-      options: {
-        emailRedirectTo: `${window.location.origin}/login?reset=otp`,
-        shouldCreateUser: false,
-      },
-    });
-    setForgotLoading(false);
-    if (error) {
-      toast({ title: "Couldn't send OTP", description: error.message, variant: "destructive" });
-      return;
-    }
-    toast({
-      title: "OTP sent",
-      description: `Check ${forgotEmail} for a 6-digit code.`,
-    });
-    setForgotStep("otp");
-  };
-
-  const handleVerifyAndReset = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (forgotOtp.length < 6) {
-      toast({ title: "Enter the 6-digit OTP", variant: "destructive" });
-      return;
-    }
     if (forgotNewPwd.length < 6) {
       toast({ title: "Password too short", description: "Use at least 6 characters", variant: "destructive" });
       return;
@@ -132,28 +105,20 @@ const Login = () => {
       return;
     }
     setForgotLoading(true);
-    sessionStorage.setItem("passwordResetInProgress", "true");
-    const { error: verifyError } = await supabase.auth.verifyOtp({
-      email: forgotEmail,
-      token: forgotOtp.trim(),
-      type: "email",
+    const { data, error } = await supabase.functions.invoke("reset-password-security", {
+      body: {
+        email: forgotEmail.trim(),
+        enrollment_number: forgotEnroll.trim(),
+        date_of_birth: forgotDob,
+        new_password: forgotNewPwd,
+      },
     });
-    if (verifyError) {
-      sessionStorage.removeItem("passwordResetInProgress");
-      setForgotLoading(false);
-      toast({ title: "Invalid or expired OTP", description: verifyError.message, variant: "destructive" });
-      return;
-    }
-    const { error: updateError } = await supabase.auth.updateUser({ password: forgotNewPwd });
-    if (updateError) {
-      sessionStorage.removeItem("passwordResetInProgress");
-      setForgotLoading(false);
-      toast({ title: "Couldn't update password", description: updateError.message, variant: "destructive" });
-      return;
-    }
-    await supabase.auth.signOut();
-    sessionStorage.removeItem("passwordResetInProgress");
     setForgotLoading(false);
+    if (error || (data && (data as any).error)) {
+      const msg = (data as any)?.error || error?.message || "Reset failed";
+      toast({ title: "Couldn't reset password", description: msg, variant: "destructive" });
+      return;
+    }
     toast({ title: "Password updated", description: "You can now sign in with your new password." });
     setForgotOpen(false);
     setEmail(forgotEmail);
@@ -282,7 +247,7 @@ const Login = () => {
               onClick={openForgot}
               className="font-semibold text-primary hover:underline underline-offset-2"
             >
-              Reset it via OTP
+            Reset using your details
             </button>
           </p>
         </motion.div>
