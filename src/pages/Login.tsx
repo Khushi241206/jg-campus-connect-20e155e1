@@ -13,9 +13,9 @@ type Mode = "login" | "register";
 const Login = () => {
   const [mode, setMode] = useState<Mode>("login");
   const [forgotOpen, setForgotOpen] = useState(false);
-  const [forgotStep, setForgotStep] = useState<"email" | "otp">("email");
   const [forgotEmail, setForgotEmail] = useState("");
-  const [forgotOtp, setForgotOtp] = useState("");
+  const [forgotEnroll, setForgotEnroll] = useState("");
+  const [forgotDob, setForgotDob] = useState("");
   const [forgotNewPwd, setForgotNewPwd] = useState("");
   const [forgotConfirmPwd, setForgotConfirmPwd] = useState("");
   const [forgotLoading, setForgotLoading] = useState(false);
@@ -87,42 +87,15 @@ const Login = () => {
 
   const openForgot = () => {
     setForgotEmail(email);
-    setForgotOtp("");
+    setForgotEnroll("");
+    setForgotDob("");
     setForgotNewPwd("");
     setForgotConfirmPwd("");
-    setForgotStep("email");
     setForgotOpen(true);
   };
 
-  const handleSendOtp = async (e: React.FormEvent) => {
+  const handleSecurityReset = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!forgotEmail) return;
-    setForgotLoading(true);
-    const { error } = await supabase.auth.signInWithOtp({
-      email: forgotEmail,
-      options: {
-        emailRedirectTo: `${window.location.origin}/login?reset=otp`,
-        shouldCreateUser: false,
-      },
-    });
-    setForgotLoading(false);
-    if (error) {
-      toast({ title: "Couldn't send OTP", description: error.message, variant: "destructive" });
-      return;
-    }
-    toast({
-      title: "OTP sent",
-      description: `Check ${forgotEmail} for a 6-digit code.`,
-    });
-    setForgotStep("otp");
-  };
-
-  const handleVerifyAndReset = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (forgotOtp.length < 6) {
-      toast({ title: "Enter the 6-digit OTP", variant: "destructive" });
-      return;
-    }
     if (forgotNewPwd.length < 6) {
       toast({ title: "Password too short", description: "Use at least 6 characters", variant: "destructive" });
       return;
@@ -132,28 +105,20 @@ const Login = () => {
       return;
     }
     setForgotLoading(true);
-    sessionStorage.setItem("passwordResetInProgress", "true");
-    const { error: verifyError } = await supabase.auth.verifyOtp({
-      email: forgotEmail,
-      token: forgotOtp.trim(),
-      type: "email",
+    const { data, error } = await supabase.functions.invoke("reset-password-security", {
+      body: {
+        email: forgotEmail.trim(),
+        enrollment_number: forgotEnroll.trim(),
+        date_of_birth: forgotDob,
+        new_password: forgotNewPwd,
+      },
     });
-    if (verifyError) {
-      sessionStorage.removeItem("passwordResetInProgress");
-      setForgotLoading(false);
-      toast({ title: "Invalid or expired OTP", description: verifyError.message, variant: "destructive" });
-      return;
-    }
-    const { error: updateError } = await supabase.auth.updateUser({ password: forgotNewPwd });
-    if (updateError) {
-      sessionStorage.removeItem("passwordResetInProgress");
-      setForgotLoading(false);
-      toast({ title: "Couldn't update password", description: updateError.message, variant: "destructive" });
-      return;
-    }
-    await supabase.auth.signOut();
-    sessionStorage.removeItem("passwordResetInProgress");
     setForgotLoading(false);
+    if (error || (data && (data as any).error)) {
+      const msg = (data as any)?.error || error?.message || "Reset failed";
+      toast({ title: "Couldn't reset password", description: msg, variant: "destructive" });
+      return;
+    }
     toast({ title: "Password updated", description: "You can now sign in with your new password." });
     setForgotOpen(false);
     setEmail(forgotEmail);
@@ -282,7 +247,7 @@ const Login = () => {
               onClick={openForgot}
               className="font-semibold text-primary hover:underline underline-offset-2"
             >
-              Reset it via OTP
+            Reset using your details
             </button>
           </p>
         </motion.div>
@@ -296,17 +261,14 @@ const Login = () => {
             onClick={(e) => e.stopPropagation()}
             className="w-full max-w-sm bg-card border border-border rounded-2xl p-6 shadow-2xl"
           >
-            <h3 className="font-bold text-lg text-foreground">
-              {forgotStep === "email" ? "Reset your password" : "Enter OTP & new password"}
-            </h3>
+            <h3 className="font-bold text-lg text-foreground">Reset your password</h3>
             <p className="text-xs text-muted-foreground mt-1">
-              {forgotStep === "email"
-                ? "Enter your registered email. We'll send the 6-digit OTP to your inbox. Use the code, not the email link."
-                : `We sent a 6-digit code to ${forgotEmail}. Enter it below along with your new password.`}
+              Verify your identity using the details you registered with. No email needed — your new password is set instantly.
             </p>
 
-            {forgotStep === "email" ? (
-              <form onSubmit={handleSendOtp} className="mt-4 space-y-3">
+            <form onSubmit={handleSecurityReset} className="mt-4 space-y-3">
+              <div>
+                <label className="block text-xs font-medium text-foreground mb-1">Registered Email</label>
                 <input
                   type="email"
                   required
@@ -316,72 +278,58 @@ const Login = () => {
                   placeholder="you@example.com"
                   className={inputCls}
                 />
-                <div className="flex gap-2">
-                  <button type="button" onClick={() => setForgotOpen(false)} className="flex-1 py-2.5 rounded-lg border border-input bg-background hover:bg-muted text-sm font-medium">
-                    Cancel
-                  </button>
-                  <button type="submit" disabled={forgotLoading} className="flex-1 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 disabled:opacity-50">
-                    {forgotLoading ? <Loader2 className="h-4 w-4 animate-spin mx-auto" /> : "Send OTP"}
-                  </button>
-                </div>
-              </form>
-            ) : (
-              <form onSubmit={handleVerifyAndReset} className="mt-4 space-y-3">
-                <div>
-                  <label className="block text-xs font-medium text-foreground mb-1">6-digit OTP</label>
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    maxLength={6}
-                    required
-                    autoFocus
-                    value={forgotOtp}
-                    onChange={(e) => setForgotOtp(e.target.value.replace(/\D/g, ""))}
-                    placeholder="123456"
-                    className={inputCls + " tracking-[0.5em] text-center font-semibold"}
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-foreground mb-1">New Password</label>
-                  <input
-                    type="password"
-                    required
-                    minLength={6}
-                    value={forgotNewPwd}
-                    onChange={(e) => setForgotNewPwd(e.target.value)}
-                    className={inputCls}
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-foreground mb-1">Confirm Password</label>
-                  <input
-                    type="password"
-                    required
-                    minLength={6}
-                    value={forgotConfirmPwd}
-                    onChange={(e) => setForgotConfirmPwd(e.target.value)}
-                    className={inputCls}
-                  />
-                </div>
-                <div className="flex items-center justify-between text-xs">
-                  <button type="button" onClick={() => setForgotStep("email")} className="text-muted-foreground hover:underline">
-                    ← Change email
-                  </button>
-                  <button type="button" onClick={handleSendOtp as unknown as () => void} disabled={forgotLoading} className="text-primary font-medium hover:underline disabled:opacity-50">
-                    Resend OTP
-                  </button>
-                </div>
-                <div className="flex gap-2">
-                  <button type="button" onClick={() => setForgotOpen(false)} className="flex-1 py-2.5 rounded-lg border border-input bg-background hover:bg-muted text-sm font-medium">
-                    Cancel
-                  </button>
-                  <button type="submit" disabled={forgotLoading} className="flex-1 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 disabled:opacity-50">
-                    {forgotLoading ? <Loader2 className="h-4 w-4 animate-spin mx-auto" /> : "Update Password"}
-                  </button>
-                </div>
-              </form>
-            )}
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-foreground mb-1">Enrollment Number</label>
+                <input
+                  type="text"
+                  required
+                  value={forgotEnroll}
+                  onChange={(e) => setForgotEnroll(e.target.value)}
+                  className={inputCls}
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-foreground mb-1">Date of Birth</label>
+                <input
+                  type="date"
+                  required
+                  value={forgotDob}
+                  onChange={(e) => setForgotDob(e.target.value)}
+                  className={inputCls}
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-foreground mb-1">New Password</label>
+                <input
+                  type="password"
+                  required
+                  minLength={6}
+                  value={forgotNewPwd}
+                  onChange={(e) => setForgotNewPwd(e.target.value)}
+                  className={inputCls}
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-foreground mb-1">Confirm New Password</label>
+                <input
+                  type="password"
+                  required
+                  minLength={6}
+                  value={forgotConfirmPwd}
+                  onChange={(e) => setForgotConfirmPwd(e.target.value)}
+                  className={inputCls}
+                />
+              </div>
+              <div className="flex gap-2 pt-1">
+                <button type="button" onClick={() => setForgotOpen(false)} className="flex-1 py-2.5 rounded-lg border border-input bg-background hover:bg-muted text-sm font-medium">
+                  Cancel
+                </button>
+                <button type="submit" disabled={forgotLoading} className="flex-1 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 disabled:opacity-50">
+                  {forgotLoading ? <Loader2 className="h-4 w-4 animate-spin mx-auto" /> : "Update Password"}
+                </button>
+              </div>
+            </form>
           </motion.div>
         </div>
       )}
